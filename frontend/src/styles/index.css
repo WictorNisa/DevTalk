@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+/* Base reset. I don't trust preflight */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* root full size */
+html,
+body,
+#root {
+  height: 100%;
+}
