@@ -1,11 +1,5 @@
 @import "tailwindcss";
-
-/* Base reset. I don't trust preflight */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@import "./variables.css";
 
 /* root full size */
 html,
