@@ -14,6 +14,6 @@ public class WebSocketEventListener {
     // TODO - Inform the users in the room that a user has disconnected (or gone offline)
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event){
-        log.info("WebSocket connection closed");
+        log.info("WebSocket connection closed. Session ID: {}", event.getSessionId());
     }
 }
