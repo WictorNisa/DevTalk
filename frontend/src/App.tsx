@@ -1,15 +1,15 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
-import LandingPage from "./routes/LandingPage";
-import LoginPage from "./routes/AuthPage/LoginPage";
-import Dashboard from "./routes/Dashboard";
-import NotFound from "./routes/NotFound";
-import { ROUTES } from "./constants/routes";
+import LandingPage from "@routes/LandingPage";
+import LoginPage from "@routes/AuthPage/LoginPage";
+import Dashboard from "@routes/Dashboard";
+import NotFound from "@routes/NotFound";
+import { ROUTES } from "@constants/routes";
 
-function App() {
+const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes that doesnt need auth */}
+        {/* Public Routes that doesn't need auth */}
         <Route path={ROUTES.HOME} element={<LandingPage />} />
 
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
@@ -32,6 +32,6 @@ function App() {
       </Routes>
     </BrowserRouter>
   );
-}
+};
 
 export default App;
