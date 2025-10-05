@@ -21,7 +21,7 @@ const LoginForm = () => {
               src="https://placehold.co/100x100"
               alt="devTalk logo"
             />
-            <h2 className="text-4xl font-semibold sm:text-5xl">devTalk</h2>
+            <h1 className="text-4xl font-semibold sm:text-5xl">devTalk</h1>
             <span className="text-lg sm:text-xl">A DEVELOPER'S APP</span>
           </div>
 
