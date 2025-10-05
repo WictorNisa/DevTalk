@@ -1,9 +1,9 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
-import LandingPage from "./routes/LandingPage";
-import LoginPage from "./routes/AuthPage/LoginPage";
-import Dashboard from "./routes/Dashboard";
-import NotFound from "./routes/NotFound";
-import { ROUTES } from "./constants/routes";
+import LandingPage from "@routes/LandingPage";
+import LoginPage from "@routes/AuthPage/LoginPage";
+import Dashboard from "@routes/Dashboard";
+import NotFound from "@routes/NotFound";
+import { ROUTES } from "@constants/routes";
 
 const App = () => {
   return (

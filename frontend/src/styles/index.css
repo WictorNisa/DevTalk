@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "./variables.css";
+@import "@styles/variables.css";
 
 /* root full size */
 html,
