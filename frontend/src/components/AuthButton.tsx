@@ -1,21 +1,24 @@
+type AuthProvider = "github" | "gitlab";
+
 interface AuthButtonProps {
   children: React.ReactNode;
   iconSrc: string;
   iconAlt: string;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  provider: AuthProvider;
+  onClick: (provider: AuthProvider) => void;
 }
 
 export const AuthButton = ({
   children,
   iconSrc,
   iconAlt,
+  provider,
   onClick,
 }: AuthButtonProps) => {
   return (
     <button
-      type="submit"
-      // TODO:  Add actual function
-      onClick={onClick}
+      type="button"
+      onClick={() => onClick(provider)}
       className="flex items-center justify-center rounded-lg bg-[var(--main-bg-color)] px-4 py-3.5 transition-opacity hover:cursor-pointer hover:opacity-90 sm:px-5 sm:py-4"
     >
       <div className="flex items-center gap-3 sm:gap-4">

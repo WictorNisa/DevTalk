@@ -1,16 +1,17 @@
 import { AuthButton } from "@components/AuthButton";
 
 const LoginForm = () => {
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleAuthProvider = (provider: "github" | "gitlab") => {
+    // TODO: Implement actual auth logic here
+    console.log(`Authenticating with ${provider}`);
   };
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center p-4 text-white sm:p-6">
       <div className="w-full max-w-md">
-        <form
-          role="form"
-          aria-label="Sign in form"
+        <div
+          role="region"
+          aria-label="Authentication options"
           className="flex flex-col rounded-lg bg-[var(--surface-dark)] p-6 sm:p-8"
         >
           {/* Top panel*/}
@@ -24,24 +25,26 @@ const LoginForm = () => {
             <span className="text-lg sm:text-xl">A DEVELOPER'S APP</span>
           </div>
 
-          {/* Bottom panel */}
+          {/* Authentication options */}
           <div className="flex flex-col gap-4">
             <AuthButton
               iconSrc="https://placehold.co/40x40"
               iconAlt="GitHub logo"
-              onClick={handleSubmit}
+              provider="github"
+              onClick={handleAuthProvider}
             >
               Sign in with GitHub
             </AuthButton>
             <AuthButton
               iconSrc="https://placehold.co/40x40"
               iconAlt="GitLab logo"
-              onClick={handleSubmit}
+              provider="gitlab"
+              onClick={handleAuthProvider}
             >
               Sign in with GitLab
             </AuthButton>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
