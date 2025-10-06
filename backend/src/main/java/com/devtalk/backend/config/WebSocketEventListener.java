@@ -26,7 +26,7 @@ public class WebSocketEventListener {
         if (usernameObj != null) {
             String username = usernameObj.toString();
             log.info("User Disconnected : {}", username);
-            ChatMessage chatMessage = ChatMessage.builder().messageType(MessageType.LEAVE).build();
+            ChatMessage chatMessage = ChatMessage.builder().messageType(MessageType.LEAVE).messageAuthor(username).build();
             messageTemplate.convertAndSend("/topic/leave", chatMessage);
         }
     }
