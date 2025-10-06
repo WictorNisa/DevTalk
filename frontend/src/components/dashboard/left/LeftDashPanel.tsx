@@ -1,11 +1,11 @@
 import LeftBottomWidget from "./LeftBottomWidget";
 import LeftCenterWidget from "./LeftCenterWidget";
-import LeftTopWidget from "./LeftTopWidget";
+import LogoPanel from "./LogoPanel";
 
 const LeftDashPanel = () => {
   return (
     <div className="flex h-full w-1/5 flex-col gap-2 rounded">
-      <LeftTopWidget />
+      <LogoPanel />
       <LeftCenterWidget />
       <LeftBottomWidget />
     </div>
