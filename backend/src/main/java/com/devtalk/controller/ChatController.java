@@ -19,7 +19,7 @@ public class ChatController {
     }
 
     // Adds the username in the web socket session attributes
-    @MessageMapping("/chat.sendMessage")
+    @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
     public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor){
         headerAccessor.getSessionAttributes().put("username", chatMessage.getMessageAuthor());
