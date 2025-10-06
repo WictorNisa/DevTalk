@@ -1,11 +1,10 @@
-package com.devtalk.backend.config;
+package com.devtalk.config;
 
-import com.devtalk.backend.model.ChatMessage;
-import com.devtalk.backend.model.MessageType;
+import com.devtalk.model.ChatMessage;
+import com.devtalk.model.MessageType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;

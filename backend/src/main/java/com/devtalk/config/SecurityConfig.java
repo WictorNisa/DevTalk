@@ -1,4 +1,4 @@
-package com.devtalk.backend.config;
+package com.devtalk.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

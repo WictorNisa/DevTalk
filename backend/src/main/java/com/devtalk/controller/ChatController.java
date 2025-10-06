@@ -1,6 +1,6 @@
-package com.devtalk.backend.controller;
+package com.devtalk.controller;
 
-import com.devtalk.backend.model.ChatMessage;
+import com.devtalk.model.ChatMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;

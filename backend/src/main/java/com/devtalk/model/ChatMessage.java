@@ -1,4 +1,4 @@
-package com.devtalk.backend.model;
+package com.devtalk.model;
 
 import lombok.*;
 
