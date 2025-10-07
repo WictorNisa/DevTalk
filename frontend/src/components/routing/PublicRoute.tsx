@@ -1,9 +1,22 @@
+import { ROUTES } from "@/constants/routes";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { Navigate } from "react-router";
 
-
-const PublicRoute = () => {
-  return (
-    <div>PublicRoute</div>
-  )
+interface PublicRouteProps {
+  children: React.ReactNode;
 }
 
-export default PublicRoute
+const PublicRoute = ({ children }: PublicRouteProps) => {
+  const user = useAuthStore((state) => state.user);
+
+  const isAuthenticated = !!user;
+  //If user is authed, redirect to dashboard or home
+  return isAuthenticated ? (
+    <Navigate to={ROUTES.DASHBOARD} replace />
+  ) : (
+    //If user is not authed, allow access to public route
+    <>{children}</>
+  );
+};
+
+export default PublicRoute;
