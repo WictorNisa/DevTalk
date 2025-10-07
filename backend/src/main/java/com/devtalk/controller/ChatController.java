@@ -13,12 +13,6 @@ import org.springframework.web.servlet.View;
 @Controller
 public class ChatController {
 
-    private final View error;
-
-    public ChatController(View error) {
-        this.error = error;
-    }
-
     // Receives the chat messages and returns them to the /topic/public destination
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
