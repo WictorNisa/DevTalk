@@ -1,15 +1,23 @@
 package com.devtalk.controller;
 
 import com.devtalk.model.ChatMessage;
+import com.devtalk.model.MessageType;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.View;
 
 
 @Controller
 public class ChatController {
+
+    private final View error;
+
+    public ChatController(View error) {
+        this.error = error;
+    }
 
     // Receives the chat messages and returns them to the /topic/public destination
     @MessageMapping("/chat.sendMessage")
@@ -28,7 +36,11 @@ public class ChatController {
             return chatMessage;
         }
         else {
-            return null;
+            ChatMessage errorMessage = new ChatMessage();
+            errorMessage.setMessageType(MessageType.ERROR);
+            errorMessage.setMessageAuthor("System");
+            errorMessage.setMessageContent("Error: Username cannot be empty");
+            return errorMessage;
         }
     }
 }

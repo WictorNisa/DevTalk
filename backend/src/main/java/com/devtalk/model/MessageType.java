@@ -1,5 +1,5 @@
 package com.devtalk.model;
 
 public enum MessageType {
-    CHAT, JOIN, LEAVE
+    CHAT, JOIN, LEAVE, ERROR
 }
