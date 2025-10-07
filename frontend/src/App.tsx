@@ -4,8 +4,9 @@ import LoginPage from "./routes/AuthPage/LoginPage";
 import Dashboard from "./routes/Dashboard";
 import NotFound from "./routes/NotFound";
 import { ROUTES } from "./constants/routes";
-import ProtectedRoute from "./components/ProtectedRoute";
-import PublicRoute from "./components/PublicRoute";
+import ProtectedRoute from "./components/routing/ProtectedRoute";
+import PublicRoute from "./components/routing/PublicRoute";
+
 
 const App = () => {
   return (
