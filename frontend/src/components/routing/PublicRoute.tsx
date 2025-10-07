@@ -12,10 +12,7 @@ const PublicRoute = ({ children }: PublicRouteProps) => {
   const isAuthenticated = !!user;
   //If user is authed, redirect to dashboard or home
   return isAuthenticated ? (
-    <Navigate
-      to={ROUTES.DASHBOARD ? ROUTES.DASHBOARD : ROUTES.HOME ? ROUTES.HOME : "/"}
-      replace
-    />
+    <Navigate to={ROUTES.DASHBOARD} replace />
   ) : (
     //If user is not authed, allow access to public route
     <>{children}</>
