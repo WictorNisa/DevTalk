@@ -16,7 +16,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .oauth2Login(Customizer.withDefaults())
                 .cors(Customizer.withDefaults())
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/webhook/**"))
+                .csrf(Customizer.withDefaults())
                 .httpBasic(basic -> basic.disable())
                 .formLogin(formLogin -> formLogin.disable())
                 .logout(logout -> logout.logoutUrl("/logout")
