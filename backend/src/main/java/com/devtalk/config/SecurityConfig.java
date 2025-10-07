@@ -1,4 +1,4 @@
-package com.devtalk.backend.config;
+package com.devtalk.config;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
