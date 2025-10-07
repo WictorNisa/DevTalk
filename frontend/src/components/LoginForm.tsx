@@ -1,4 +1,4 @@
-import { AuthButton } from "@components/AuthButton";
+import { AuthButton } from "./AuthButton"; 
 
 const LoginForm = () => {
   const handleAuthProvider = (provider: "github" | "gitlab") => {
