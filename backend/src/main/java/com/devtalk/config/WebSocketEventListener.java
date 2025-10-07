@@ -1,4 +1,4 @@
-package com.devtalk.backend.config;
+package com.devtalk.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

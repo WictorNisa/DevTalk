@@ -1,4 +1,4 @@
-package com.devtalk.backend;
+package com.devtalk;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
