@@ -1,4 +1,4 @@
-package com.devtalk.backend.controller;
+package com.devtalk.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
