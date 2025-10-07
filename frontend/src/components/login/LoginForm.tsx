@@ -1,4 +1,8 @@
+<<<<<<< HEAD:frontend/src/components/LoginForm.tsx
 import { AuthButton } from "./AuthButton"; 
+=======
+import { AuthButton } from "@/components/login/AuthButton";
+>>>>>>> cf7a4064e3f84037be23d9a5fd3bd563081d43a7:frontend/src/components/login/LoginForm.tsx
 
 const LoginForm = () => {
   const handleAuthProvider = (provider: "github" | "gitlab") => {
