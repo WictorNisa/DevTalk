@@ -22,7 +22,13 @@ public class ChatController {
     @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
     public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor){
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getMessageAuthor());
-        return chatMessage;
+        String author = chatMessage.getMessageAuthor();
+        if (author != null && !author.trim().isEmpty()) {
+            headerAccessor.getSessionAttributes().put("username", chatMessage.getMessageAuthor());
+            return chatMessage;
+        }
+        else {
+            return null;
+        }
     }
 }
