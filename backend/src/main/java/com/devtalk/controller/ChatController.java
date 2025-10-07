@@ -32,7 +32,7 @@ public class ChatController {
     public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor){
         String author = chatMessage.getMessageAuthor();
         if (author != null && !author.trim().isEmpty()) {
-            headerAccessor.getSessionAttributes().put("username", chatMessage.getMessageAuthor());
+            headerAccessor.getSessionAttributes().put("username", author);
             return chatMessage;
         }
         else {
