@@ -33,7 +33,7 @@ public class User extends BaseEntity {
 
     @NotBlank
     @Size(max = 50)
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 50)
     private String displayName;
 
     @Enumerated(EnumType.STRING)
