@@ -1,5 +1,6 @@
 package com.devtalk.model;
 
+import com.devtalk.enums.MessageReactionType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -18,10 +19,10 @@ import jakarta.validation.constraints.Size;
 @SuperBuilder(toBuilder = true)
 public class MessageReaction extends BaseEntity {
 
-    @NotBlank
-    @Size(max = 10)
-    @Column(nullable = false, length = 10)
-    private String emoji;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MessageReactionType type;
 
     @NotNull
     @ManyToOne(optional = false)
