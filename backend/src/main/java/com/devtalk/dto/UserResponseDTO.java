@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponseDTO extends UserDTO{
-    private String displayName;
     private PresenceStatus presenceStatus;
     private String statusMessage;
     private Role role;
