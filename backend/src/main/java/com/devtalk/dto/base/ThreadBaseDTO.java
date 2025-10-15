@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class ThreadBaseDTO extends BaseDTO{
+public class ThreadBaseDTO extends BaseDTO {
     private Long channelId;
     private Long originalMessageId;
 }
