@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-public class UserGroupRelationshipBaseDTO extends BaseDTO{
+public class UserGroupRelationshipBaseDTO extends BaseDTO {
     private Long userId;
     private Long groupId;
     private UserGroupMembershipType userGroupMembershipType;
