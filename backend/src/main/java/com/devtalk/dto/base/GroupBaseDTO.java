@@ -11,6 +11,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class GroupBaseDTO extends BaseDTO{
+public class GroupBaseDTO extends BaseDTO {
     private String name;
 }
