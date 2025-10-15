@@ -3,9 +3,10 @@ package com.devtalk.dto;
 import com.devtalk.dto.base.MessageBaseDTO;
 import com.devtalk.enums.MessageReactionType;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
