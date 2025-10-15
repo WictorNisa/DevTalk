@@ -15,7 +15,4 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class UserResponseDTO extends UserBaseDTO {
     private String avatarUrl;
-    private PresenceStatus presenceStatus;
-    private String statusMessage;
-
 }

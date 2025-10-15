@@ -20,6 +20,8 @@ import jakarta.validation.constraints.Size;
 public class MessageReaction extends BaseEntity {
 
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private MessageReactionType type;
 
     @NotNull
