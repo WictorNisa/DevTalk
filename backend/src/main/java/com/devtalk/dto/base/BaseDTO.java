@@ -1,22 +1,19 @@
-package com.devtalk.dto;
+package com.devtalk.dto.base;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 
-
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+
+public class BaseDTO {
     private Long id;
-    private String displayName;
-    private String githubToken;
-    private String externalId;
     private Instant createdAt;
     private Instant updatedAt;
 }

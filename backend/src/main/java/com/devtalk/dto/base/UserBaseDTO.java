@@ -1,6 +1,5 @@
-package com.devtalk.dto;
+package com.devtalk.dto.base;
 
-import com.devtalk.dto.base.UserBaseDTO;
 import com.devtalk.enums.Language;
 import com.devtalk.enums.PresenceStatus;
 import com.devtalk.enums.Role;
@@ -8,14 +7,17 @@ import com.devtalk.enums.Theme;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class UserResponseDTO extends UserBaseDTO {
-    private String avatarUrl;
+public abstract class UserBaseDTO extends BaseDTO{
+    private String externalId;
+    private String displayName;
     private PresenceStatus presenceStatus;
-    private String statusMessage;
-
+    private Role role;
+    private Language language;
+    private Theme theme;
 }
