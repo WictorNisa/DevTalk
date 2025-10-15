@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public abstract class UserBaseDTO extends BaseDTO{
+public abstract class UserBaseDTO extends BaseDTO {
     private String externalId;
     private String displayName;
     private PresenceStatus presenceStatus;
