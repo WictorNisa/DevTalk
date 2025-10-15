@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-public class AttachmentBaseDTO extends BaseDTO{
+public class AttachmentBaseDTO extends BaseDTO {
     private AttachmentType attachmentType;
     private String url;
     private String filename;
