@@ -1,3 +1,6 @@
+// components/auth/AuthButton.tsx
+import { Button } from "@components/ui/Button";
+
 type AuthProvider = "github" | "gitlab";
 
 interface AuthButtonProps {
@@ -16,15 +19,11 @@ export const AuthButton = ({
   onClick,
 }: AuthButtonProps) => {
   return (
-    <button
-      type="button"
-      onClick={() => onClick(provider)}
-      className="flex items-center justify-center rounded-lg bg-[var(--main-bg-color)] px-4 py-3.5 transition-opacity hover:cursor-pointer hover:opacity-90 sm:px-5 sm:py-4"
-    >
+    <Button type="button" onClick={() => onClick(provider)}>
       <div className="flex items-center gap-3 sm:gap-4">
         <img className="h-10 w-10 rounded-full" src={iconSrc} alt={iconAlt} />
-        <span className="text-base sm:text-lg">{children}</span>
+        <span>{children}</span>
       </div>
-    </button>
+    </Button>
   );
 };

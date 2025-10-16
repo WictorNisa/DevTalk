@@ -1,7 +1,7 @@
+import Card from "@components/ui/Card";
+
 const LeftCenterWidget = () => {
-  return (
-    <div className="flex h-full w-full flex-col bg-[var(--surface-md-dark)]"></div>
-  );
+  return <Card className="h-full">{/*TODO: Content*/} Left Panel Center</Card>;
 };
 
 export default LeftCenterWidget;

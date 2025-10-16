@@ -1,7 +1,7 @@
+import Card from "@/components/ui/Card";
+
 const LeftBottomWidget = () => {
-  return (
-    <div className="flex h-1/6 w-full flex-col bg-[var(--surface-md-dark)]"></div>
-  );
+  return <Card className="h-1/6">{/*TODO: Content*/} Bottom Left</Card>;
 };
 
 export default LeftBottomWidget;

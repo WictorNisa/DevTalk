@@ -1,6 +1,10 @@
+import Card from "@/components/ui/Card";
+
 const CenterBottomWidget = () => {
   return (
-    <div className="flex h-1/7 w-full flex-col rounded-xl bg-[var(--surface-dark)]"></div>
+    <Card className="flex h-1/7 bg-[var(--surface-dark)]">
+      {/*TODO: Content*/} Center Panel Bottom
+    </Card>
   );
 };
 
