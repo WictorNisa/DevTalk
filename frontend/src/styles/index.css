@@ -9,7 +9,8 @@ html,
 body,
 #root {
   height: 100%;
-  background-color: var(--main-bg-color);
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 @theme inline {
