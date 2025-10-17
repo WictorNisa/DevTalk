@@ -10,7 +10,10 @@ body,
 #root {
   height: 100%;
   background-color: var(--background);
+<<<<<<< HEAD
   color: var(--foreground);
+=======
+>>>>>>> f94806e (feat: Landing Setup)
 }
 
 @theme inline {

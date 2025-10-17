@@ -1,15 +1,15 @@
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import {
-  MessageSquare,
+  MessagesSquare,
   Hash,
-  Code,
+  SquareCode,
   ShieldCheck,
   Bell,
-  Github,
 } from "lucide-react";
 
 export const features = [
   {
-    icon: MessageSquare,
+    icon: MessagesSquare,
     title: "Real-time chat",
     desc: "Fast channels and direct messages powered by WebSocket.",
   },
@@ -19,7 +19,7 @@ export const features = [
     desc: "Keep discussions organized by topic and team.",
   },
   {
-    icon: Code,
+    icon: SquareCode,
     title: "Code snippets",
     desc: "Share formatted, syntax-highlighted code directly in chat.",
   },
@@ -34,7 +34,7 @@ export const features = [
     desc: "Get notified instantly when someone mentions you or your channel.",
   },
   {
-    icon: Github,
+    icon: GitHubLogoIcon,
     title: "GitHub SSO",
     desc: "Seamless sign-in using your GitHub account via OAuth.",
   },
