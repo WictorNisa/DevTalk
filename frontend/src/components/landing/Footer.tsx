@@ -3,7 +3,7 @@ import { Heart } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-[var(--background)] py-8 text-white/70">
+    <footer className="border-t py-8">
       <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-6 text-center sm:flex-row sm:text-left">
         <p className="flex items-center gap-1 text-sm">
           © {new Date().getFullYear()} DevTalk. Built with
@@ -15,9 +15,9 @@ export default function Footer() {
           href="https://github.com/WictorNisa/DevTalk"
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-2 text-sm transition hover:text-white"
+          className="inline-flex items-center gap-2 text-sm transition hover:scale-102"
         >
-          <GitHubLogoIcon className="h-4 w-4" />
+          <GitHubLogoIcon className="h-5 w-5" />
           <span>GitHub</span>
         </a>
       </div>

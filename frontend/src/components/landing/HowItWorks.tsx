@@ -21,27 +21,24 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section
-      id="how-it-works"
-      className="bg-[var(--background)] py-20 text-white"
-    >
+    <section id="how-it-works" className="py-20">
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-3xl font-bold sm:text-4xl">How it works</h2>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-3">
+        <div className="mt-14 grid gap-6 sm:grid-cols-3">
           {steps.map(({ icon: Icon, title, desc }, i) => (
             <div
               key={title}
-              className="relative rounded-2xl border border-white/10 bg-white/5 p-6"
+              className="bg-card relative rounded-3xl border p-6 text-left"
             >
               <div className="mb-4 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </div>
-                <span className="text-sm text-white/50">Step {i + 1}</span>
+                <span className="text-sm">Step {i + 1}</span>
               </div>
               <h3 className="text-lg font-semibold">{title}</h3>
-              <p className="mt-2 text-white/70">{desc}</p>
+              <p className="mt-2">{desc}</p>
             </div>
           ))}
         </div>

@@ -3,25 +3,25 @@ import { GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 const team = [
   {
     name: "Nicholas Sjöstrand",
-    role: "Frontend Developer",
+    role: "Frontend, UI/UX",
     githubUser: "kaigan94",
     linkedin: "https://www.linkedin.com/in/nicholas-sjostrand/",
   },
   {
     name: "Jonas Jönsson",
-    role: "Frontend Developer",
+    role: "Frontend, UI/UX",
     githubUser: "adhSwede",
     linkedin: "https://www.linkedin.com/in/jonas-j-57858b320/",
   },
   {
     name: "Luke Salem",
-    role: "Backend Developer",
+    role: "Backend, Database Design",
     githubUser: "lukebike",
     linkedin: "https://www.linkedin.com/in/luke-salem-17051a231/",
   },
   {
     name: "Oskar Lindahl",
-    role: "Backend Developer",
+    role: "Backend, Database Design",
     githubUser: "Oskarlindahl03",
     linkedin: "https://www.linkedin.com/in/oskar-lindahl-a91a30284/",
   },
@@ -35,51 +35,48 @@ const team = [
 
 export default function MeetTheTeam() {
   return (
-    <section
-      id="team"
-      className="bg-[var(--background)] py-20 text-[var(--foreground)]"
-    >
+    <section id="team" className="py-20">
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-2xl font-bold sm:text-4xl">
           The Team Behind DevTalk
         </h2>
-        <p className="mt-3 text-white/70">
+        <p className="mt-3">
           A small team of passionate dev-students building a place for coders to
           connect, learn, and grow.
         </p>
 
-        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {team.map((member) => (
             <div
               key={member.name}
-              className="flex flex-col items-center rounded-xl border border-white/10 bg-white/5 p-6 transition hover:bg-white/10"
+              className="bg-card flex flex-col items-center rounded-3xl border p-6 transition"
             >
-              {/* Profilbild från GitHub */}
+              {/* Profile Picture from GitHub */}
               <img
                 src={`https://github.com/${member.githubUser}.png`}
                 alt={member.name}
-                className="mb-4 h-20 w-20 rounded-full border border-white/10 object-cover"
+                className="mb-4 h-20 w-20 rounded-full border object-cover"
               />
 
               <h3 className="text-lg font-semibold">{member.name}</h3>
-              <p className="text-white/70">{member.role}</p>
+              <p>{member.role}</p>
 
               <div className="mt-4 flex justify-center gap-4">
                 <a
                   href={`https://github.com/${member.githubUser}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-white/70 transition hover:text-white"
+                  className="transition hover:scale-102"
                 >
-                  <GitHubLogoIcon className="h-5 w-5" />
+                  <GitHubLogoIcon className="h-6 w-6" />
                 </a>
                 <a
                   href={member.linkedin}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-white/70 transition hover:text-white"
+                  className="transition hover:scale-102"
                 >
-                  <LinkedInLogoIcon className="h-5 w-5" />
+                  <LinkedInLogoIcon className="h-6 w-6" />
                 </a>
               </div>
             </div>
