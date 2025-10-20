@@ -3,7 +3,7 @@ import CenterTopWidget from "./CenterTopWidget";
 
 const CenterDashPanel = () => {
   return (
-    <div className="flex h-full w-3/5 flex-col gap-2">
+    <div className="flex h-full w-3/5 flex-1 flex-col gap-2">
       <CenterTopWidget />
       <CenterBottomWidget />
     </div>
