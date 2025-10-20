@@ -14,7 +14,7 @@ const Testconnection = () => {
   const [connected, setConnected] = useState<boolean>(false);
 
   const connect = () => {
-    //This creates a SockJs conection
+    //This creates a SockJs connection
     const socket = new SockJs("http://localhost:8080/ws");
 
     //Create a STOMP client
