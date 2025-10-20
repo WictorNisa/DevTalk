@@ -1,94 +1,106 @@
-import { Menu } from "lucide-react";
+import Logo from "@/assets/img/devtalk-logo.svg";
+import { GitHubLogoIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "../ui/navigation-menu";
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 const GITHUB_REPO = "https://github.com/WictorNisa/DevTalk";
 
 const navLinks = [
-  { label: "Features", href: "#fe atures" },
+  { label: "Features", href: "#features" },
   { label: "How It Works", href: "#how-it-works" },
+  { label: "Meet The Team", href: "#team" },
 ];
 
 export default function Navbar() {
   return (
-    <header className="dark:text-foreground sticky top-0 z-50 w-full border-b bg-[var(--background)]/95 text-[var(--foreground)] backdrop-blur-md dark:border-[var(--border)] dark:bg-[var(--background)]/80">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-2 py-6">
+    <header className="dark:text-foreground bg-background/90 text-foreground sticky top-0 z-50 w-full border-b backdrop-blur-md dark:border-[var(--border)]/65 dark:bg-[var(--background)]/65">
+      <nav className="max-w-8xl mx-auto flex items-center justify-between px-5 py-5">
         <a href="#home" className="flex items-center gap-2">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg font-bold">
-            DT
-          </span>
-          <span className="text-lg font-semibold tracking-tight">DevTalk</span>
+          <img
+            src={Logo}
+            className="h-10 w-10 dark:invert"
+            alt="DevTalk logo"
+          />
         </a>
+        <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="hidden cursor-pointer items-center gap-2 md:inline-flex"
+              >
+                Menu
+              </Button>
+            </DropdownMenuTrigger>
 
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList className="items-center gap-4">
-            {navLinks.map((link) => (
-              <NavigationMenuItem key={link.href}>
-                <NavigationMenuLink asChild className="text-sm">
-                  <a href={link.href}>{link.label}</a>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            ))}
-            <NavigationMenuItem>
-              <NavigationMenuLink asChild className="text-sm">
-                <a href={GITHUB_REPO} target="_blank" rel="noreferrer">
-                  GitHub
-                </a>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="h-8 w-8 md:hidden">
-              <Menu className="h-5 w-5" />
-              <span className="sr-only">Toggle navigation</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent
-            side="top"
-            className="w-auto border-b backdrop-blur-sm sm:w-auto"
-          >
-            <div className="flex items-center justify-between">
-              <SheetClose asChild>
-                <Button variant="ghost" size="icon">
-                  <span className="sr-only">Close menu</span>
-                </Button>
-              </SheetClose>
-            </div>
-
-            <div className="mt-4 flex flex-col gap-4">
+            <DropdownMenuContent align="end" className="hidden w-48 md:block">
               {navLinks.map((link) => (
-                <SheetClose asChild key={link.href}>
+                <DropdownMenuItem key={link.href} asChild>
                   <a
                     href={link.href}
-                    className="rounded-lg px-5 py-2 text-sm font-medium"
+                    className="flex cursor-pointer items-center gap-2"
                   >
                     {link.label}
                   </a>
-                </SheetClose>
+                </DropdownMenuItem>
               ))}
-
-              <SheetClose asChild>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
                 <a
                   href={GITHUB_REPO}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-lg px-5 py-2 text-sm font-medium"
+                  className="cursor-pointer"
                 >
-                  GitHub
+                  <GitHubLogoIcon /> View Project
                 </a>
-              </SheetClose>
-            </div>
-          </SheetContent>
-        </Sheet>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Mobile Menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 md:hidden"
+                aria-label="Open navigation menu"
+              >
+                <HamburgerMenuIcon className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 md:hidden">
+              {navLinks.map((link) => (
+                <DropdownMenuItem key={link.href} asChild>
+                  <a
+                    href={link.href}
+                    className="flex items-center gap-2 text-base"
+                  >
+                    {link.label}
+                  </a>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <a
+                  href={GITHUB_REPO}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 text-base"
+                >
+                  <GitHubLogoIcon /> GitHub Repo
+                </a>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </nav>
     </header>
   );

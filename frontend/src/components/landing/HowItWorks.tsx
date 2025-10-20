@@ -1,5 +1,6 @@
 import { Rss, FileCode2 } from "lucide-react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const steps = [
   {
@@ -21,25 +22,28 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-20">
+    <section id="how-it-works" className="border-b py-32">
       <div className="container mx-auto px-6 text-center">
-        <h2 className="text-3xl font-bold sm:text-4xl">How it works</h2>
-
-        <div className="mt-14 grid gap-6 sm:grid-cols-3">
+        <h2 className="text-3xl font-semibold sm:text-4xl">How it works</h2>
+        <p className="dark:text-primary/70 mt-3 text-base">
+          Getting started is simple.
+        </p>
+        <div className="mt-12 grid gap-8 sm:grid-cols-3">
           {steps.map(({ icon: Icon, title, desc }, i) => (
-            <div
-              key={title}
-              className="bg-card relative rounded-3xl border p-6 text-left"
-            >
-              <div className="mb-4 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
-                  <Icon className="h-5 w-5" aria-hidden="true" />
+            <Card key={title} className="flex h-full flex-col text-left">
+              <CardHeader className="space-y-3">
+                <div className="text-muted-foreground flex items-center gap-3 text-sm">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <span>Step {i + 1}</span>
                 </div>
-                <span className="text-sm">Step {i + 1}</span>
-              </div>
-              <h3 className="text-lg font-semibold">{title}</h3>
-              <p className="mt-2">{desc}</p>
-            </div>
+                <CardTitle className="text-lg">{title}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-muted-foreground flex-1 text-sm">
+                <p>{desc}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>

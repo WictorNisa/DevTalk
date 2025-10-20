@@ -1,4 +1,6 @@
 import { GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const team = [
   {
@@ -35,51 +37,62 @@ const team = [
 
 export default function MeetTheTeam() {
   return (
-    <section id="team" className="py-20">
+    <section id="team" className="border-b py-32">
       <div className="container mx-auto px-6 text-center">
-        <h2 className="text-2xl font-bold sm:text-4xl">
+        <h2 className="text-3xl font-bold sm:text-4xl">
           The Team Behind DevTalk
         </h2>
-        <p className="mt-3">
+        <p className="text-primary/70 mt-3 text-base">
           A small team of passionate dev-students building a place for coders to
           connect, learn, and grow.
         </p>
 
-        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {team.map((member) => (
-            <div
-              key={member.name}
-              className="bg-card flex flex-col items-center rounded-3xl border p-6 transition"
-            >
-              {/* Profile Picture from GitHub */}
-              <img
-                src={`https://github.com/${member.githubUser}.png`}
-                alt={member.name}
-                className="mb-4 h-20 w-20 rounded-full border object-cover"
-              />
-
-              <h3 className="text-lg font-semibold">{member.name}</h3>
-              <p>{member.role}</p>
-
-              <div className="mt-4 flex justify-center gap-4">
-                <a
-                  href={`https://github.com/${member.githubUser}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="transition hover:scale-102"
-                >
-                  <GitHubLogoIcon className="h-6 w-6" />
-                </a>
-                <a
-                  href={member.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="transition hover:scale-102"
-                >
-                  <LinkedInLogoIcon className="h-6 w-6" />
-                </a>
-              </div>
-            </div>
+            <Card key={member.name} className="flex h-full flex-col text-left">
+              <CardHeader className="space-y-3">
+                <div className="text-muted-foreground flex items-center gap-3 text-sm">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage
+                        src={`https://github.com/${member.githubUser}.png`}
+                        alt={member.name}
+                      />
+                      <AvatarFallback className="text-[0.75rem] font-medium">
+                        {member.name
+                          .split(" ")
+                          .map((part) => part[0])
+                          .join("")
+                          .toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <span>Team</span>
+                </div>
+                <CardTitle className="text-lg">{member.name}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-muted-foreground flex-1 text-sm">
+                <p>{member.role}</p>
+                <div className="mt-4 flex gap-4">
+                  <a
+                    href={`https://github.com/${member.githubUser}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <GitHubLogoIcon className="h-5 w-5" />
+                  </a>
+                  <a
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <LinkedInLogoIcon className="h-5 w-5" />
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
