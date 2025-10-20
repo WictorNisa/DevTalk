@@ -1,7 +1,7 @@
+import { Card } from "@components/ui/card";
+
 const RightDashPanel = () => {
-  return (
-    <div className="flex h-full w-1/5 flex-col rounded-xl bg-[var(--surface-md-dark)]"></div>
-  );
+  return <Card className="flex h-full w-full"></Card>;
 };
 
 export default RightDashPanel;

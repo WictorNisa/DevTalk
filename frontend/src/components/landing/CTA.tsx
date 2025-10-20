@@ -1,9 +1,10 @@
-import { Github } from "lucide-react";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router";
+import { Button } from "../ui/button";
 
 export default function CTA() {
   return (
-    <section className="relative bg-[#0E1320] py-20 text-center text-white">
+    <section className="relative bg-[var(--background)] py-20 text-center text-white">
       <div className="container mx-auto px-6">
         <h2 className="text-3xl font-bold sm:text-4xl">
           Ready To Connect With Other Developers?
@@ -13,13 +14,17 @@ export default function CTA() {
         </p>
 
         <div className="mt-8 flex justify-center">
-          <Link
-            to="/login"
-            className="inline-flex items-center justify-center rounded-full bg-white/10 px-8 py-3 text-base font-semibold text-white transition hover:bg-white/20"
+          <Button
+            variant="outline"
+            asChild
+            size="lg"
+            className="rounded-md bg-white/10 text-white hover:bg-white/20"
           >
-            Sign in with GitHub
-            <Github className="ml-2 h-5 w-5" />
-          </Link>
+            <Link to="/login">
+              <GitHubLogoIcon className="h-5 w-5" />
+              Sign in with GitHub
+            </Link>
+          </Button>
         </div>
       </div>
 
