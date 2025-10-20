@@ -11,11 +11,11 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative -mt-28 flex min-h-[105vh] items-center justify-center overflow-hidden px-6 pt-24 text-center"
+      className="relative -mt-24 flex min-h-[101vh] items-center justify-center overflow-hidden px-6 pt-24 text-center"
     >
       {/* Background video loop */}
       <motion.video
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover brightness-[0.65] hue-rotate-[230deg] saturate-[0.35] dark:brightness-40 dark:saturate-40"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover brightness-[0.55] hue-rotate-[250deg] saturate-[0.35] dark:brightness-45"
         autoPlay
         muted
         loop
@@ -30,7 +30,7 @@ export default function Hero() {
       </motion.video>
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-90 mix-blend-color dark:bg-[var(--background)] dark:mix-blend-plus-darker"
+        className="pointer-events-none absolute inset-0 opacity-80 mix-blend-color dark:bg-[var(--background)] dark:mix-blend-plus-darker"
       />
       {/* Interactive particles */}
       <Particles
@@ -43,7 +43,7 @@ export default function Hero() {
       />
       <div className="relative z-10 max-w-3xl text-center">
         <h1 className="text-6xl font-extrabold tracking-tight text-white/90 sm:text-7xl">
-          <div className="relative mx-auto mb-8 w-22">
+          <div className="relative mx-auto mb-16 w-22">
             <div className="dark:to-background to-chart-3 absolute inset-3 bg-gradient-to-b from-transparent blur-xl dark:blur-lg" />
             <div className="dark:bg-background bg-foreground relative flex aspect-square items-center justify-center rounded-3xl shadow-[inset_0_4px_6px_rgba(0,200,200,0.15)] dark:shadow-[inset_0_4px_6px_rgba(0,200,200,0.15)]">
               <img

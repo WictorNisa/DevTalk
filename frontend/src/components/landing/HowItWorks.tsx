@@ -25,7 +25,7 @@ export default function HowItWorks() {
     <section id="how-it-works" className="border-b py-32">
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-3xl font-semibold sm:text-4xl">How it works</h2>
-        <p className="dark:text-primary/70 mt-3 text-base">
+        <p className="text-primary/70 mt-3 text-base">
           Getting started is simple.
         </p>
         <div className="mt-12 grid gap-8 sm:grid-cols-3">

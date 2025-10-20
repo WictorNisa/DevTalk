@@ -11,7 +11,7 @@ export default function CTA() {
         </h2>
 
         <p className="text-primary/70 mx-auto mt-3 max-w-2xl text-base">
-          Join DevTalk today and start networking
+          Join DevTalk today and start networking!
         </p>
 
         <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
