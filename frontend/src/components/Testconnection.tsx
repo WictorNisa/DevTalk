@@ -63,7 +63,7 @@ const Testconnection = () => {
         destination: "/app/chat",
         body: JSON.stringify({
           content: messageContent,
-          timestamp: new Date().toISOString,
+          timestamp: new Date().toISOString(),
         }),
       });
     }
