@@ -3,6 +3,7 @@ import LandingPage from "@/pages/LandingPage";
 import LoginPage from "@/pages/LoginPage";
 import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/NotFound";
+import Testconnection from "@/components/Testconnection";
 import { ROUTES } from "@/constants/routes";
 import ProtectedRoute from "@/components/routing/ProtectedRoute";
 import PublicRoute from "@/components/routing/PublicRoute";
@@ -13,6 +14,9 @@ const App = () => {
       <Routes>
         {/* Public Routes that doesn't need auth */}
         <Route path={ROUTES.HOME} element={<LandingPage />} />
+
+        {/* Test page for websocket demo */}
+        <Route path={ROUTES.TEST} element={<Testconnection />} />
 
         <Route
           path={ROUTES.LOGIN}
