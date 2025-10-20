@@ -9,7 +9,7 @@ export default function Features() {
           <h2 className="text-3xl font-semibold sm:text-4xl">
             Why Choose DevTalk?
           </h2>
-          <p className="dark:text-primary/70 mt-3 text-base">
+          <p className="text-primary/70 mt-3 text-base">
             Join a developer community built for sharing knowledge, learning and
             growth.
           </p>
@@ -23,9 +23,10 @@ export default function Features() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </div>
-                  <span>Feature</span>
+                  <CardTitle className="text-foreground text-lg">
+                    {title}
+                  </CardTitle>
                 </div>
-                <CardTitle className="text-lg">{title}</CardTitle>
               </CardHeader>
               <CardContent className="text-muted-foreground flex-1 text-sm">
                 <p>{desc}</p>
