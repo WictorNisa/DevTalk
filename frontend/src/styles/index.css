@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "./variables.css";
 @import "tw-animate-css";
-@import url("https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap");
-
 @custom-variant dark (&:is(.dark *));
 
 /* root full size */
