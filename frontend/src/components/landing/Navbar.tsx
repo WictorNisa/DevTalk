@@ -19,10 +19,10 @@ const navLinks = [
 
 export default function Navbar() {
   return (
-    <header className="dark:text-foreground bg-foreground/50 text-foreground sticky top-0 z-50 w-full border-b border-[var(--muted-foreground)]/30 backdrop-blur-md dark:border-[var(--border)]/70 dark:bg-[var(--background)]/40">
+    <header className="dark:text-foreground bg-foreground/50 text-foreground sticky top-0 z-50 w-full border-b border-(--muted-foreground)/30 backdrop-blur-md dark:border-(--border)/70 dark:bg-(--background)/40">
       <nav className="max-w-8xl mx-auto flex items-center justify-between px-5 py-5">
         <a href="#home" className="flex">
-          <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--foreground)]/50 transition-colors hover:border-[var(--)]/60 dark:border-none dark:bg-transparent">
+          <span className="bg-foreground/50 flex h-12 w-12 items-center justify-center rounded-lg transition-colors hover:border-(--)/60 dark:border-none dark:bg-transparent">
             <img src={Logo} className="h-8 w-8 invert" alt="DevTalk logo" />
           </span>
         </a>

@@ -21,7 +21,7 @@ export default function MeetTheTeam() {
             <Card key={githubUser || name} className="flex h-full flex-col">
               <CardContent className="flex flex-1 flex-col px-6 py-5 sm:py-6">
                 <div className="grid grid-cols-[auto_1fr] items-start gap-4 text-left">
-                  <div className="dark:bg-foreground/10 dark:border-primary/10 flex h-20 w-20 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--background)]/80">
+                  <div className="dark:bg-foreground/10 dark:border-primary/10 border-border flex h-20 w-20 items-center justify-center rounded-full border bg-(--background)/80">
                     <Avatar className="h-16 w-16 rounded-full">
                       <AvatarImage
                         src={`https://github.com/${githubUser}.png`}

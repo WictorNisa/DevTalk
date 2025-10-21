@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 
 export default function CTA() {
   return (
-    <section className="relative bg-[var(--background)] py-32 text-center">
+    <section className="bg-background relative py-32 text-center">
       <div className="container mx-auto px-6">
         <h2 className="text-3xl font-semibold sm:text-4xl">
           Ready To Connect With Other Developers?
