@@ -1,4 +1,4 @@
-import { Github, Linkedin } from "lucide-react";
+import { GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 
 const team = [
   {
@@ -35,9 +35,12 @@ const team = [
 
 export default function MeetTheTeam() {
   return (
-    <section id="team" className="bg-[#0B0E14] py-20 text-white">
+    <section
+      id="team"
+      className="bg-[var(--background)] py-20 text-[var(--foreground)]"
+    >
       <div className="container mx-auto px-6 text-center">
-        <h2 className="text-3xl font-bold sm:text-4xl">
+        <h2 className="text-2xl font-bold sm:text-4xl">
           The Team Behind DevTalk
         </h2>
         <p className="mt-3 text-white/70">
@@ -68,7 +71,7 @@ export default function MeetTheTeam() {
                   rel="noreferrer"
                   className="text-white/70 transition hover:text-white"
                 >
-                  <Github className="h-5 w-5" />
+                  <GitHubLogoIcon className="h-5 w-5" />
                 </a>
                 <a
                   href={member.linkedin}
@@ -76,7 +79,7 @@ export default function MeetTheTeam() {
                   rel="noreferrer"
                   className="text-white/70 transition hover:text-white"
                 >
-                  <Linkedin className="h-5 w-5" />
+                  <LinkedInLogoIcon className="h-5 w-5" />
                 </a>
               </div>
             </div>

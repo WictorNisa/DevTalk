@@ -1,8 +1,9 @@
-import { Github, Rss, MessageCircleCode } from "lucide-react";
+import { Rss, FileCode2 } from "lucide-react";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 const steps = [
   {
-    icon: Github,
+    icon: GitHubLogoIcon,
     title: "Sign in with GitHub",
     desc: "Log in with ease using your GitHub account.",
   },
@@ -12,7 +13,7 @@ const steps = [
     desc: "Find or create a channel for your favorite dev topics.",
   },
   {
-    icon: MessageCircleCode,
+    icon: FileCode2,
     title: "Share code & get help",
     desc: "Post snippets, ask questions, and learn from other developers in real time.",
   },
@@ -20,8 +21,11 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-[#0E1320] py-20 text-white">
-      <div className="container mx-auto px-6">
+    <section
+      id="how-it-works"
+      className="bg-[var(--background)] py-20 text-white"
+    >
+      <div className="container mx-auto px-6 text-center">
         <h2 className="text-3xl font-bold sm:text-4xl">How it works</h2>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-3">

@@ -2,8 +2,8 @@ import { features } from "@/data/features";
 
 export default function Features() {
   return (
-    <section id="features" className="bg-[#0E1320] py-20">
-      <div className="container mx-auto px-4">
+    <section id="features" className="bg-[var(--background)] py-20">
+      <div className="container mx-auto px-6 text-center">
         <h2 className="text-3xl font-bold md:text-4xl">Why Choose DevTalk?</h2>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map(({ icon: Icon, title, desc }) => (

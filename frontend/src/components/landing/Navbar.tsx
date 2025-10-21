@@ -13,7 +13,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#0B0E14]/80 backdrop-blur">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[oklch(0.13_0.028_261.692)]/80 backdrop-blur-sm">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         {/* Logo */}
         <a href="#home" className="flex items-center gap-2">
