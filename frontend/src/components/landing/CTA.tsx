@@ -19,7 +19,7 @@ export default function CTA() {
             variant="outline"
             asChild
             size="lg"
-            className="dark:bg-background dark:hover:bg-accent w-auto rounded-md sm:w-auto"
+            className="w-auto rounded-lg sm:w-auto"
           >
             <Link to="/login">
               <GitHubLogoIcon className="h-5 w-5" />

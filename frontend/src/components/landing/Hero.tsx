@@ -63,7 +63,7 @@ export default function Hero() {
             variant="outline"
             asChild
             size="lg"
-            className="dark:bg-background dark:hover:bg-secondary bg-background hover:bg-ring border-ring hover:border-secondary w-auto rounded-lg sm:w-auto"
+            className="w-auto rounded-lg sm:w-auto"
           >
             <Link to="/login">
               <GitHubLogoIcon className="h-5 w-5" />

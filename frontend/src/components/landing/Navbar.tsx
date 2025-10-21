@@ -68,7 +68,7 @@ export default function Navbar() {
               <Button
                 variant="outline"
                 size="icon"
-                className="border-ring md:hidden"
+                className="md:hidden"
                 aria-label="Open navigation menu"
               >
                 <HamburgerMenuIcon className="h-5 w-5" />
