@@ -35,7 +35,7 @@ public class PresenceService {
         if(sessionId == null) return Collections.emptySet();
         Set<String> removed = subscriptions.remove(sessionId);
         sessions.remove(sessionId);
-        return removed == null ? Collections.emptySet() : Collections.unmodifiableSet(removed);
+        return removed == null ? Collections.emptySet() : new java.util.HashSet<>(removed);
     }
 
     public String getUsername(String sessionId){
