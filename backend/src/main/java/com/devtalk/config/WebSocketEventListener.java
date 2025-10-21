@@ -61,8 +61,6 @@ public class WebSocketEventListener {
             simpMessagingTemplate.convertAndSend("/topic/users", message);
         }
 
-
-
     }
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
@@ -100,4 +98,3 @@ public class WebSocketEventListener {
         }
     }
 }
-

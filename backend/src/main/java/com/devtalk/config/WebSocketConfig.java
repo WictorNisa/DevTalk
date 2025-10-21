@@ -4,7 +4,6 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.config.Task;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -35,6 +34,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         TaskScheduler taskScheduler = taskSchedulerProvider.getIfAvailable();
         if (taskScheduler != null) {
             simpleBroker.setTaskScheduler(taskScheduler);
+            // setHeartbeatValue([send interval, receive interval] in milliseconds)
             simpleBroker.setHeartbeatValue(new long[]{10000, 10000});
         } else {
             simpleBroker.setHeartbeatValue(new long[]{0, 0});

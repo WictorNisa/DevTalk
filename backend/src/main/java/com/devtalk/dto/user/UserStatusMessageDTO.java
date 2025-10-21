@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class UserStatusMessageDTO extends UserBaseDTO {
 
-    public ConnectionType connectionType;
+    private ConnectionType connectionType;
     private String sessionId;
     private String destination;
     private long timestamp;
