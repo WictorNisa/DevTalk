@@ -11,4 +11,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class MessageResponseDTO extends MessageBaseDTO {
     private String content;
+    private String senderDisplayName;
+    private Long timestamp;
 }
