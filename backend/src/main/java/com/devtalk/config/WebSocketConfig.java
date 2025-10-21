@@ -34,6 +34,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         TaskScheduler taskScheduler = taskSchedulerProvider.getIfAvailable();
         if (taskScheduler != null) {
             simpleBroker.setTaskScheduler(taskScheduler);
+            // setHeartbeatValue([send interval, receive interval] in milliseconds)
             simpleBroker.setHeartbeatValue(new long[]{10000, 10000});
         } else {
             simpleBroker.setHeartbeatValue(new long[]{0, 0});
