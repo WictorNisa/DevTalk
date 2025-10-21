@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "./variables.css";
 @import "tw-animate-css";
-
 @custom-variant dark (&:is(.dark *));
 
 /* root full size */
@@ -126,6 +125,17 @@ body,
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Fira Mono", monospace;
+  }
+  p {
+    font-family: "Noto Sans", sans-serif;
   }
 }
