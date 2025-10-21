@@ -1,10 +1,6 @@
-package com.devtalk.dto;
+package com.devtalk.dto.user;
 
 import com.devtalk.dto.base.UserBaseDTO;
-import com.devtalk.enums.Language;
-import com.devtalk.enums.PresenceStatus;
-import com.devtalk.enums.Role;
-import com.devtalk.enums.Theme;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

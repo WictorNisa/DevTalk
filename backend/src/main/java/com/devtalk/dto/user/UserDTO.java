@@ -1,4 +1,4 @@
-package com.devtalk.dto;
+package com.devtalk.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
