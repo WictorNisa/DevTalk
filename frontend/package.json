@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@stomp/stompjs": "^7.2.1",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
@@ -24,6 +25,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router": "^7.9.3",
+    "sockjs-client": "^1.6.1",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.14",
     "zustand": "^5.0.8"
@@ -33,6 +35,7 @@
     "@types/node": "^24.6.0",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
+    "@types/sockjs-client": "^1.5.4",
     "@vitejs/plugin-react-swc": "^4.1.0",
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",
