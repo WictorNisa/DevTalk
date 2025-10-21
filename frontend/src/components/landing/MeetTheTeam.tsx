@@ -8,7 +8,7 @@ export default function MeetTheTeam() {
   return (
     <section id="team" className="border-b py-24 sm:py-32">
       <div className="container mx-auto px-6 text-center">
-        <h2 className="text-3xl font-bold sm:text-4xl">
+        <h2 className="text-2xl font-bold sm:text-4xl">
           The Team Behind DevTalk
         </h2>
         <p className="text-primary/70 mt-3 text-base">
