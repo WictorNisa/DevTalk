@@ -3,6 +3,7 @@ export const ROUTES = {
     LOGIN: '/login',
     DASHBOARD: '/dashboard',
     CHANNEL: "/channel/:id",
-    NOT_FOUND: '/404'
+    NOT_FOUND: '/404',
+    TEST: '/test'
 } as const
 

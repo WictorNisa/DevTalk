@@ -1,6 +1,8 @@
+import { Card } from "@/components/ui/card";
+
 const CenterTopWidget = () => {
   return (
-    <div className="flex h-full w-full flex-col rounded-xl border border-gray-900 bg-[var(--main-bg-color)]"></div>
+    <Card className="flex h-full w-full flex-col bg-[var(--background)]"></Card>
   );
 };
 
