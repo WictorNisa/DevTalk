@@ -44,6 +44,6 @@ public class PresenceService {
 
     public Set<String> getSubscriptions(String sessionId){
         Set<String> subSet = subscriptions.get(sessionId);
-        return subSet == null ? Collections.emptySet() : Collections.unmodifiableSet(subSet);
+        return subSet == null ? Collections.emptySet() : new HashSet<>(subSet);
     }
 }
