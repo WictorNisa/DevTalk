@@ -1,4 +1,4 @@
-package com.devtalk.dto;
+package com.devtalk.dto.messages;
 
 import com.devtalk.dto.base.MessageBaseDTO;
 import com.devtalk.enums.MessageReactionType;
