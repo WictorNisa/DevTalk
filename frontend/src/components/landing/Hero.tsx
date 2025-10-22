@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { motion } from "framer-motion";
 import { Particles } from "@/components/ui/animations/particles";
 import { Link } from "react-router";
@@ -8,6 +10,7 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { ChevronDown } from "lucide-react";
 
 export default function Hero() {
+  const { t } = useTranslation();
   return (
     <section
       id="home"
@@ -48,7 +51,7 @@ export default function Hero() {
           transition={{ delay: 0.3 }}
           className="text-6xl font-extrabold tracking-tight text-white/90 sm:text-7xl"
         >
-          <div className="relative mx-auto mb-16 w-22">
+          <div className="relative mx-auto mb-14 w-22">
             <div className="dark:to-background to-chart-3 absolute inset-3 bg-linear-to-b from-transparent blur-xl dark:blur-lg" />
             <div className="dark:bg-background bg-foreground relative flex aspect-square items-center justify-center rounded-3xl shadow-[inset_0_4px_6px_rgba(0,200,200,0.15)] dark:shadow-[inset_0_4px_6px_rgba(0,200,200,0.15)]">
               <img
@@ -58,7 +61,7 @@ export default function Hero() {
               />
             </div>
           </div>
-          DevTalk
+          {t("hero.title")}
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 75 }}
@@ -66,7 +69,7 @@ export default function Hero() {
           transition={{ delay: 0.2 }}
           className="mt-4 text-lg text-white/70 sm:text-2xl"
         >
-          Talk code. Share wisdom. Grow together.
+          {t("hero.subtitle")}
         </motion.p>
         <motion.div
           whileHover={{ scale: 1.02 }}
@@ -80,7 +83,7 @@ export default function Hero() {
           >
             <Link to="/login">
               <GitHubLogoIcon className="h-5 w-5" />
-              Sign In With GitHub
+              {t("hero.ctaGithub")}
             </Link>
           </Button>
         </motion.div>

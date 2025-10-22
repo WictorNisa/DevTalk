@@ -4,17 +4,19 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 
 import { team } from "@/data/team";
+import { useTranslation } from "react-i18next";
 
 export default function MeetTheTeam() {
+  const { t } = useTranslation();
+
   return (
     <section id="team" className="border-b py-24 sm:py-32">
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-2xl font-bold sm:text-4xl">
-          The Team Behind DevTalk
+          {t("team.title")}
         </h2>
         <p className="text-primary/70 mt-3 text-base">
-          A small team of passionate dev-students building a place for coders to
-          connect, learn, and grow.
+          {t("team.description")}
         </p>
 
         <motion.div
@@ -48,7 +50,7 @@ export default function MeetTheTeam() {
                         {name}
                       </CardTitle>
                       <p className="text-muted-foreground mt-1 text-sm">
-                        {role}
+                        {t(`team.roles.${role}`)}
                       </p>
                     </div>
                     <div className="text-muted-foreground mt-2 flex gap-4">
