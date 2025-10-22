@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { features } from "@/data/features";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -6,16 +7,18 @@ export default function Features() {
     <section id="features" className="border-b py-32">
       <div className="mx-auto w-full max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-semibold sm:text-4xl">
-            Why Choose DevTalk?
-          </h2>
+          <h2 className="text-3xl font-semibold sm:text-4xl">Features</h2>
           <p className="text-primary/70 mt-3 text-base">
             Join a developer community built for sharing knowledge, learning and
             growth.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-8 sm:grid-cols-3">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className="mt-12 grid gap-8 sm:grid-cols-3"
+        >
           {features.map(({ icon: Icon, title, desc }) => (
             <Card key={title} className="flex h-full flex-col text-left">
               <CardHeader className="space-y-3">
@@ -33,7 +36,7 @@ export default function Features() {
               </CardContent>
             </Card>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

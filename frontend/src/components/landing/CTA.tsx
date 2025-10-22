@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router";
 import { Button } from "../ui/button";
@@ -14,7 +15,10 @@ export default function CTA() {
           Join DevTalk today and start networking!
         </p>
 
-        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+        <motion.div
+          whileHover={{ scale: 1.02 }}
+          className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6"
+        >
           <Button
             variant="outline"
             asChild
@@ -26,7 +30,7 @@ export default function CTA() {
               Sign In With GitHub
             </Link>
           </Button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

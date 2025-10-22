@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
@@ -16,7 +17,11 @@ export default function MeetTheTeam() {
           connect, learn, and grow.
         </p>
 
-        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {team.map(({ name, role, githubUser, linkedin }) => (
             <Card key={githubUser || name} className="flex h-full flex-col">
               <CardContent className="flex flex-1 flex-col px-6 py-5 sm:py-6">
@@ -69,7 +74,7 @@ export default function MeetTheTeam() {
               </CardContent>
             </Card>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Rss, FileCode2 } from "lucide-react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,7 +29,11 @@ export default function HowItWorks() {
         <p className="text-primary/70 mt-3 text-base">
           Getting started is simple.
         </p>
-        <div className="mt-12 grid gap-8 sm:grid-cols-3">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className="mt-12 grid gap-8 sm:grid-cols-3"
+        >
           {steps.map(({ icon: Icon, title, desc }, i) => (
             <Card key={title} className="flex h-full flex-col text-left">
               <CardHeader className="space-y-3">
@@ -45,7 +50,7 @@ export default function HowItWorks() {
               </CardContent>
             </Card>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
