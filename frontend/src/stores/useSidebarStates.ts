@@ -1,6 +1,5 @@
 import { create } from "zustand";
 
-
 type States = {
     isLeftCollapsed: boolean;
     isRightCollapsed: boolean;

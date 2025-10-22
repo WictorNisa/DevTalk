@@ -28,7 +28,7 @@ export const CollapsiblePanel = ({ children, side }: CollapsiblePanelProps) => {
     }
   };
 
-  const expandedWidth = "20%";
+  const expandedWidth = "12%";
   const collapsedWidth = side === "left" ? "3%" : "3%";
 
   const toggleButton = (
