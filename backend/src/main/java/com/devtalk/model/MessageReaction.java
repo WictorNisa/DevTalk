@@ -21,7 +21,7 @@ public class MessageReaction extends BaseEntity {
 
 
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "emoji", nullable = false)
+    @Column(name = "emoji", nullable = false)
     private MessageReactionType type;
 
     @NotNull
