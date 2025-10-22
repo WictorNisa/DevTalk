@@ -23,7 +23,7 @@ public class Group extends BaseEntity {
     @NotBlank
     @Size(max = 255)
     @Column(nullable = false, unique = true, length = 255)
-    private String groupname;
+    private String groupName;
 
     @OneToMany(mappedBy = "group", 
                cascade = {CascadeType.PERSIST, CascadeType.MERGE}, 

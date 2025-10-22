@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>WS Test</title>
+</head>
+<body>
+<h3>WebSocket STOMP test</h3>
+<button id="connectBtn">Connect</button>
+<button id="disconnectBtn" disabled>Disconnect</button>
+<button id="pingBtn" disabled>Send Ping</button>
+<button id="chatBtn" disabled>Send Chat to /topic/room/1</button>
+<pre id="log" style="height:300px;overflow:auto;border:1px solid #ccc;padding:8px"></pre>
+
+<!-- SockJS + stompjs (stompjs 2.x for Stomp.over) -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+<script>
+    const logEl = document.getElementById('log');
+    function log(...args){ logEl.textContent += args.map(a => (typeof a === 'string' ? a : JSON.stringify(a))).join(' ') + '\n'; logEl.scrollTop = logEl.scrollHeight; }
+
+    let client = null;
+
+    document.getElementById('connectBtn').onclick = () => {
+        const socket = new SockJS('http://localhost:8080/ws');
+        client = Stomp.over(socket);
+        client.debug = () => {}; // disable verbose logging
+
+        // If you need authentication, set headers here:
+        // const connectHeaders = { Authorization: 'Bearer <YOUR_TOKEN>' };
+        const connectHeaders = {}; // or {} for no auth
+
+        client.connect(connectHeaders, frame => {
+            log('Connected:', frame && frame.headers ? frame.headers['user-name'] || frame.headers['session'] : frame);
+
+            // subscribe to topics
+            client.subscribe('/topic/pong', msg => {
+                log('PONG:', msg.body ? JSON.parse(msg.body) : msg.body);
+            });
+            client.subscribe('/topic/errors', msg => {
+                log('ERROR:', msg.body ? JSON.parse(msg.body) : msg.body);
+            });
+            client.subscribe('/topic/room/1', msg => {
+                log('ROOM/1:', msg.body ? JSON.parse(msg.body) : msg.body);
+            });
+
+            document.getElementById('connectBtn').disabled = true;
+            document.getElementById('disconnectBtn').disabled = false;
+            document.getElementById('pingBtn').disabled = false;
+            document.getElementById('chatBtn').disabled = false;
+        }, error => {
+            log('Connect error:', error);
+        });
+    };
+
+    document.getElementById('disconnectBtn').onclick = () => {
+        if (client) {
+            client.disconnect(() => {
+                log('Disconnected');
+                document.getElementById('connectBtn').disabled = false;
+                document.getElementById('disconnectBtn').disabled = true;
+                document.getElementById('pingBtn').disabled = true;
+                document.getElementById('chatBtn').disabled = true;
+            });
+        }
+    };
+
+    document.getElementById('pingBtn').onclick = () => {
+        if (!client || !client.connected) { log('Not connected'); return; }
+        const payload = {
+            content: null,
+            userId: 123,
+            channelId: 1,
+            threadId: null,
+            parentMessageId: null
+        };
+        client.send('/app/ping', { 'content-type': 'application/json' }, JSON.stringify(payload));
+        log('Sent /app/ping', payload);
+    };
+
+    document.getElementById('chatBtn').onclick = () => {
+        if (!client || !client.connected) { log('Not connected'); return; }
+        const chat = {
+            destination: '/topic/room/1',
+            content: 'Hello from test page',
+            userId: 123,
+            channelId: 1
+        };
+        client.send('/app/chat.send', { 'content-type': 'application/json' }, JSON.stringify(chat));
+        log('Sent /app/chat.send', chat);
+    };
+</script>
+</body>
+</html>

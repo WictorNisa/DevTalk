@@ -1,0 +1,16 @@
+package com.devtalk.dto.messages;
+
+import com.devtalk.dto.base.MessageBaseDTO;
+import com.devtalk.enums.MessageReactionType;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class MessageReactionDTO extends MessageBaseDTO {
+    private Long reactionCount;
+    private MessageReactionType reactionType;
+}

@@ -11,4 +11,7 @@ export default defineConfig({
     tsconfigPaths(), // Path plugin to reduce redundancy between vite config and tsconfig
     svgr(), // Plugin to properly load SVG to be manipulated with Tailwind CSS
   ],
+  define: {
+    global: 'globalThis'
+  }
 });
