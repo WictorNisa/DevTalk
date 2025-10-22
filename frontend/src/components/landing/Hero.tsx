@@ -21,9 +21,9 @@ export default function Hero() {
         loop
         playsInline
         preload="none"
-        initial={{ scale: 1.2, opacity: 0 }}
+        initial={{ scale: 1.5, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
+        transition={{ duration: 2, ease: "easeOut" }}
       >
         <source src="/media/hero-loop.mp4" type="video/mp4" />
         <source src="/media/hero-loop.webm" type="video/webm" />
