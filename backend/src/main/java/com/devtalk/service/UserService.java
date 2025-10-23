@@ -1,6 +1,5 @@
 package com.devtalk.service;
 
-import com.devtalk.dto.base.UserBaseDTO;
 import com.devtalk.dto.user.UserResponseDTO;
 import com.devtalk.enums.PresenceStatus;
 import com.devtalk.mappers.UserMapper;

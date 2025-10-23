@@ -28,7 +28,11 @@ public class WebSocketEventListener {
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
         SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
-        String username = headerAccessor.getUser() != null ? headerAccessor.getUser().getName() : "Unknown";
+        String username = "Unknown";
+        var user = headerAccessor.getUser();
+        if (user != null) {
+            username = user.getName();
+        }
         presenceService.registerSession(sessionId, username);
         log.info("WebSocket connected. Session ID: {}, user: {}", sessionId, username);
 
@@ -47,7 +51,11 @@ public class WebSocketEventListener {
         SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
         String destination = headerAccessor.getDestination();
-        String username = headerAccessor.getUser() != null ? headerAccessor.getUser().getName() : "Unknown";
+        String username = "Unknown";
+        var user = headerAccessor.getUser();
+        if (user != null) {
+            username = user.getName();
+        }
         if(destination != null){
             presenceService.addSubscription(sessionId, destination);
             log.info("Session {} subscribed to {}", sessionId, destination);

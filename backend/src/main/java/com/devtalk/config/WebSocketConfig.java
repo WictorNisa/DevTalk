@@ -2,6 +2,7 @@ package com.devtalk.config;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -20,7 +21,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
+    public void registerStompEndpoints(@NonNull StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .addInterceptors(new HttpSessionHandshakeInterceptor())
                 .setAllowedOrigins("http://localhost:5173", "http://localhost:8080", "http://localhost:63342")
@@ -28,7 +29,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
+    public void configureMessageBroker(@NonNull MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/app");
         var simpleBroker = registry.enableSimpleBroker("/topic", "/queue");
         TaskScheduler taskScheduler = taskSchedulerProvider.getIfAvailable();

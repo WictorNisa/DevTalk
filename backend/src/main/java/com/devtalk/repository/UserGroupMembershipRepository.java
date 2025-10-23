@@ -6,10 +6,12 @@ import com.devtalk.model.UserGroupMembership;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface UserGroupMembershipRepository extends JpaRepository<UserGroupMembership, Long> {
 
     @Query("select m from UserGroupMembership m join fetch m.user u join fetch m.group g where m.id = :id")

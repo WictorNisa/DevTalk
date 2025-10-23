@@ -5,13 +5,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "message_reactions",
-       uniqueConstraints = @UniqueConstraint(columnNames = {"message_id", "user_id", "emoji"}))
+       uniqueConstraints = @UniqueConstraint(columnNames = {"message_id", "user_id", "reaction_type"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,8 +19,8 @@ public class MessageReaction extends BaseEntity {
 
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "emoji", nullable = false)
-    private MessageReactionType type;
+    @Column(name = "reaction_type", nullable = false)
+    private MessageReactionType reactionType;
 
     @NotNull
     @ManyToOne(optional = false)
