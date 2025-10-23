@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { useEffect } from "react";
 import LandingPage from "@/pages/LandingPage";
 // import LoginPage from "@/pages/LoginPage";
 import Dashboard from "@/pages/Dashboard";
@@ -7,26 +8,38 @@ import Testconnection from "@/components/landing/Testconnection";
 import { ROUTES } from "@/constants/routes";
 import ProtectedRoute from "@/components/routing/ProtectedRoute";
 import PublicRoute from "@/components/routing/PublicRoute";
+import { useThemeStore } from "./stores/useThemeStore";
 
 const App = () => {
+  const theme = useThemeStore((state) => state.theme);
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    root.classList.remove("light", "dark");
+
+    root.classList.add(theme);
+  }, [theme]);
+
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public Routes that doesn't need auth */}
-        <Route path={ROUTES.HOME} element={<LandingPage />} />
+    <div className={theme}>
+      <BrowserRouter>
+        <Routes>
+          {/* Public Routes that doesn't need auth */}
+          <Route path={ROUTES.HOME} element={<LandingPage />} />
 
-        {/* Test page for websocket demo */}
-        <Route path={ROUTES.TEST} element={<Testconnection />} />
+          {/* Test page for websocket demo */}
+          <Route path={ROUTES.TEST} element={<Testconnection />} />
 
-        <Route
-          path={ROUTES.HOME}
-          element={
-            <PublicRoute>
-              <LandingPage />
-            </PublicRoute>
-          }
-        />
-        {/* <Route
+          <Route
+            path={ROUTES.HOME}
+            element={
+              <PublicRoute>
+                <LandingPage />
+              </PublicRoute>
+            }
+          />
+          {/* <Route
           path={ROUTES.LOGIN}
           element={
             <PublicRoute>
@@ -35,30 +48,31 @@ const App = () => {
           }
         /> */}
 
-        {/* Protected Routes that require AUTH  */}
-        <Route
-          path={ROUTES.DASHBOARD}
-          element={
-            //<ProtectedRoute>
-            <Dashboard />
-            //</ProtectedRoute>
-          }
-        />
-
-        <Route
-          path={ROUTES.CHANNEL}
-          element={
-            <ProtectedRoute>
+          {/* Protected Routes that require AUTH  */}
+          <Route
+            path={ROUTES.DASHBOARD}
+            element={
+              //<ProtectedRoute>
               <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+              //</ProtectedRoute>
+            }
+          />
 
-        {/* 404 NOT FOUND */}
-        <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
-        <Route path="*" element={<Navigate to="/404" replace />} />
-      </Routes>
-    </BrowserRouter>
+          <Route
+            path={ROUTES.CHANNEL}
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 404 NOT FOUND */}
+          <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/404" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 };
 
