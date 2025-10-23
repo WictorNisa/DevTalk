@@ -3,11 +3,13 @@ package com.devtalk.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.devtalk.model.Group;
 
 import java.util.Optional;
 
+@Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
     @Query("select g from Group g left join fetch g.channels where g.id = :id")
