@@ -26,7 +26,6 @@ export type FeatureKey = (typeof FEATURE_KEYS)[number];
 
 type IconComponent =
   | ComponentType<SVGProps<SVGSVGElement>>
-  // allow forward-ref components with any props (covers Radix, lucide, etc.)
   | ForwardRefExoticComponent<any & RefAttributes<SVGSVGElement>>;
 
 type FeatureItem = {

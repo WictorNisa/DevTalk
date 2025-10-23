@@ -10,16 +10,16 @@ export default function CTA() {
   return (
     <section className="bg-background relative py-32 text-center">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-semibold sm:text-4xl">
-          {t("cta.title")}
-        </h2>
+        <h2 className="text-3xl font-semibold sm:text-4xl">{t("cta.title")}</h2>
 
         <p className="text-primary/70 mx-auto mt-3 max-w-2xl text-base">
           {t("cta.description")}
         </p>
 
         <motion.div
-          whileHover={{ scale: 1.02 }}
+          initial={{ opacity: 0 }}
+          transition={{ ease: "easeIn", duration: 0.35 }}
+          whileInView={{ opacity: 1 }}
           className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6"
         >
           <Button
