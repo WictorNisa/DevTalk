@@ -1,9 +1,11 @@
 package com.devtalk.controller;
 
 import com.devtalk.dto.base.MessageBaseDTO;
+import com.devtalk.dto.channel.ChannelResponseDTO;
 import com.devtalk.dto.messages.ChatMessageDTO;
 import com.devtalk.dto.messages.MessageResponseDTO;
 import com.devtalk.dto.messages.PingPongMessageDTO;
+import com.devtalk.dto.user.UserResponseDTO;
 import com.devtalk.mappers.MessageMapper;
 import com.devtalk.model.Channel;
 import com.devtalk.model.Message;
@@ -57,17 +59,16 @@ public class ChatController {
                 sendErrorToUser(principal, "UserId is required");
                 return;
             }
-            User user = userService.getUserById(message.getUserId());
+            UserResponseDTO user = userService.getUserDTOById(message.getUserId());
 
             if (message.getChannelId() == null) {
                 log.warn("Message received without channelId");
                 sendErrorToUser(principal, "ChannelId is required");
                 return;
             }
-            Channel channel = channelService.getChannelById(message.getChannelId());
-            Message savedMessage = messageService.saveMessage(message, user, channel);
-            MessageResponseDTO response = messageMapper.toResponseDTO(savedMessage);
-            simpMessagingTemplate.convertAndSend(message.getDestination(), response);
+            ChannelResponseDTO channel = channelService.getChannelDTOById(message.getChannelId());
+            MessageResponseDTO savedMessage = messageService.saveMessage(message, user, channel);
+            simpMessagingTemplate.convertAndSend(message.getDestination(), savedMessage);
             log.info("Broadcasted message {} from user {} to {}", savedMessage.getId(), user.getDisplayName(), message.getDestination());
 
         } catch (RuntimeException e) {

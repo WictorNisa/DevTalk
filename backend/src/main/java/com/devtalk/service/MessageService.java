@@ -1,8 +1,12 @@
 package com.devtalk.service;
 
+import com.devtalk.dto.channel.ChannelResponseDTO;
 import com.devtalk.dto.messages.ChatMessageDTO;
 import com.devtalk.dto.messages.MessageResponseDTO;
+import com.devtalk.dto.user.UserResponseDTO;
+import com.devtalk.mappers.ChannelMapper;
 import com.devtalk.mappers.MessageMapper;
+import com.devtalk.mappers.UserMapper;
 import com.devtalk.model.Channel;
 import com.devtalk.model.Message;
 import com.devtalk.model.User;
@@ -26,14 +30,18 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
     private final MessageMapper messageMapper;
+    private final UserMapper userMapper;
+    private final ChannelMapper channelMapper;
 
 
     @Transactional
-    public Message saveMessage(ChatMessageDTO dto, User user, Channel channel) {
-        Message message = messageMapper.toEntity(dto, user, channel);
+    public MessageResponseDTO saveMessage(ChatMessageDTO dto, UserResponseDTO user, ChannelResponseDTO channel) {
+        Message message = messageMapper.toEntity(dto);
+        message.setUser(userMapper.toEntity(user));
+        message.setChannel(channelMapper.toEntity(channel));
         Message saved = messageRepository.save(message);
         log.info("Saved message {} from user {} to channel {}", saved.getId(), user.getId(), channel.getId());
-        return saved;
+        return messageMapper.toResponseDTO(saved);
     }
 
 

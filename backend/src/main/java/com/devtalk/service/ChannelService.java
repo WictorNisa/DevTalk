@@ -40,6 +40,12 @@ public class ChannelService {
     }
 
     @Transactional(readOnly = true)
+    public ChannelResponseDTO getChannelDTOById(Long channelId) {
+        Channel channel = getChannelById(channelId);
+        return channelMapper.toResponseDTO(channel);
+    }
+
+    @Transactional(readOnly = true)
     public List<ChannelResponseDTO> getChannelsByGroupId(Long groupId) {
         return channelRepository.findByGroupIdWithGroup(groupId).stream()
                 .map(channelMapper::toResponseDTO)
