@@ -64,6 +64,7 @@ public class ChannelService {
             List<MessageResponseDTO> messageDTOs = channel.getMessages().stream()
                     .map(messageMapper::toResponseDTO)
                     .toList();
+            channelMessagesDTO.setMessages(messageDTOs);
         }
         return channelMessagesDTO;
     }
