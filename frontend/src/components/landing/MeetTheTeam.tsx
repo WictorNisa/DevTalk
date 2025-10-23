@@ -1,27 +1,34 @@
+import { motion } from "framer-motion";
 import { GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 
 import { team } from "@/data/team";
+import { useTranslation } from "react-i18next";
 
 export default function MeetTheTeam() {
+  const { t } = useTranslation();
+
   return (
     <section id="team" className="border-b py-24 sm:py-32">
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-2xl font-bold sm:text-4xl">
-          The Team Behind DevTalk
+          {t("team.title")}
         </h2>
         <p className="text-primary/70 mt-3 text-base">
-          A small team of passionate dev-students building a place for coders to
-          connect, learn, and grow.
+          {t("team.description")}
         </p>
 
-        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {team.map(({ name, role, githubUser, linkedin }) => (
             <Card key={githubUser || name} className="flex h-full flex-col">
               <CardContent className="flex flex-1 flex-col px-6 py-5 sm:py-6">
                 <div className="grid grid-cols-[auto_1fr] items-start gap-4 text-left">
-                  <div className="dark:bg-foreground/10 dark:border-primary/10 flex h-20 w-20 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--background)]/80">
+                  <div className="dark:bg-foreground/10 dark:border-primary/10 border-border flex h-20 w-20 items-center justify-center rounded-full border bg-(--background)/80">
                     <Avatar className="h-16 w-16 rounded-full">
                       <AvatarImage
                         src={`https://github.com/${githubUser}.png`}
@@ -43,7 +50,7 @@ export default function MeetTheTeam() {
                         {name}
                       </CardTitle>
                       <p className="text-muted-foreground mt-1 text-sm">
-                        {role}
+                        {t(`team.roles.${role}`)}
                       </p>
                     </div>
                     <div className="text-muted-foreground mt-2 flex gap-4">
@@ -69,7 +76,7 @@ export default function MeetTheTeam() {
               </CardContent>
             </Card>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

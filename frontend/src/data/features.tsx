@@ -1,41 +1,39 @@
+import type { ComponentType, SVGProps } from "react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import {
-  MessagesSquare,
-  Hash,
-  SquareCode,
-  ShieldCheck,
-  Bell,
-} from "lucide-react";
+import { MessagesSquare, Hash, SquareCode, ShieldCheck, Bell } from "lucide-react";
 
-export const features = [
+export const FEATURE_KEYS = ["realtime", "threads", "snippets", "security", "notifications", "github"] as const;
+
+export type FeatureKey = (typeof FEATURE_KEYS)[number];
+
+type FeatureItem = {
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
+  key: FeatureKey;
+};
+
+export const features: FeatureItem[] = [
   {
     icon: MessagesSquare,
-    title: "Real-time chat",
-    desc: "Fast channels and direct messages powered by WebSocket.",
+    key: "realtime",
   },
   {
     icon: Hash,
-    title: "Threads & channels",
-    desc: "Keep discussions organized by topic and team.",
+    key: "threads",
   },
   {
     icon: SquareCode,
-    title: "Code snippets",
-    desc: "Share formatted, syntax-highlighted code directly in chat.",
+    key: "snippets",
   },
   {
     icon: ShieldCheck,
-    title: "Security",
-    desc: "Protected with Spring Security and JWT under the hood.",
+    key: "security",
   },
   {
     icon: Bell,
-    title: "Mentions & notifications",
-    desc: "Get notified instantly when someone mentions you or your channel.",
+    key: "notifications",
   },
   {
     icon: GitHubLogoIcon,
-    title: "GitHub SSO",
-    desc: "Seamless sign-in using your GitHub account via OAuth.",
+    key: "github",
   },
 ];
