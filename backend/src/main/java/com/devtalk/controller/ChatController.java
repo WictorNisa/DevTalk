@@ -35,7 +35,6 @@ public class ChatController {
     @MessageMapping("/ping")
     @SendTo("/topic/pong")
     public PingPongMessageDTO handlePing(MessageBaseDTO pingMessage, Principal principal) {
-        String user = principal != null ? principal.getName() : "Unknown";
         return PingPongMessageDTO.builder()
                 .userId(pingMessage.getUserId())
                 .channelId(pingMessage.getChannelId())
