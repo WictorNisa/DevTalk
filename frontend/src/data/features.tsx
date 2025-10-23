@@ -1,13 +1,36 @@
-import type { ComponentType, SVGProps } from "react";
+import type {
+  ComponentType,
+  SVGProps,
+  RefAttributes,
+  ForwardRefExoticComponent,
+} from "react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { MessagesSquare, Hash, SquareCode, ShieldCheck, Bell } from "lucide-react";
+import {
+  MessagesSquare,
+  Hash,
+  SquareCode,
+  ShieldCheck,
+  Bell,
+} from "lucide-react";
 
-export const FEATURE_KEYS = ["realtime", "threads", "snippets", "security", "notifications", "github"] as const;
+export const FEATURE_KEYS = [
+  "realtime",
+  "threads",
+  "snippets",
+  "security",
+  "notifications",
+  "github",
+] as const;
 
 export type FeatureKey = (typeof FEATURE_KEYS)[number];
 
+type IconComponent =
+  | ComponentType<SVGProps<SVGSVGElement>>
+  // allow forward-ref components with any props (covers Radix, lucide, etc.)
+  | ForwardRefExoticComponent<any & RefAttributes<SVGSVGElement>>;
+
 type FeatureItem = {
-  icon: ComponentType<SVGProps<SVGSVGElement>>;
+  icon: IconComponent;
   key: FeatureKey;
 };
 
