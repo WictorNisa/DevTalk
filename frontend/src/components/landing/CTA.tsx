@@ -18,7 +18,7 @@ export default function CTA() {
 
         <motion.div
           initial={{ opacity: 0 }}
-          transition={{ ease: "easeIn", duration: 0.35 }}
+          transition={{ ease: "easeIn", duration: 0.4 }}
           whileInView={{ opacity: 1 }}
           className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6"
         >
