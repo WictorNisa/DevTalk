@@ -42,6 +42,7 @@ public class UserService {
         return saved;
     }
 
+    //Internal use
     @Transactional(readOnly = true)
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
@@ -52,22 +53,6 @@ public class UserService {
     public UserResponseDTO getUserDTOById(Long userId) {
         User user = getUserById(userId);
         return userMapper.toDTO(user);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<User> findUserById(Long userId) {
-        return userRepository.findById(userId);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<User> findUserByExternalId(String externalId) {
-        return userRepository.findByExternalId(externalId);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<UserResponseDTO> findUserDTOByExternalId(String externalId) {
-        return userRepository.findByExternalId(externalId)
-                .map(userMapper::toDTO);
     }
 
     @Transactional
