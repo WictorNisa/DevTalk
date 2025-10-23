@@ -24,11 +24,11 @@ public class UserService {
     private final UserMapper userMapper;
 
     @Transactional
-    public User createOrGetUser(String externalId, String displayName) {
+    public UserResponseDTO createOrGetUser(String externalId, String displayName) {
         Optional<User> existingUser = userRepository.findByExternalId(externalId);
         if (existingUser.isPresent()) {
             log.info("User found: {} ({})", displayName, externalId);
-            return existingUser.get();
+            return userMapper.toDTO(existingUser.get());
         }
 
         User newUser = User.builder()
@@ -39,8 +39,9 @@ public class UserService {
 
         User saved = userRepository.save(newUser);
         log.info("Created new user: {} ({})", displayName, externalId);
-        return saved;
+        return userMapper.toDTO(saved);
     }
+
 
     //Internal use
     @Transactional(readOnly = true)
