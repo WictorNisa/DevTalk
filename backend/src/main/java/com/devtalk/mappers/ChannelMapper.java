@@ -2,7 +2,6 @@ package com.devtalk.mappers;
 
 import com.devtalk.dto.channel.ChannelResponseDTO;
 import com.devtalk.model.Channel;
-import com.devtalk.model.Group;
 import org.springframework.stereotype.Component;
 
 @Component
