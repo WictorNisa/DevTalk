@@ -1,0 +1,92 @@
+{
+  "nav": {
+    "menu": "Meny",
+    "features": "Funktioner",
+    "howItWorks": "Så fungerar det",
+    "meetTheTeam": "Möt teamet",
+    "githubLabel": "Visa projekt",
+    "githubLabelMobile": "GitHub-repo"
+  },
+
+  "language": {
+    "label": "Språk",
+    "switchTo": "Byt till {{language}}",
+    "names": {
+      "en": "Engelska",
+      "sv": "Svenska"
+    }
+  },
+
+  "hero": {
+    "title": "DevTalk",
+    "subtitle": "Snacka kod. Dela kunskap. Väx tillsammans.",
+    "ctaGithub": "Logga In Med GitHub"
+  },
+
+  "features": {
+    "title": "Allt du behöver finns här",
+    "description": "DevTalk samlar verktygen som utvecklare behöver för att hålla sig synkade.",
+    "items": {
+      "realtime": {
+        "title": "Chatt i realtid",
+        "desc": "Snabba kanaler och direktmeddelanden drivna av WebSocket."
+      },
+      "threads": {
+        "title": "Trådar & kanaler",
+        "desc": "Håll diskussioner organiserade efter ämne och team."
+      },
+      "snippets": {
+        "title": "Kodsnuttar",
+        "desc": "Dela formaterad, syntaxmarkerad kod direkt i chatten."
+      },
+      "security": {
+        "title": "Säkerhet",
+        "desc": "Skyddad med Spring Security och JWT under huven."
+      },
+      "notifications": {
+        "title": "Notiser",
+        "desc": "Få notiser direkt när någon nämner dig."
+      },
+      "github": {
+        "title": "GitHub-inloggning",
+        "desc": "Sömlös inloggning med ditt GitHub-konto via OAuth."
+      }
+    }
+  },
+
+  "howItWorks": {
+    "title": "Hur det fungerar",
+    "subtitle": "Att komma igång är enkelt.",
+    "stepLabel": "Steg {{number}}",
+    "steps": {
+      "signin": {
+        "title": "Logga in med GitHub",
+        "desc": "Logga in smidigt med ditt GitHub-konto."
+      },
+      "join": {
+        "title": "Gå med i en kanal",
+        "desc": "Hitta en kanal för dina favoritämnen inom utveckling."
+      },
+      "share": {
+        "title": "Dela kod och få hjälp",
+        "desc": "Publicera kodbitar, ställ frågor och lär av andra utvecklare i realtid."
+      }
+    }
+  },
+
+  "cta": {
+    "title": "Redo att koppla upp dig med andra utvecklare?",
+    "description": "Gå med i DevTalk idag för att börja ditt kodäventyr!",
+    "ctaGithub": "Logga In Med GitHub"
+  },
+
+  "team": {
+    "title": "Teamet bakom DevTalk",
+    "description": "Ett litet team av passionerade utvecklarstudenter som bygger en plats där kodare kan mötas, lära och växa.",
+    "roles": {
+      "frontend": "Frontend, UI/UX",
+      "backend": "Backend, Database Design",
+      "scrum": "Scrum Master"
+    }
+  }
+}

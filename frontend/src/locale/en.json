@@ -1,0 +1,92 @@
+{
+  "nav": {
+    "menu": "Menu",
+    "features": "Features",
+    "howItWorks": "How It Works",
+    "meetTheTeam": "Meet The Team",
+    "githubLabel": "View Project",
+    "githubLabelMobile": "GitHub Repo"
+  },
+
+  "language": {
+    "label": "Language",
+    "switchTo": "Switch to {{language}}",
+    "names": {
+      "en": "English",
+      "sv": "Swedish"
+    }
+  },
+
+  "hero": {
+    "title": "DevTalk",
+    "subtitle": "Talk code. Share knowledge. Grow together.",
+    "ctaGithub": "Sign In With GitHub"
+  },
+
+  "features": {
+    "title": "Everything you need is here",
+    "description": "DevTalk bundles the essential tools devs rely on to stay in sync.",
+    "items": {
+      "realtime": {
+        "title": "Real-time Chat",
+        "desc": "Fast channels and direct messages powered by WebSocket."
+      },
+      "threads": {
+        "title": "Threads & Channels",
+        "desc": "Keep discussions organized by topic and team."
+      },
+      "snippets": {
+        "title": "Code Snippets",
+        "desc": "Share formatted, syntax-highlighted code directly in chat."
+      },
+      "security": {
+        "title": "Security",
+        "desc": "Protected with Spring Security and JWT under the hood."
+      },
+      "notifications": {
+        "title": "Notifications",
+        "desc": "Get notified instantly when someone mentions you."
+      },
+      "github": {
+        "title": "GitHub SSO",
+        "desc": "Seamless sign-in using your GitHub account via OAuth."
+      }
+    }
+  },
+
+  "howItWorks": {
+    "title": "How it works",
+    "subtitle": "Getting started is simple.",
+    "stepLabel": "Step {{number}}",
+    "steps": {
+      "signin": {
+        "title": "Sign in with GitHub",
+        "desc": "Log in with ease using your GitHub account."
+      },
+      "join": {
+        "title": "Join a channel",
+        "desc": "Find or create a channel for your favorite dev topics."
+      },
+      "share": {
+        "title": "Share code & get help",
+        "desc": "Post snippets, ask questions, and learn from other developers in real time."
+      }
+    }
+  },
+
+  "cta": {
+    "title": "Ready to connect with other developers?",
+    "description": "Join DevTalk today to start your coding-adventure!",
+    "ctaGithub": "Sign In With GitHub"
+  },
+
+  "team": {
+    "title": "The Team Behind DevTalk",
+    "description": "A small team of passionate dev-students building a place for coders to connect, learn, and grow.",
+    "roles": {
+      "frontend": "Frontend, UI/UX",
+      "backend": "Backend, Database Design",
+      "scrum": "Scrum Master"
+    }
+  }
+}
