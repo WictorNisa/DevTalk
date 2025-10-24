@@ -14,4 +14,5 @@ public class MessageBaseDTO extends BaseDTO {
     private Long channelId;
     private Long threadId;
     private Long parentMessageId;
+    private Long beforeTimestamp;
 }

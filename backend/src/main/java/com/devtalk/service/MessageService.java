@@ -70,6 +70,20 @@ public class MessageService {
         return result;
     }
 
+    @Transactional(readOnly = true)
+    public List<MessageResponseDTO> getChannelMessagesBefore(Long channelId, long beforeEpochMillis, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+        List<Message> messages = messageRepository
+                .findByChannelIdAndCreatedAtBefore(channelId, Instant.ofEpochMilli(beforeEpochMillis), pageRequest)
+                .getContent();
+
+        List<MessageResponseDTO> result = messages.stream()
+                .map(messageMapper::toResponseDTO)
+                .collect(Collectors.toList());
+        Collections.reverse(result);
+        return result;
+    }
+
 
     @Transactional
     public Message editMessage(Long messageId, String newContent, Long userId) {
