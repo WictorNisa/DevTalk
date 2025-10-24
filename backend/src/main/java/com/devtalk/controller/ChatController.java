@@ -86,7 +86,12 @@ public class ChatController {
                 return;
             }
 
-            List<MessageResponseDTO> messages = messageService.getChannelMessages(request.getChannelId(), 50);
+            List<MessageResponseDTO> messages;
+            if (request.getBeforeTimestamp() != null && request.getBeforeTimestamp() > 0) {
+                messages = messageService.getChannelMessagesBefore(request.getChannelId(), request.getBeforeTimestamp(), 50);
+            } else {
+                messages = messageService.getChannelMessages(request.getChannelId(), 50);
+            }
 
             String username = principal != null ? principal.getName() : "Unknown";
             simpMessagingTemplate.convertAndSendToUser(username, "/queue/history", messages);
