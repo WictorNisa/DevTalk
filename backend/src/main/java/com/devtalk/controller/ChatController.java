@@ -20,12 +20,17 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import java.security.Principal;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Chat", description = "Chat API")
 public class ChatController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
@@ -36,8 +41,12 @@ public class ChatController {
 
     @MessageMapping("/ping")
     @SendTo("/topic/pong")
+    @Operation(summary = "Handle ping message", description = "Handles the ping message and returns a pong message")
+    @ApiResponse(responseCode = "200", description = "Pong message sent successfully")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     public PingPongMessageDTO handlePing(MessageBaseDTO pingMessage, Principal principal) {
-        String user = principal != null ? principal.getName() : "Unknown";
+        //String user = principal != null ? principal.getName() : "Unknown"; - this is not used
         return PingPongMessageDTO.builder()
                 .userId(pingMessage.getUserId())
                 .channelId(pingMessage.getChannelId())
@@ -48,6 +57,10 @@ public class ChatController {
     }
 
     @MessageMapping("/chat.send")
+    @Operation(summary = "Handle chat message", description = "Handles the chat message and sends it to the destination")
+    @ApiResponse(responseCode = "200", description = "Message sent successfully")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     public void handleChat(ChatMessageDTO message, Principal principal) {
         if(message == null || message.getDestination() == null) {
             log.warn("Received null message or destination");
@@ -78,6 +91,10 @@ public class ChatController {
     }
 
     @MessageMapping("/message.history")
+    @Operation(summary = "Handle message history", description = "Handles the message history request and sends it to the user")
+    @ApiResponse(responseCode = "200", description = "Message history sent successfully")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     public void handleMessageHistory(MessageBaseDTO request, Principal principal) {
         try {
             if (request.getChannelId() == null) {
@@ -103,6 +120,10 @@ public class ChatController {
         }
     }
 
+    @Operation(summary = "Send error to user", description = "Sends an error message to the user")
+    @ApiResponse(responseCode = "200", description = "Error message sent successfully")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     private void sendErrorToUser(Principal principal, String errorMessage) {
         String username = principal != null ? principal.getName() : "Unknown";
         simpMessagingTemplate.convertAndSendToUser(username, "/queue/errors", errorMessage);
