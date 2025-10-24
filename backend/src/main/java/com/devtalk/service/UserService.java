@@ -24,11 +24,11 @@ public class UserService {
     private final UserMapper userMapper;
 
     @Transactional
-    public User createOrGetUser(String externalId, String displayName) {
+    public UserResponseDTO createOrGetUser(String externalId, String displayName) {
         Optional<User> existingUser = userRepository.findByExternalId(externalId);
         if (existingUser.isPresent()) {
             log.info("User found: {} ({})", displayName, externalId);
-            return existingUser.get();
+            return userMapper.toDTO(existingUser.get());
         }
 
         User newUser = User.builder()
@@ -39,9 +39,11 @@ public class UserService {
 
         User saved = userRepository.save(newUser);
         log.info("Created new user: {} ({})", displayName, externalId);
-        return saved;
+        return userMapper.toDTO(saved);
     }
 
+
+    //Internal use
     @Transactional(readOnly = true)
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
@@ -52,22 +54,6 @@ public class UserService {
     public UserResponseDTO getUserDTOById(Long userId) {
         User user = getUserById(userId);
         return userMapper.toDTO(user);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<User> findUserById(Long userId) {
-        return userRepository.findById(userId);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<User> findUserByExternalId(String externalId) {
-        return userRepository.findByExternalId(externalId);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<UserResponseDTO> findUserDTOByExternalId(String externalId) {
-        return userRepository.findByExternalId(externalId)
-                .map(userMapper::toDTO);
     }
 
     @Transactional

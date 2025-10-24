@@ -2,9 +2,7 @@ package com.devtalk.mappers;
 
 import com.devtalk.dto.messages.ChatMessageDTO;
 import com.devtalk.dto.messages.MessageResponseDTO;
-import com.devtalk.model.Channel;
 import com.devtalk.model.Message;
-import com.devtalk.model.User;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,15 +29,17 @@ public class MessageMapper {
     }
 
 
-    public Message toEntity(ChatMessageDTO dto, User user, Channel channel) {
+    public Message toEntity(ChatMessageDTO dto) {
         if (dto == null) {
             return null;
         }
 
         return Message.builder()
                 .content(dto.getContent())
-                .user(user)
-                .channel(channel)
+                .user(null)
+                .channel(null)
                 .build();
     }
+
+
 }
