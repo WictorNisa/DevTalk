@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { useEffect } from "react";
 import LandingPage from "@/pages/LandingPage";
 // import LoginPage from "@/pages/LoginPage";
 import Dashboard from "@/pages/Dashboard";
@@ -7,8 +8,19 @@ import Testconnection from "@/components/landing/Testconnection";
 import { ROUTES } from "@/constants/routes";
 import ProtectedRoute from "@/components/routing/ProtectedRoute";
 import PublicRoute from "@/components/routing/PublicRoute";
+import { useThemeStore } from "./stores/useThemeStore";
 
 const App = () => {
+  const theme = useThemeStore((state) => state.theme);
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    root.classList.remove("light", "dark");
+
+    root.classList.add(theme);
+  }, [theme]);
+
   return (
     <BrowserRouter>
       <Routes>

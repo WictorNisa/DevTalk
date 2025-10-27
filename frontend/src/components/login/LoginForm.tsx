@@ -12,7 +12,7 @@ const LoginForm = () => {
         <div
           role="region"
           aria-label="Authentication options"
-          className="flex flex-col rounded-lg bg-[var(--surface-dark)] p-6 sm:p-8"
+          className="flex flex-col rounded-lg bg-(--surface-dark) p-6 sm:p-8"
         >
           {/* Top panel*/}
           <div className="flex flex-col items-center gap-3 pb-8 sm:gap-4 sm:pb-10">
