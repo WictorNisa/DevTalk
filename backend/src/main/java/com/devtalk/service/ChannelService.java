@@ -2,16 +2,24 @@ package com.devtalk.service;
 
 import com.devtalk.dto.channel.ChannelMessagesDTO;
 import com.devtalk.dto.channel.ChannelResponseDTO;
+import com.devtalk.dto.messages.MessagesWithMetadataDTO;
 import com.devtalk.dto.messages.MessageResponseDTO;
 import com.devtalk.mappers.ChannelMapper;
 import com.devtalk.mappers.MessageMapper;
 import com.devtalk.model.Channel;
+import com.devtalk.model.Message;
 import com.devtalk.repository.ChannelRepository;
+import com.devtalk.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +32,7 @@ public class ChannelService {
     private final ChannelRepository channelRepository;
     private final ChannelMapper channelMapper;
     private final MessageMapper messageMapper;
+    private final MessageRepository messageRepository;
 
     @Transactional(readOnly = true)
     public List<ChannelResponseDTO> getAllChannels() {
@@ -64,8 +73,43 @@ public class ChannelService {
             List<MessageResponseDTO> messageDTOs = channel.getMessages().stream()
                     .map(messageMapper::toResponseDTO)
                     .toList();
+            channelMessagesDTO.setMessages(messageDTOs);
         }
         return channelMessagesDTO;
     }
 
+    @Transactional(readOnly = true)
+    public MessagesWithMetadataDTO getChannelMessagesWithPagination(Long channelId, int limit, Long before) {
+        if (!channelRepository.existsById(channelId)) {
+            throw new RuntimeException("Channel not found with id: " + channelId);
+        }
+
+        PageRequest pageRequest = PageRequest.of(0, limit + 1, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Message> messagePage;
+
+        if (before != null) {
+            Instant beforeInstant = Instant.ofEpochMilli(before);
+            messagePage = messageRepository.findByChannelIdAndCreatedAtBefore(channelId, beforeInstant, pageRequest);
+        } else {
+            messagePage = messageRepository.findLatestByChannel(channelId, pageRequest);
+        }
+
+        List<Message> messages = messagePage.getContent();
+        boolean hasMore = messages.size() > limit;
+
+
+        if (hasMore) {
+            messages = messages.subList(0, limit);
+        }
+
+        List<MessageResponseDTO> messageDTOs = messages.stream()
+                .map(messageMapper::toResponseDTO)
+                .collect(Collectors.toList());
+        Collections.reverse(messageDTOs);
+
+        return MessagesWithMetadataDTO.builder()
+                .messages(messageDTOs)
+                .hasMore(hasMore)
+                .build();
+    }
 }
