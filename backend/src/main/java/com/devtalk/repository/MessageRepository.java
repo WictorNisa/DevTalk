@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.devtalk.model.Message;
 
@@ -12,6 +13,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
     @Query("select m from Message m join fetch m.user join fetch m.channel where m.id = :id")

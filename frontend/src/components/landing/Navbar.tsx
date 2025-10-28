@@ -97,7 +97,6 @@ export default function Navbar() {
           </span>
         </a>
         <div className="flex items-center gap-2">
-          <ThemeSwitcher />
           <LanguageDropdown />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
