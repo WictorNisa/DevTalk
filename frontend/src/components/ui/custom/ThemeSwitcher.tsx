@@ -8,12 +8,13 @@ const ThemeSwitcher = () => {
   return (
     <div className="flex items-center space-x-2">
       {theme === "light" ? (
-        <Sun strokeWidth={1} className="h-5 w-5 text-white" />
+        <Sun strokeWidth={2} className="h-5 w-5" />
       ) : (
-        <Moon strokeWidth={1} className="h-5 w-5 text-white" />
+        <Moon strokeWidth={2} className="h-5 w-5" />
       )}
       <Switch
         id="theme-switch"
+        className="cursor-pointer"
         checked={theme === "dark"}
         onCheckedChange={toggleTheme}
       />

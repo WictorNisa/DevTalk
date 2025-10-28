@@ -14,7 +14,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
-import ThemeSwitcher from "../ThemeSwitcher";
+import ThemeSwitcher from "../ui/custom/ThemeSwitcher";
 
 const GITHUB_REPO = "https://github.com/WictorNisa/DevTalk";
 
@@ -129,6 +129,10 @@ export default function Navbar() {
                 >
                   <GitHubLogoIcon /> {t("nav.githubLabel")}
                 </a>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <ThemeSwitcher />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
