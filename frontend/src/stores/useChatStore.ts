@@ -1,4 +1,6 @@
+import { mockMessages } from "@/data/mockMessages";
 import { create } from "zustand";
+
 
 // Basic chat store exempel
 // TODO: Connecta med WebSocket när backend är redo.
@@ -20,7 +22,7 @@ type ChatState = {
 
 export const useChatStore = create<ChatState>((set) => ({
   activeChannel: null,
-  messages: [],
+  messages: mockMessages,
   setActiveChannel: (channel) => set({ activeChannel: channel, messages: [] }),
   addMessage: (msg) => set((state) => ({ messages: [...state.messages, msg] })),
   clearMessages: () => set({ messages: [] }),
