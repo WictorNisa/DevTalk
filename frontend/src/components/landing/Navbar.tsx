@@ -14,6 +14,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
+import ThemeSwitcher from "../ThemeSwitcher";
 
 const GITHUB_REPO = "https://github.com/WictorNisa/DevTalk";
 

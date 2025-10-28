@@ -20,6 +20,7 @@ export default function CTA() {
           initial={{ opacity: 0 }}
           transition={{ ease: "easeIn", duration: 0.4 }}
           whileInView={{ opacity: 1 }}
+          whileHover={{ scale: 1.02 }}
           className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6"
         >
           <Button
