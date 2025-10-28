@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.devtalk.model.Message;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,9 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     @Query(value = "select m from Message m join fetch m.user where m.channel.id = :channelId order by m.createdAt desc")
     Page<Message> findLatestByChannel(@Param("channelId") Long channelId, Pageable pageable);
+
+    @Query(value = "select m from Message m join fetch m.user where m.channel.id = :channelId and m.createdAt < :before order by m.createdAt desc")
+    Page<Message> findByChannelIdAndCreatedAtBefore(@Param("channelId") Long channelId, @Param("before") Instant before, Pageable pageable);
 
     @Query("select m from Message m join fetch m.user u join fetch m.channel c where m.channel.id = :channelId order by m.createdAt desc")
     List<Message> findByChannelIdWithAuthorAndChannel(@Param("channelId") Long channelId);

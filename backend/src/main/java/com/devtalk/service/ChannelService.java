@@ -1,7 +1,10 @@
 package com.devtalk.service;
 
+import com.devtalk.dto.channel.ChannelMessagesDTO;
 import com.devtalk.dto.channel.ChannelResponseDTO;
+import com.devtalk.dto.messages.MessageResponseDTO;
 import com.devtalk.mappers.ChannelMapper;
+import com.devtalk.mappers.MessageMapper;
 import com.devtalk.model.Channel;
 import com.devtalk.repository.ChannelRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +23,16 @@ public class ChannelService {
 
     private final ChannelRepository channelRepository;
     private final ChannelMapper channelMapper;
+    private final MessageMapper messageMapper;
 
+    @Transactional(readOnly = true)
+    public List<ChannelResponseDTO> getAllChannels() {
+        return channelRepository.findAll().stream()
+                .map(channelMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    //Internal use
     @Transactional(readOnly = true)
     public Channel getChannelById(Long channelId) {
         return channelRepository.findById(channelId)
@@ -30,31 +42,31 @@ public class ChannelService {
     @Transactional(readOnly = true)
     public ChannelResponseDTO getChannelDTOById(Long channelId) {
         Channel channel = getChannelById(channelId);
-        return channelMapper.toDTO(channel);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<Channel> findChannelById(Long channelId) {
-        return channelRepository.findById(channelId);
+        return channelMapper.toResponseDTO(channel);
     }
 
     @Transactional(readOnly = true)
     public List<ChannelResponseDTO> getChannelsByGroupId(Long groupId) {
         return channelRepository.findByGroupIdWithGroup(groupId).stream()
-                .map(channelMapper::toDTO)
+                .map(channelMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public Channel getChannelWithMessages(Long channelId) {
-        return channelRepository.findByIdWithMessages(channelId)
-                .orElseThrow(() -> new RuntimeException("Channel not found with id: " + channelId));
+    public ChannelMessagesDTO getChannelWithMessages(Long channelId) {
+        Optional<Channel> channelOpt = channelRepository.findById(channelId);
+        if (channelOpt.isEmpty()) {
+            throw new RuntimeException("Channel not found with id: " + channelId);
+        }
+        Channel channel = channelOpt.get();
+        ChannelMessagesDTO channelMessagesDTO = new ChannelMessagesDTO();
+        if(channel.getMessages() != null) {
+            List<MessageResponseDTO> messageDTOs = channel.getMessages().stream()
+                    .map(messageMapper::toResponseDTO)
+                    .toList();
+            channelMessagesDTO.setMessages(messageDTOs);
+        }
+        return channelMessagesDTO;
     }
 
-    @Transactional(readOnly = true)
-    public List<ChannelResponseDTO> getAllChannels() {
-        return channelRepository.findAll().stream()
-                .map(channelMapper::toDTO)
-                .collect(Collectors.toList());
-    }
 }

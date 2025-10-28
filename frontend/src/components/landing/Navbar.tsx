@@ -14,6 +14,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
+import ThemeSwitcher from "../ThemeSwitcher";
 
 const GITHUB_REPO = "https://github.com/WictorNisa/DevTalk";
 
@@ -96,6 +97,7 @@ export default function Navbar() {
           </span>
         </a>
         <div className="flex items-center gap-2">
+          <ThemeSwitcher />
           <LanguageDropdown />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
