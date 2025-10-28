@@ -21,6 +21,7 @@ public class UserMapper {
                 .role(user.getRole())
                 .language(user.getLanguage())
                 .theme(user.getTheme())
+                .avatarUrl(user.getAvatarUrl())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();
@@ -39,6 +40,7 @@ public class UserMapper {
                 .role(dto.getRole())
                 .language(dto.getLanguage())
                 .theme(dto.getTheme())
+                .avatarUrl(dto.getAvatarUrl())
                 .build();
     }
 }
