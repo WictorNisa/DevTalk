@@ -12,15 +12,14 @@ export default function MeetTheTeam() {
   return (
     <section id="team" className="border-b py-24 sm:py-32">
       <div className="container mx-auto px-6 text-center">
-        <h2 className="text-2xl font-bold sm:text-4xl">
-          {t("team.title")}
-        </h2>
+        <h2 className="text-2xl font-bold sm:text-4xl">{t("team.title")}</h2>
         <p className="text-primary/70 mt-3 text-base">
           {t("team.description")}
         </p>
 
         <motion.div
           initial={{ opacity: 0 }}
+          transition={{ ease: "easeIn", duration: 0.4 }}
           whileInView={{ opacity: 1 }}
           className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
         >

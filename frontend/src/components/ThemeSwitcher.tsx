@@ -1,5 +1,4 @@
 import { useThemeStore } from "@/stores/useThemeStore";
-import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Sun } from "lucide-react";
 import { Moon } from "lucide-react";
