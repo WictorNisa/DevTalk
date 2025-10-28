@@ -21,6 +21,7 @@ export default function Features() {
 
         <motion.div
           initial={{ opacity: 0 }}
+          transition={{ ease: "easeIn", duration: 0.4 }}
           whileInView={{ opacity: 1 }}
           className="mt-12 grid gap-8 sm:grid-cols-3"
         >
