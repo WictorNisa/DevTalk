@@ -7,11 +7,10 @@ import lombok.experimental.SuperBuilder;
 import java.util.List;
 
 @Data
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class MessagesWithMetadataDTO extends MessageBaseDTO {
+public class MessagesWithMetadataDTO {
     private List<MessageResponseDTO> messages;
     private boolean hasMore;
 }
