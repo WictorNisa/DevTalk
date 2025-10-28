@@ -2,11 +2,12 @@ import { create } from "zustand";
 
 // Basic chat store exempel
 // TODO: Connecta med WebSocket när backend är redo.
-type Message = {
+export type Message = {
   id: string;
+  avatar: string;
   user: string;
   text: string;
-  timestamp: number;
+  timestamp: string;
 };
 
 type ChatState = {
