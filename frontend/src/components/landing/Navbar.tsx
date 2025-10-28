@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import { Languages } from "lucide-react";
+
 import Logo from "@/assets/img/devtalk-logo.svg";
 import { GitHubLogoIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
@@ -7,33 +10,102 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
+import ThemeSwitcher from "../ThemeSwitcher";
 
 const GITHUB_REPO = "https://github.com/WictorNisa/DevTalk";
 
-const navLinks = [
-  { label: "Features", href: "#features" },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Meet The Team", href: "#team" },
-];
+const NAV_LINKS = [
+  { key: "features", href: "#features" },
+  { key: "howItWorks", href: "#how-it-works" },
+  { key: "meetTheTeam", href: "#team" },
+] as const;
+
+const LANGUAGE_CODES = ["en", "sv"] as const;
+type LanguageCode = (typeof LANGUAGE_CODES)[number];
 
 export default function Navbar() {
+  const { t, i18n } = useTranslation();
+
+  const navLinks = NAV_LINKS.map(({ key, href }) => ({
+    href,
+    label: t(`nav.${key}`),
+  }));
+
+  const normalizeLanguage = (code?: string | null): LanguageCode => {
+    const base = code?.split("-")[0]?.toLowerCase() ?? "en";
+    return LANGUAGE_CODES.includes(base as LanguageCode)
+      ? (base as LanguageCode)
+      : "en";
+  };
+
+  const currentLanguageCode = normalizeLanguage(
+    i18n.resolvedLanguage ?? i18n.language,
+  );
+
+  const languageNames: Record<"en" | "sv", string> = {
+    en: t("language.names.en"),
+    sv: t("language.names.sv"),
+  };
+
+  const handleLanguageChange = (value: LanguageCode) => {
+    if (value !== currentLanguageCode) {
+      void i18n.changeLanguage(value);
+    }
+  };
+
+  const LanguageDropdown = () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className="border-input/20 text-secondary hover:text-secondary hover:bg-secondary/10 dark:text-primary bg-accent/5 inline-flex cursor-pointer items-center gap-2"
+          aria-label={t("language.label")}
+        >
+          <Languages className="h-4 w-4" aria-hidden="true" />
+          <span className="text-xs font-medium md:text-sm">
+            {languageNames[currentLanguageCode]}
+          </span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuLabel>{t("language.label")}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup
+          value={currentLanguageCode}
+          onValueChange={(value) => handleLanguageChange(value as LanguageCode)}
+        >
+          {LANGUAGE_CODES.map((code) => (
+            <DropdownMenuRadioItem key={code} value={code}>
+              {languageNames[code]}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+
   return (
-    <header className="dark:text-foreground bg-foreground/50 text-foreground sticky top-0 z-50 w-full border-b border-[var(--muted-foreground)]/30 backdrop-blur-md dark:border-[var(--border)]/70 dark:bg-[var(--background)]/40">
+    <header className="dark:text-foreground bg-foreground/50 text-foreground sticky top-0 z-50 w-full border-b border-(--muted-foreground)/30 backdrop-blur-md dark:border-(--border)/70 dark:bg-(--background)/40">
       <nav className="max-w-8xl mx-auto flex items-center justify-between px-5 py-5">
         <a href="#home" className="flex">
-          <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--foreground)]/50 transition-colors hover:border-[var(--)]/60 dark:border-none dark:bg-transparent">
+          <span className="bg-foreground/15 flex h-12 w-12 items-center justify-center rounded-lg transition-colors dark:border-none dark:bg-transparent">
             <img src={Logo} className="h-8 w-8 invert" alt="DevTalk logo" />
           </span>
         </a>
         <div className="flex items-center gap-2">
+          <ThemeSwitcher />
+          <LanguageDropdown />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="hidden cursor-pointer items-center gap-2 md:inline-flex"
+                className="border-input/20 text-secondary hover:text-secondary hover:bg-secondary/10 dark:text-primary bg-accent/5 hidden cursor-pointer items-center gap-2 md:inline-flex"
               >
-                Menu
+                {t("nav.menu")}
               </Button>
             </DropdownMenuTrigger>
 
@@ -56,7 +128,7 @@ export default function Navbar() {
                   rel="noreferrer"
                   className="cursor-pointer"
                 >
-                  <GitHubLogoIcon /> View Project
+                  <GitHubLogoIcon /> {t("nav.githubLabel")}
                 </a>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -68,7 +140,7 @@ export default function Navbar() {
               <Button
                 variant="outline"
                 size="icon"
-                className="border-ring md:hidden"
+                className="border-input/20 text-secondary hover:text-secondary hover:bg-secondary/10 dark:text-primary bg-accent/5 md:hidden"
                 aria-label="Open navigation menu"
               >
                 <HamburgerMenuIcon className="h-5 w-5" />
@@ -93,7 +165,7 @@ export default function Navbar() {
                   rel="noreferrer"
                   className="flex items-center gap-2 text-base"
                 >
-                  <GitHubLogoIcon /> GitHub Repo
+                  <GitHubLogoIcon /> {t("nav.githubLabelMobile")}
                 </a>
               </DropdownMenuItem>
             </DropdownMenuContent>
