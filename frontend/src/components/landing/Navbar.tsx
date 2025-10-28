@@ -132,9 +132,7 @@ export default function Navbar() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <span className="cursor-pointer">
-                  <ThemeSwitcher />
-                </span>
+                <ThemeSwitcher />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
