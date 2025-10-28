@@ -22,6 +22,7 @@ public class MessageMapper {
                 .threadId(message.getThread() != null ? message.getThread().getId() : null)
                 .parentMessageId(message.getParentMessage() != null ? message.getParentMessage().getId() : null)
                 .senderDisplayName(message.getUser() != null ? message.getUser().getDisplayName() : null)
+                .senderAvatarUrl(message.getUser() != null ? message.getUser().getAvatarUrl() : null)
                 .timestamp(message.getCreatedAt() != null ? message.getCreatedAt().toEpochMilli() : System.currentTimeMillis())
                 .createdAt(message.getCreatedAt())
                 .updatedAt(message.getUpdatedAt())
