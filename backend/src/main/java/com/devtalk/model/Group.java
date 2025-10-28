@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "groups", indexes = {
-    @Index(name = "idx_group_name", columnList = "groupname")
+    @Index(name = "idx_group_name", columnList = "groupName")
 })
 @Getter
 @Setter
