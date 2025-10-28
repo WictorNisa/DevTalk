@@ -4,12 +4,12 @@ import com.devtalk.dto.base.MessageBaseDTO;
 import com.devtalk.dto.channel.ChannelResponseDTO;
 import com.devtalk.dto.messages.ChatMessageDTO;
 import com.devtalk.dto.messages.MessageResponseDTO;
+import com.devtalk.dto.messages.MessageEditDTO;
+import com.devtalk.dto.messages.MessageDeleteDTO;
+import com.devtalk.dto.messages.TypingDTO;
+import com.devtalk.dto.messages.ReadReceiptDTO;
 import com.devtalk.dto.messages.PingPongMessageDTO;
 import com.devtalk.dto.user.UserResponseDTO;
-import com.devtalk.mappers.MessageMapper;
-import com.devtalk.model.Channel;
-import com.devtalk.model.Message;
-import com.devtalk.model.User;
 import com.devtalk.service.ChannelService;
 import com.devtalk.service.MessageService;
 import com.devtalk.service.UserService;
@@ -37,7 +37,6 @@ public class ChatController {
     private final MessageService messageService;
     private final UserService userService;
     private final ChannelService channelService;
-    private final MessageMapper messageMapper;
 
     @MessageMapping("/ping")
     @SendTo("/topic/pong")
@@ -88,6 +87,63 @@ public class ChatController {
             log.error("Error handling chat message: {}", e.getMessage(), e);
             sendErrorToUser(principal, "Error sending message: " + e.getMessage());
         }
+    }
+
+    @MessageMapping("/chat.edit")
+    @Operation(summary = "Edit chat message", description = "Edits an existing message and broadcasts the update")
+    public void handleEdit(MessageEditDTO edit, Principal principal) {
+        if (edit == null || edit.getMessageId() == null || edit.getChannelId() == null || edit.getUserId() == null) {
+            sendErrorToUser(principal, "Invalid edit payload");
+            return;
+        }
+        try {
+            var updated = messageService.editMessage(edit.getMessageId(), edit.getContent(), edit.getUserId());
+            var response = messageService.getMessageById(updated.getId());
+            simpMessagingTemplate.convertAndSend("/topic/room/" + edit.getChannelId(), response);
+        } catch (RuntimeException e) {
+            log.error("Edit failed: {}", e.getMessage());
+            sendErrorToUser(principal, "Edit failed: " + e.getMessage());
+        }
+    }
+
+    @MessageMapping("/chat.delete")
+    @Operation(summary = "Delete chat message", description = "Deletes a message and broadcasts a tombstone event")
+    public void handleDelete(MessageDeleteDTO del, Principal principal) {
+        if (del == null || del.getMessageId() == null || del.getChannelId() == null || del.getUserId() == null) {
+            sendErrorToUser(principal, "Invalid delete payload");
+            return;
+        }
+        try {
+            messageService.deleteMessage(del.getMessageId(), del.getUserId());
+            simpMessagingTemplate.convertAndSend("/topic/room/" + del.getChannelId(),
+                    PingPongMessageDTO.builder().type("MESSAGE_DELETED").threadId(null).channelId(del.getChannelId())
+                            .userId(del.getUserId()).timestamp(System.currentTimeMillis()).build());
+        } catch (RuntimeException e) {
+            log.error("Delete failed: {}", e.getMessage());
+            sendErrorToUser(principal, "Delete failed: " + e.getMessage());
+        }
+    }
+
+    @MessageMapping("/typing.start")
+    @Operation(summary = "Typing start", description = "Broadcast typing start event")
+    public void typingStart(TypingDTO dto) {
+        if (dto == null || dto.getChannelId() == null || dto.getUserId() == null) { return; }
+        simpMessagingTemplate.convertAndSend("/topic/room/" + dto.getChannelId(), dto);
+    }
+
+    @MessageMapping("/typing.stop")
+    @Operation(summary = "Typing stop", description = "Broadcast typing stop event")
+    public void typingStop(TypingDTO dto) {
+        if (dto == null || dto.getChannelId() == null || dto.getUserId() == null) { return; }
+        simpMessagingTemplate.convertAndSend("/topic/room/" + dto.getChannelId(), dto);
+    }
+
+    @MessageMapping("/message.read")
+    @Operation(summary = "Read receipt", description = "Broadcast single read receipt")
+    public void readReceipt(ReadReceiptDTO dto) {
+        if (dto == null || dto.getChannelId() == null || dto.getMessageId() == null || dto.getUserId() == null) { return; }
+        if (dto.getReadAt() == null) { dto.setReadAt(System.currentTimeMillis()); }
+        simpMessagingTemplate.convertAndSend("/topic/room/" + dto.getChannelId(), dto);
     }
 
     @MessageMapping("/message.history")
