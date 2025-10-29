@@ -54,17 +54,18 @@ public class DatabaseSeeder implements CommandLineRunner {
         defaultUser = userRepository.save(defaultUser);
         log.info("Created default user: {} (ID: {})", defaultUser.getDisplayName(), defaultUser.getId());
 
-        Channel generalChannel = channelRepository.findAll().stream()
+        List<Channel> channels = channelRepository.findAll();
+        Channel generalChannel = channels.stream()
                 .filter(c -> "general".equals(c.getName()))
                 .findFirst()
                 .orElse(null);
 
-        Channel frontendChannel = channelRepository.findAll().stream()
+        Channel frontendChannel = channels.stream()
                 .filter(c -> "frontend".equals(c.getName()))
                 .findFirst()
                 .orElse(null);
 
-        Channel backendChannel = channelRepository.findAll().stream()
+        Channel backendChannel = channels.stream()
                 .filter(c -> "backend".equals(c.getName()))
                 .findFirst()
                 .orElse(null);
