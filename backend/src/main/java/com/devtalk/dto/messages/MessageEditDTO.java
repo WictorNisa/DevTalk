@@ -12,8 +12,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class PingPongMessageDTO extends MessageBaseDTO {
-    private String type;
-    private long timestamp;
+public class MessageEditDTO extends MessageBaseDTO {
     private Long messageId;
+    private Long userId;
+    private Long channelId;
+    private String content;
 }
+
+

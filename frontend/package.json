@@ -29,6 +29,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-i18next": "^16.1.4",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-router": "^7.9.3",
     "sockjs-client": "^1.6.1",
     "tailwind-merge": "^3.3.1",

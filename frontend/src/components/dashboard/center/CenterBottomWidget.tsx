@@ -13,14 +13,42 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SmilePlus, PlusIcon, SendHorizontal, FileUp } from "lucide-react";
+import { useSendMessage } from "@/hooks/useSendMessage";
+import { useState } from "react";
 
 const CenterBottomWidget = () => {
+  const { sendMessage } = useSendMessage();
+  const [inputValue, setInputValue] = useState<string>("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (inputValue.trim()) {
+      sendMessage({
+        text: inputValue,
+        user: "CurrentUser",
+        avatar: "Mullebäck",
+      });
+      setInputValue("");
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+
   return (
-    <div className="grid w-full">
+    <form className="grid w-full" onSubmit={handleSubmit}>
       <InputGroup className="rounded-xl">
         <InputGroupTextarea
           className="min-h-auto"
           placeholder="Type your message here..."
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          typeof="button"
         />
         <InputGroupAddon align="block-end" className="ml-auto border-t">
           {/* Drop Down */}
@@ -66,12 +94,13 @@ const CenterBottomWidget = () => {
             variant="ghost"
             className="cursor-pointer rounded-full"
             size="icon-xs"
+            onClick={handleSubmit}
           >
             <SendHorizontal />
           </InputGroupButton>
         </InputGroupAddon>
       </InputGroup>
-    </div>
+    </form>
   );
 };
 

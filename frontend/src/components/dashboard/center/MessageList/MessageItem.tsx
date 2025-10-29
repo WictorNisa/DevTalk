@@ -25,7 +25,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
   );
   return (
     <div className="bg-foreground mt-3 flex w-full gap-2 text-black">
-      <div className="m-auto h-max w-max shrink-0">
+      <div className="m-auto h-max w-max shrink-0 ml-2">
         <Avatar>
           <AvatarImage src={mockMessageAvatar} alt={mockMessageUser} className="object-cover"/>
           <AvatarFallback>LB</AvatarFallback>

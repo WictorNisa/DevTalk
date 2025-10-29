@@ -12,5 +12,6 @@ import lombok.experimental.SuperBuilder;
 public class MessageResponseDTO extends MessageBaseDTO {
     private String content;
     private String senderDisplayName;
+    private String senderAvatarUrl;
     private Long timestamp;
 }
