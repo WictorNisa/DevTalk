@@ -117,7 +117,7 @@ public class ChatController {
             messageService.deleteMessage(del.getMessageId(), del.getUserId());
             simpMessagingTemplate.convertAndSend("/topic/room/" + del.getChannelId(),
                     PingPongMessageDTO.builder().type("MESSAGE_DELETED").threadId(null).channelId(del.getChannelId())
-                            .userId(del.getUserId()).timestamp(System.currentTimeMillis()).build());
+                            .userId(del.getUserId()).messageId(del.getMessageId()).timestamp(System.currentTimeMillis()).build());
         } catch (RuntimeException e) {
             log.error("Delete failed: {}", e.getMessage());
             sendErrorToUser(principal, "Delete failed: " + e.getMessage());
