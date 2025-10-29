@@ -2,6 +2,7 @@ import dummyUsers from "@/data/dummyUsers.json";
 import { UserListCard } from "./UserListCard";
 
 type User = {
+  id: string | null | undefined;
   username: string;
   avatar?: string;
   status?: string;
@@ -11,22 +12,53 @@ type User = {
 export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
   // use dummyUsers when present, otherwise use the local fallback
   const fallbackUsers: User[] = [
-    { username: "AlexCoder", avatar: "/images/alex.jpg", status: "online" },
-    { username: "SarahDev", avatar: "/images/sarah.jpg", status: "idle" },
-    { username: "MikeDesign", avatar: "/images/mike.jpg", status: "busy" },
-    { username: "Pedro", avatar: "/images/pedro.jpg", status: "busy" },
-    { username: "DeezNuts", avatar: "/images/deeznuts.jpg", status: "online" },
+    {
+      username: "AlexCoder",
+      avatar: "/images/alex.jpg",
+      status: "online",
+      id: undefined,
+    },
+    {
+      username: "SarahDev",
+      avatar: "/images/sarah.jpg",
+      status: "idle",
+      id: undefined,
+    },
+    {
+      username: "MikeDesign",
+      avatar: "/images/mike.jpg",
+      status: "busy",
+      id: undefined,
+    },
+    {
+      username: "Pedro",
+      avatar: "/images/pedro.jpg",
+      status: "busy",
+      id: undefined,
+    },
+    {
+      username: "DeezNuts",
+      avatar: "/images/deeznuts.jpg",
+      status: "online",
+      id: undefined,
+    },
     {
       username: "MustafaJunior",
       avatar: "/images/mustafajunior.jpg",
       status: "idle",
+      id: undefined,
     },
     {
       username: "MuricanCitizen",
       avatar: "/images/muricancitizen.jpg",
       status: "offline",
+      id: undefined,
     },
-    { username: "JaneTester", status: undefined },
+    {
+      username: "JaneTester",
+      status: undefined,
+      id: undefined,
+    },
   ];
 
   const usersFromJson = Array.isArray(dummyUsers)
@@ -47,7 +79,7 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
   return (
     <div className={`flex flex-col gap-2 ${collapsed ? "items-center" : ""}`}>
       {users.map((u) => (
-        <UserListCard key={u.username} {...u} collapsed={collapsed} />
+        <UserListCard key={u.id} {...u} collapsed={collapsed} />
       ))}
     </div>
   );
