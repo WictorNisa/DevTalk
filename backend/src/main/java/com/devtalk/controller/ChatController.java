@@ -127,14 +127,20 @@ public class ChatController {
     @MessageMapping("/typing.start")
     @Operation(summary = "Typing start", description = "Broadcast typing start event")
     public void typingStart(TypingDTO dto) {
-        if (dto == null || dto.getChannelId() == null || dto.getUserId() == null) { return; }
+        if (dto == null || dto.getChannelId() == null || dto.getUserId() == null) {
+            log.warn("Received invalid TypingDTO in typingStart: {}", dto);
+            return;
+        }
         simpMessagingTemplate.convertAndSend("/topic/room/" + dto.getChannelId(), dto);
     }
 
     @MessageMapping("/typing.stop")
     @Operation(summary = "Typing stop", description = "Broadcast typing stop event")
     public void typingStop(TypingDTO dto) {
-        if (dto == null || dto.getChannelId() == null || dto.getUserId() == null) { return; }
+        if (dto == null || dto.getChannelId() == null || dto.getUserId() == null) {
+            log.warn("Received invalid TypingDTO in typingStop: {}", dto);
+            return;
+        }
         simpMessagingTemplate.convertAndSend("/topic/room/" + dto.getChannelId(), dto);
     }
 
