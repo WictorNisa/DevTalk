@@ -15,4 +15,5 @@ import lombok.experimental.SuperBuilder;
 public class PingPongMessageDTO extends MessageBaseDTO {
     private String type;
     private long timestamp;
+    private Long messageId;
 }
