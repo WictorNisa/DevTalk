@@ -8,7 +8,7 @@
   },
   {
     "id": "2",
-    "avatar": "https://i.pravatar.cc/120?img=2",
+    "avatar": "https://i.pravatar.cc/120?img=47",
     "username": "SarahDev",
     "isOnline": true,
     "status": "Idle"
@@ -22,9 +22,37 @@
   },
   {
     "id": "4",
+    "avatar": "https://i.pravatar.cc/120?img=17",
+    "username": "Pedro",
+    "isOnline": true,
+    "status": "Idle"
+  },
+  {
+    "id": "5",
+    "avatar": "https://i.pravatar.cc/120?img=48",
+    "username": "DeezNuts",
+    "isOnline": true,
+    "status": "Online"
+  },
+  {
+    "id": "6",
+    "avatar": "https://i.pravatar.cc/120?img=59",
+    "username": "MustafaJunior",
+    "isOnline": true,
+    "status": "Online"
+  },
+  {
+    "id": "7",
+    "avatar": "https://i.pravatar.cc/120?img=65",
+    "username": "MuricanCitizen",
+    "isOnline": true,
+    "status": "Online"
+  },
+  {
+    "id": "8",
     "avatar": "",
     "username": "JaneTester",
     "isOnline": false,
-    "status": "Offline"
+    "status": ""
   }
 ]

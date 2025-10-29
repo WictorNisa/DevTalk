@@ -1,11 +1,11 @@
 import { Card, CardContent } from "@components/ui/card";
 import { UserList } from "./UserList";
 
-const RightDashPanel = () => {
+const RightDashPanel = ({ collapsed = false }: { collapsed?: boolean }) => {
   return (
-    <Card className="flex h-full w-full p-1">
-      <CardContent className="p-1">
-        <UserList />
+    <Card className="flex h-full w-full p-2">
+      <CardContent className="h-full w-full overflow-auto p-0">
+        <UserList collapsed={collapsed} />
       </CardContent>
     </Card>
   );

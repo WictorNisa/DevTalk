@@ -1,3 +1,4 @@
+import React from "react";
 import { useSidebarStates } from "@stores/useSidebarStates";
 import { motion } from "framer-motion";
 import { Button } from "../button";
@@ -28,17 +29,24 @@ export const CollapsiblePanel = ({ children, side }: CollapsiblePanelProps) => {
     }
   };
 
-  const expandedWidth = "12%";
+  const expandedWidth = "14%";
   const collapsedWidth = side === "left" ? "3%" : "3%";
 
   const toggleButton = (
     <Button
       onClick={toggle}
-      className={`text-ring hover:text-foreground absolute h-full bg-transparent hover:bg-transparent ${side === "left" ? "right-0" : "left-0"}`}
+      className={`text-ring hover:text-foreground absolute h-full cursor-pointer bg-transparent hover:bg-transparent ${side === "left" ? "right-0" : "left-0"}`}
     >
       {getToggleIcon()}
     </Button>
   );
+
+  const childrenWithCollapsed = React.Children.map(children, (child) => {
+    if (!React.isValidElement(child)) return child;
+    const element = child as React.ReactElement<{ collapsed?: boolean }>;
+
+    return React.cloneElement(element, { collapsed: isCollapsed });
+  });
 
   return (
     <motion.div
@@ -51,13 +59,17 @@ export const CollapsiblePanel = ({ children, side }: CollapsiblePanelProps) => {
     >
       {side === "left" ? (
         <>
-          <div className="min-w-0 flex-1 overflow-hidden">{children}</div>
+          <div className="min-w-0 flex-1 overflow-hidden">
+            {childrenWithCollapsed}
+          </div>
           {toggleButton}
         </>
       ) : (
         <>
           {toggleButton}
-          <div className="min-w-0 flex-1 overflow-hidden">{children}</div>
+          <div className="min-w-0 flex-1 overflow-hidden">
+            {childrenWithCollapsed}
+          </div>
         </>
       )}
     </motion.div>
