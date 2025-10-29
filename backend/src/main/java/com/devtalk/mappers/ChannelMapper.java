@@ -3,61 +3,26 @@ package com.devtalk.mappers;
 import com.devtalk.dto.channel.ChannelMessagesDTO;
 import com.devtalk.dto.channel.ChannelResponseDTO;
 import com.devtalk.model.Channel;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
-@Component
-public class ChannelMapper {
+@Mapper(componentModel = "spring")
+public interface ChannelMapper {
 
-    public ChannelResponseDTO toResponseDTO(Channel channel) {
-        if (channel == null) {
-            return null;
-        }
+    @Mapping(target = "groupId",  source = "group.id")
+    ChannelResponseDTO toResponseDTO(Channel channel);
 
-        return ChannelResponseDTO.builder()
-                .id(channel.getId())
-                .name(channel.getName())
-                .groupId(channel.getGroup() != null ? channel.getGroup().getId() : null)
-                .createdAt(channel.getCreatedAt())
-                .updatedAt(channel.getUpdatedAt())
-                .build();
-    }
+    @Mapping(target = "groupId", source = "group.id")
+    ChannelMessagesDTO toResponseMessagesDTO(Channel channel);
 
-    public ChannelMessagesDTO toResponseMessagesDTO(Channel channel) {
-        if (channel == null) {
-            return null;
-        }
-        return ChannelMessagesDTO.builder()
-                .id(channel.getId())
-                .name(channel.getName())
-                .groupId(channel.getGroup() != null ? channel.getGroup().getId() : null)
-                .createdAt(channel.getCreatedAt())
-                .updatedAt(channel.getUpdatedAt())
-                .build();
-    }
+    @Mapping(target = "group", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    Channel toEntity(ChannelResponseDTO dto);
 
-    public Channel toEntity(ChannelResponseDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        Channel.ChannelBuilder<?, ?> builder = Channel.builder()
-                .id(dto.getId())
-                .name(dto.getName());
-
-        // TODO: Group relationship needs to be set separately (in service layer)
-
-        return builder.build();
-    }
-
-    public Channel toEntity(ChannelMessagesDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        Channel.ChannelBuilder<?, ?> builder = Channel.builder()
-                .id(dto.getId())
-                .name(dto.getName());
-
-        return builder.build();
-    }
+    @Mapping(target = "group", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    Channel toEntity(ChannelMessagesDTO dto);
 }

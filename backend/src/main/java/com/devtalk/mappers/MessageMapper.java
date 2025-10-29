@@ -3,44 +3,32 @@ package com.devtalk.mappers;
 import com.devtalk.dto.messages.ChatMessageDTO;
 import com.devtalk.dto.messages.MessageResponseDTO;
 import com.devtalk.model.Message;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
-@Component
-public class MessageMapper {
+@Mapper(componentModel = "spring")
+public interface MessageMapper {
 
 
-    public MessageResponseDTO toResponseDTO(Message message) {
-        if (message == null) {
-            return null;
-        }
-
-        return MessageResponseDTO.builder()
-                .id(message.getId())
-                .content(message.getContent())
-                .userId(message.getUser() != null ? message.getUser().getId() : null)
-                .channelId(message.getChannel() != null ? message.getChannel().getId() : null)
-                .threadId(message.getThread() != null ? message.getThread().getId() : null)
-                .parentMessageId(message.getParentMessage() != null ? message.getParentMessage().getId() : null)
-                .senderDisplayName(message.getUser() != null ? message.getUser().getDisplayName() : null)
-                .senderAvatarUrl(message.getUser() != null ? message.getUser().getAvatarUrl() : null)
-                .timestamp(message.getCreatedAt() != null ? message.getCreatedAt().toEpochMilli() : System.currentTimeMillis())
-                .createdAt(message.getCreatedAt())
-                .updatedAt(message.getUpdatedAt())
-                .build();
-    }
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "channelId", source = "channel.id")
+    @Mapping(target = "threadId", source = "thread.id")
+    @Mapping(target = "parentMessageId", source = "parentMessage.id")
+    @Mapping(target = "senderDisplayName", source = "user.displayName")
+    @Mapping(target = "senderAvatarUrl", source = "user.avatarUrl")
+    @Mapping(target = "timestamp", expression = "java(message.getCreatedAt() != null ? message.getCreatedAt().toEpochMilli() : System.currentTimeMillis())")
+    MessageResponseDTO toResponseDTO(Message message);
 
 
-    public Message toEntity(ChatMessageDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        return Message.builder()
-                .content(dto.getContent())
-                .user(null)
-                .channel(null)
-                .build();
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "channel", ignore = true)
+    @Mapping(target = "thread", ignore = true)
+    @Mapping(target = "parentMessage", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    Message toEntity(ChatMessageDTO dto);
 
 
 }

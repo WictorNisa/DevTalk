@@ -1,0 +1,43 @@
+package com.devtalk.mappers;
+
+
+import com.devtalk.dto.base.GroupBaseDTO;
+import com.devtalk.dto.groups.GroupResponseDTO;
+import com.devtalk.dto.user.UserResponseDTO;
+import com.devtalk.model.Group;
+import com.devtalk.model.UserGroupMembership;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.springframework.stereotype.Component;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+
+
+@Mapper(componentModel = "spring", uses = {ChannelMapper.class, UserMapper.class})
+public interface GroupMapper {
+
+    @Mapping(target = "name", source = "groupName")
+    @Mapping(target = "members", source = "memberships")
+    @Mapping(target = "channels", source = "channels")
+    GroupResponseDTO toResponseDTO(Group group);
+
+    @AfterMapping
+    default void extractUsersFromMemberships(@MappingTarget GroupResponseDTO dto, Group group) {
+        if (group.getMemberships() != null && !group.getMemberships().isEmpty()) {
+            Set<UserResponseDTO> users = group.getMemberships().stream()
+                    .map(UserGroupMembership::getUser)
+                    .filter(user -> user != null)
+                    .map(user -> UserResponseDTO.builder()
+                            .id(user.getId())
+                            .displayName(user.getDisplayName())
+                            .createdAt(user.getCreatedAt())
+                            .updatedAt(user.getUpdatedAt())
+                            .build())
+                    .collect(Collectors.toSet());
+            dto.setMembers(users);
+        }
+    }
+}
