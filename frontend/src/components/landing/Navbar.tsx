@@ -14,7 +14,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
-import ThemeSwitcher from "../ThemeSwitcher";
+import ThemeSwitcher from "../ui/custom/ThemeSwitcher";
 
 const GITHUB_REPO = "https://github.com/WictorNisa/DevTalk";
 
@@ -71,7 +71,7 @@ export default function Navbar() {
           </span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent align="end" className="w-auto">
         <DropdownMenuLabel>{t("language.label")}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup
@@ -108,7 +108,7 @@ export default function Navbar() {
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="end" className="hidden w-48 md:block">
+            <DropdownMenuContent align="end" className="hidden w-auto md:block">
               {navLinks.map((link) => (
                 <DropdownMenuItem key={link.href} asChild>
                   <a
@@ -130,6 +130,12 @@ export default function Navbar() {
                   <GitHubLogoIcon /> {t("nav.githubLabel")}
                 </a>
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <span>
+                  <ThemeSwitcher />
+                </span>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -145,7 +151,7 @@ export default function Navbar() {
                 <HamburgerMenuIcon className="h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 md:hidden">
+            <DropdownMenuContent align="end" className="w-auto md:hidden">
               {navLinks.map((link) => (
                 <DropdownMenuItem key={link.href} asChild>
                   <a
@@ -166,6 +172,12 @@ export default function Navbar() {
                 >
                   <GitHubLogoIcon /> {t("nav.githubLabelMobile")}
                 </a>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <span>
+                  <ThemeSwitcher />
+                </span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

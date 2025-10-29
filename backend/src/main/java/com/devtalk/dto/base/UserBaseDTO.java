@@ -20,4 +20,5 @@ public abstract class UserBaseDTO extends BaseDTO {
     private Role role;
     private Language language;
     private Theme theme;
+    private String avatarUrl;
 }

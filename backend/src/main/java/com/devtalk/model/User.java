@@ -56,6 +56,10 @@ public class User extends BaseEntity {
     @Builder.Default
     private Theme theme = Theme.LIGHT;
 
+    @Size(max = 512)
+    @Column(length = 512)
+    private String avatarUrl;
+
     @OneToMany(mappedBy = "user", 
                cascade = {CascadeType.PERSIST, CascadeType.MERGE}, 
                orphanRemoval = true)
