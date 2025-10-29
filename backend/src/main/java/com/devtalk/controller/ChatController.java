@@ -147,7 +147,10 @@ public class ChatController {
     @MessageMapping("/message.read")
     @Operation(summary = "Read receipt", description = "Broadcast single read receipt")
     public void readReceipt(ReadReceiptDTO dto) {
-        if (dto == null || dto.getChannelId() == null || dto.getMessageId() == null || dto.getUserId() == null) { return; }
+        if (dto == null || dto.getChannelId() == null || dto.getMessageId() == null || dto.getUserId() == null) {
+            log.warn("Invalid ReadReceiptDTO received: {}", dto);
+            return;
+        }
         if (dto.getReadAt() == null) { dto.setReadAt(System.currentTimeMillis()); }
         simpMessagingTemplate.convertAndSend("/topic/room/" + dto.getChannelId(), dto);
     }
