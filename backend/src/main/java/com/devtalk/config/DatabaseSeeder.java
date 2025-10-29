@@ -101,7 +101,6 @@ public class DatabaseSeeder implements CommandLineRunner {
         }
 
         log.info("User and message seeding completed successfully!");
-
     }
 
     private void seedDefaultGroupAndChannel() {
