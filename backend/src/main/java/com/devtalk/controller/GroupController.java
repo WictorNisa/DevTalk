@@ -1,7 +1,5 @@
 package com.devtalk.controller;
 
-import com.devtalk.dto.base.GroupBaseDTO;
-import com.devtalk.dto.channel.ChannelMessagesDTO;
 import com.devtalk.dto.groups.GroupResponseDTO;
 import com.devtalk.service.GroupService;
 import io.swagger.v3.oas.annotations.Operation;
