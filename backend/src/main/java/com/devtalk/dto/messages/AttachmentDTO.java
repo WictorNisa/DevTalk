@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class AttachmentDTO extends MessageBaseDTO {
     private Long messageId;
     private AttachmentType type;
@@ -18,5 +18,3 @@ public class AttachmentDTO extends MessageBaseDTO {
     private String filename;
     private Long sizeBytes;
 }
-
-

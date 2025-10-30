@@ -1,21 +1,22 @@
 package com.devtalk.service;
 
 import com.devtalk.dto.channel.ChannelResponseDTO;
-import com.devtalk.dto.messages.ChatMessageDTO;
 import com.devtalk.dto.messages.AttachmentDTO;
-import com.devtalk.enums.MessageReactionType;
+import com.devtalk.dto.messages.ChatMessageDTO;
 import com.devtalk.dto.messages.MessageResponseDTO;
 import com.devtalk.dto.user.UserResponseDTO;
+import com.devtalk.enums.MessageReactionType;
 import com.devtalk.mappers.ChannelMapper;
 import com.devtalk.mappers.MessageMapper;
 import com.devtalk.mappers.UserMapper;
-import com.devtalk.model.Message;
 import com.devtalk.model.Attachment;
+import com.devtalk.model.Message;
 import com.devtalk.model.MessageReaction;
 import com.devtalk.model.User;
-import com.devtalk.repository.MessageRepository;
-import com.devtalk.repository.MessageReactionRepository;
 import com.devtalk.repository.AttachmentRepository;
+import com.devtalk.repository.MessageReactionRepository;
+import com.devtalk.repository.MessageRepository;
+import com.devtalk.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -39,6 +40,7 @@ public class MessageService {
     private final ChannelMapper channelMapper;
     private final MessageReactionRepository messageReactionRepository;
     private final AttachmentRepository attachmentRepository;
+    private final UserRepository userRepository;
 
 
     @Transactional
@@ -54,18 +56,26 @@ public class MessageService {
         log.info("Saved message {} from user {} to channel {}", saved.getId(), user.getId(), channel.getId());
         return messageMapper.toResponseDTO(saved);
     }
+
+    // TODO: Return value is never used.
     @Transactional
     public MessageReaction addReaction(Long messageId, Long userId, MessageReactionType type) {
         var existing = messageReactionRepository.findByMessage_IdAndUser_IdAndReactionType(messageId, userId, type);
-        if (existing.isPresent()) { return existing.get(); }
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+
+        User user = userRepository.getReferenceById(userId);
+
         Message message = messageRepository.findById(messageId)
                 .orElseThrow(() -> new RuntimeException("Message not found with id: " + messageId));
-        User user = userMapper.toEntity(userMapper.toDTO(message.getUser())); // ensure managed user if needed
+
         MessageReaction reaction = MessageReaction.builder()
                 .message(message)
                 .user(user)
                 .reactionType(type)
                 .build();
+
         return messageReactionRepository.save(reaction);
     }
 

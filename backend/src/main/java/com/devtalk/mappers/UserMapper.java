@@ -43,6 +43,10 @@ public class UserMapper {
                 .avatarUrl(dto.getAvatarUrl())
                 .build();
     }
+
+    public User toEntityById(Long userId) {
+        return null;
+    }
 }
 
 
