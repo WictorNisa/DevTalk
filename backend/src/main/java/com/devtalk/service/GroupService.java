@@ -5,7 +5,6 @@ import com.devtalk.dto.channel.ChannelMessagesDTO;
 import com.devtalk.dto.groups.GroupResponseDTO;
 import com.devtalk.mappers.GroupMapper;
 import com.devtalk.model.Group;
-import com.devtalk.repository.ChannelRepository;
 import com.devtalk.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
