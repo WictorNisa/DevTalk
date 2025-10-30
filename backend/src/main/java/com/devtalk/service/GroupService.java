@@ -3,7 +3,6 @@ package com.devtalk.service;
 import com.devtalk.dto.base.GroupBaseDTO;
 import com.devtalk.dto.channel.ChannelMessagesDTO;
 import com.devtalk.dto.groups.GroupResponseDTO;
-import com.devtalk.mappers.ChannelMapper;
 import com.devtalk.mappers.GroupMapper;
 import com.devtalk.mappers.MessageMapper;
 import com.devtalk.model.Group;
