@@ -4,7 +4,6 @@ import com.devtalk.dto.base.GroupBaseDTO;
 import com.devtalk.dto.channel.ChannelMessagesDTO;
 import com.devtalk.dto.groups.GroupResponseDTO;
 import com.devtalk.mappers.GroupMapper;
-import com.devtalk.mappers.MessageMapper;
 import com.devtalk.model.Group;
 import com.devtalk.repository.ChannelRepository;
 import com.devtalk.repository.GroupRepository;
