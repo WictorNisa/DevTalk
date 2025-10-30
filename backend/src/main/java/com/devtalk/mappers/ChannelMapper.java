@@ -5,7 +5,6 @@ import com.devtalk.dto.channel.ChannelResponseDTO;
 import com.devtalk.model.Channel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
 public interface ChannelMapper {
