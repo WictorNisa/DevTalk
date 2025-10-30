@@ -174,5 +174,3 @@ setTimeout(() => {
     client.deactivate();
   }
 }, 5000);
-
-
