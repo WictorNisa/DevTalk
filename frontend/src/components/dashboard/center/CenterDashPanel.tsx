@@ -5,17 +5,22 @@ import { useChatStore } from "@/stores/useChatStore";
 import { useEffect } from "react";
 
 const CenterDashPanel = () => {
-  const messages = useChatStore((state) => state.messages);
-  const addMessage = useChatStore((state) => state.addMessage);
+  const connect = useChatStore((state) => state.connect);
+  const disconnect = useChatStore((state) => state.disconnect);
+  const connected = useChatStore((state) => state.connected);
 
   useEffect(() => {
-    if (messages.length === 0) {
-      messages.forEach((msg) => addMessage(msg));
-    }
-  }, [messages.length, addMessage]);
+    connect();
+    return () => {
+      disconnect();
+    };
+  }, [connect, disconnect]);
 
   return (
     <div className="flex h-full w-3/5 flex-1 flex-col gap-2">
+      <div className="text-sm">
+        {connected ? "🟢 Connected" : "🔴 Disconnected"}
+      </div>
       <CenterTopWidget />
       <CenterBottomWidget />
     </div>

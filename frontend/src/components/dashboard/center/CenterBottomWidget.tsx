@@ -13,22 +13,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SmilePlus, PlusIcon, SendHorizontal, FileUp } from "lucide-react";
-import { useSendMessage } from "@/hooks/useSendMessage";
 import { useState } from "react";
+import { useChatStore } from "@/stores/useChatStore";
 
 const CenterBottomWidget = () => {
-  const { sendMessage } = useSendMessage();
   const [inputValue, setInputValue] = useState<string>("");
+
+  const sendMessage = useChatStore((state) => state.sendMessage);
+  const activeChannel = useChatStore((state) => state.activeChannel);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputValue.trim()) {
-      sendMessage({
-        text: inputValue,
-        user: "CurrentUser",
-        avatar: "Mullebäck",
-      });
+    console.log("🔍 activeChannel:", activeChannel); // ADD THIS
+    console.log("🔍 inputValue:", inputValue);
+    if (inputValue.trim() && activeChannel) {
+      console.log("✅ Sending message..."); // ADD THIS
+      sendMessage(activeChannel, inputValue.trim());
       setInputValue("");
+    } else {
+      console.log("❌ Cannot send - missing channel or empty input"); // ADD THIS
     }
   };
 
@@ -48,7 +51,6 @@ const CenterBottomWidget = () => {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          typeof="button"
         />
         <InputGroupAddon align="block-end" className="ml-auto border-t">
           {/* Drop Down */}
