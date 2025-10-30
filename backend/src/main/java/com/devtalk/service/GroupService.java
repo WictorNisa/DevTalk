@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -20,19 +19,19 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final GroupMapper groupMapper;
 
-    // Custom exception for no groups found
-    public static class NoGroupsFoundException extends RuntimeException {
-        public NoGroupsFoundException(String message) {
-            super(message);
-        }
-    }
-
     @Transactional(readOnly = true)
     public GroupResponseDTO getDefaultGroup() {
         Group group = groupRepository.findByGroupnameWithMembers(DEFAULT_GROUP_NAME)
                 .orElseGet(() -> groupRepository.findAll().stream().findFirst()
                         .orElseThrow(() -> new NoGroupsFoundException("No groups found in the system")));
         return groupMapper.toResponseDTO(group);
+    }
+
+    // Custom exception for no groups found
+    public static class NoGroupsFoundException extends RuntimeException {
+        public NoGroupsFoundException(String message) {
+            super(message);
+        }
     }
 
 }
