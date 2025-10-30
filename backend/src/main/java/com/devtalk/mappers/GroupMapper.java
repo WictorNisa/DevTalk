@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 public interface GroupMapper {
 
     @Mapping(target = "name", source = "groupName")
-    @Mapping(target = "channels", source = "channels")
     GroupResponseDTO toResponseDTO(Group group);
 
     @AfterMapping
