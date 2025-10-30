@@ -27,7 +27,7 @@ public class UserService {
         Optional<User> existingUser = userRepository.findByExternalId(externalId);
         if (existingUser.isPresent()) {
             log.info("User found: {} ({})", displayName, externalId);
-            return userMapper.toDTO(existingUser.get());
+            return userMapper.toResponseDTO(existingUser.get());
         }
 
         User newUser = User.builder()
@@ -38,7 +38,7 @@ public class UserService {
 
         User saved = userRepository.save(newUser);
         log.info("Created new user: {} ({})", displayName, externalId);
-        return userMapper.toDTO(saved);
+        return userMapper.toResponseDTO(saved);
     }
 
 
@@ -52,7 +52,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponseDTO getUserDTOById(Long userId) {
         User user = getUserById(userId);
-        return userMapper.toDTO(user);
+        return userMapper.toResponseDTO(user);
     }
 
     @Transactional
@@ -67,14 +67,14 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<UserResponseDTO> getUsersByPresenceStatus(PresenceStatus status) {
         return userRepository.findByPresenceStatus(status).stream()
-                .map(userMapper::toDTO)
+                .map(userMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<UserResponseDTO> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(userMapper::toDTO)
+                .map(userMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 }

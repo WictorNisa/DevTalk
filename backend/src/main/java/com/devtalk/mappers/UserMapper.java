@@ -1,17 +1,13 @@
 package com.devtalk.mappers;
 
-import com.devtalk.dto.base.UserBaseDTO;
 import com.devtalk.dto.user.UserResponseDTO;
 import com.devtalk.model.User;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
-@Component
-public class UserMapper {
+@Mapper(componentModel = "spring")
+public interface UserMapper {
 
-    public UserResponseDTO toDTO(User user) {
-        if (user == null) {
-            return null;
-        }
+   UserResponseDTO toResponseDTO(User user);
 
         return UserResponseDTO.builder()
                 .id(user.getId())
