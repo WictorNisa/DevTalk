@@ -1,0 +1,15 @@
+# Node
+**/node_modules/
+*.log
+
+# Builds
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+

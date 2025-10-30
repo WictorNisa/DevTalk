@@ -1,17 +1,19 @@
 package com.devtalk.dto.messages;
 
 import com.devtalk.dto.base.MessageBaseDTO;
-import com.devtalk.enums.MessageReactionType;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class MessageReactionDTO extends MessageBaseDTO {
-    private Long reactionCount;
-    private MessageReactionType reactionType;
+public class DeliveryAckDTO extends MessageBaseDTO {
+    private String status; // e.g., "DELIVERED"
+    private Long serverTimestamp;
     private Long messageId;
 }
+
+

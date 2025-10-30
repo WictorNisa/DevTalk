@@ -1,16 +1,22 @@
 package com.devtalk.service;
 
 import com.devtalk.dto.channel.ChannelResponseDTO;
+import com.devtalk.dto.messages.AttachmentDTO;
 import com.devtalk.dto.messages.ChatMessageDTO;
 import com.devtalk.dto.messages.MessageResponseDTO;
 import com.devtalk.dto.user.UserResponseDTO;
+import com.devtalk.enums.MessageReactionType;
 import com.devtalk.mappers.ChannelMapper;
 import com.devtalk.mappers.MessageMapper;
 import com.devtalk.mappers.UserMapper;
-import com.devtalk.model.Channel;
+import com.devtalk.model.Attachment;
 import com.devtalk.model.Message;
+import com.devtalk.model.MessageReaction;
 import com.devtalk.model.User;
+import com.devtalk.repository.AttachmentRepository;
+import com.devtalk.repository.MessageReactionRepository;
 import com.devtalk.repository.MessageRepository;
+import com.devtalk.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +38,9 @@ public class MessageService {
     private final MessageMapper messageMapper;
     private final UserMapper userMapper;
     private final ChannelMapper channelMapper;
+    private final MessageReactionRepository messageReactionRepository;
+    private final AttachmentRepository attachmentRepository;
+    private final UserRepository userRepository;
 
 
     @Transactional
@@ -39,9 +48,65 @@ public class MessageService {
         Message message = messageMapper.toEntity(dto);
         message.setUser(userMapper.toEntity(user));
         message.setChannel(channelMapper.toEntity(channel));
+        if (dto.getParentMessageId() != null) {
+            message.setParentMessage(messageRepository.findById(dto.getParentMessageId())
+                    .orElseThrow(() -> new RuntimeException("Parent message not found: " + dto.getParentMessageId())));
+        }
         Message saved = messageRepository.save(message);
         log.info("Saved message {} from user {} to channel {}", saved.getId(), user.getId(), channel.getId());
         return messageMapper.toResponseDTO(saved);
+    }
+
+    // TODO: Return value is never used.
+    @Transactional
+    public MessageReaction addReaction(Long messageId, Long userId, MessageReactionType type) {
+        var existing = messageReactionRepository.findByMessage_IdAndUser_IdAndReactionType(messageId, userId, type);
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+
+        User user = userRepository.getReferenceById(userId);
+
+        Message message = messageRepository.findById(messageId)
+                .orElseThrow(() -> new RuntimeException("Message not found with id: " + messageId));
+
+        MessageReaction reaction = MessageReaction.builder()
+                .message(message)
+                .user(user)
+                .reactionType(type)
+                .build();
+
+        return messageReactionRepository.save(reaction);
+    }
+
+    @Transactional
+    public void removeReaction(Long messageId, Long userId, MessageReactionType type) {
+        messageReactionRepository.findByMessage_IdAndUser_IdAndReactionType(messageId, userId, type)
+                .ifPresent(messageReactionRepository::delete);
+    }
+
+    @Transactional
+    public MessageResponseDTO addAttachment(AttachmentDTO dto) {
+        Message message = messageRepository.findById(dto.getMessageId())
+                .orElseThrow(() -> new RuntimeException("Message not found with id: " + dto.getMessageId()));
+        Attachment attachment = Attachment.builder()
+                .message(message)
+                .type(dto.getType())
+                .url(dto.getUrl())
+                .filename(dto.getFilename())
+                .sizeBytes(dto.getSizeBytes())
+                .build();
+        attachmentRepository.save(attachment);
+        return messageMapper.toResponseDTO(messageRepository.findByIdWithAllDetails(message.getId())
+                .orElseThrow());
+    }
+
+    @Transactional(readOnly = true)
+    public List<MessageResponseDTO> searchMessages(String query, int limit) {
+        return messageRepository.findByContentContainingIgnoreCase(query).stream()
+                .limit(limit)
+                .map(messageMapper::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
 

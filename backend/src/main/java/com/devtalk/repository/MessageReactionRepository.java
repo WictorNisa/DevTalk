@@ -25,4 +25,6 @@ public interface MessageReactionRepository extends JpaRepository<MessageReaction
 
     @Query("select r from MessageReaction r join fetch r.message m where r.reactionType = :reactionType")
     List<MessageReaction> findByReactionTypeWithMessage(@Param("reactionType") MessageReactionType reactionType);
+
+    Optional<MessageReaction> findByMessage_IdAndUser_IdAndReactionType(Long messageId, Long userId, MessageReactionType reactionType);
 }
