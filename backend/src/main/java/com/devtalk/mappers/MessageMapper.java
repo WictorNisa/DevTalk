@@ -5,8 +5,6 @@ import com.devtalk.dto.messages.MessageResponseDTO;
 import com.devtalk.model.Message;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.stereotype.Component;
-
 @Mapper(componentModel = "spring")
 public interface MessageMapper {
 
