@@ -14,7 +14,7 @@ public class MessageMapper {
             return null;
         }
 
-        return MessageResponseDTO.builder()
+        var dto = MessageResponseDTO.builder()
                 .id(message.getId())
                 .content(message.getContent())
                 .userId(message.getUser() != null ? message.getUser().getId() : null)
@@ -27,6 +27,9 @@ public class MessageMapper {
                 .createdAt(message.getCreatedAt())
                 .updatedAt(message.getUpdatedAt())
                 .build();
+
+        // Note: attachments/reactions can be added to MessageResponseDTO later; keep mapper ready
+        return dto;
     }
 
 

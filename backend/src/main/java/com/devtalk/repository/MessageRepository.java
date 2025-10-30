@@ -36,6 +36,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     @Query("select m from Message m join fetch m.user u where m.user.id = :userId order by m.createdAt desc")
     List<Message> findByUserIdWithUser(@Param("userId") Long userId);
+
+    List<Message> findByContentContainingIgnoreCase(String query);
 }
 
 

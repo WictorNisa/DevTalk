@@ -13,4 +13,5 @@ import lombok.experimental.SuperBuilder;
 public class MessageReactionDTO extends MessageBaseDTO {
     private Long reactionCount;
     private MessageReactionType reactionType;
+    private Long messageId;
 }

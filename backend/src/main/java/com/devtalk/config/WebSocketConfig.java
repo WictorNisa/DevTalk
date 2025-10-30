@@ -24,7 +24,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(@NonNull StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .addInterceptors(new HttpSessionHandshakeInterceptor())
-                .setAllowedOrigins("http://localhost:5173", "http://localhost:8080", "http://localhost:63342")
+                .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
 

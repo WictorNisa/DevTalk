@@ -3,12 +3,15 @@ package com.devtalk.controller;
 import com.devtalk.dto.base.MessageBaseDTO;
 import com.devtalk.dto.channel.ChannelResponseDTO;
 import com.devtalk.dto.messages.ChatMessageDTO;
+import com.devtalk.dto.messages.DeliveryAckDTO;
 import com.devtalk.dto.messages.MessageResponseDTO;
 import com.devtalk.dto.messages.MessageEditDTO;
 import com.devtalk.dto.messages.MessageDeleteDTO;
 import com.devtalk.dto.messages.TypingDTO;
 import com.devtalk.dto.messages.ReadReceiptDTO;
 import com.devtalk.dto.messages.PingPongMessageDTO;
+import com.devtalk.dto.messages.MessageReactionDTO;
+import com.devtalk.dto.messages.AttachmentDTO;
 import com.devtalk.dto.user.UserResponseDTO;
 import com.devtalk.service.ChannelService;
 import com.devtalk.service.MessageService;
@@ -83,10 +86,46 @@ public class ChatController {
             simpMessagingTemplate.convertAndSend(message.getDestination(), savedMessage);
             log.info("Broadcasted message {} from user {} to {}", savedMessage.getId(), user.getDisplayName(), message.getDestination());
 
+            // Send delivery confirmation to the sender (all active sessions)
+            if (principal != null) {
+                String username = principal.getName();
+                DeliveryAckDTO ack = new DeliveryAckDTO();
+                ack.setStatus("DELIVERED");
+                ack.setServerTimestamp(System.currentTimeMillis());
+                ack.setChannelId(savedMessage.getChannelId());
+                ack.setMessageId(savedMessage.getId());
+                ack.setUserId(savedMessage.getUserId());
+                simpMessagingTemplate.convertAndSendToUser(username, "/queue/acks", ack);
+            }
+
         } catch (RuntimeException e) {
             log.error("Error handling chat message: {}", e.getMessage(), e);
             sendErrorToUser(principal, "Error sending message: " + e.getMessage());
         }
+    }
+
+    @MessageMapping("/message.react")
+    @Operation(summary = "Add reaction", description = "Adds a reaction to a message and broadcasts it")
+    public void react(MessageReactionDTO dto) {
+        if (dto == null || dto.getMessageId() == null || dto.getUserId() == null || dto.getChannelId() == null || dto.getReactionType() == null) { return; }
+        messageService.addReaction(dto.getMessageId(), dto.getUserId(), dto.getReactionType());
+        simpMessagingTemplate.convertAndSend("/topic/room/" + dto.getChannelId(), dto);
+    }
+
+    @MessageMapping("/message.unreact")
+    @Operation(summary = "Remove reaction", description = "Removes a reaction from a message and broadcasts it")
+    public void unreact(MessageReactionDTO dto) {
+        if (dto == null || dto.getMessageId() == null || dto.getUserId() == null || dto.getChannelId() == null || dto.getReactionType() == null) { return; }
+        messageService.removeReaction(dto.getMessageId(), dto.getUserId(), dto.getReactionType());
+        simpMessagingTemplate.convertAndSend("/topic/room/" + dto.getChannelId(), dto);
+    }
+
+    @MessageMapping("/message.attach")
+    @Operation(summary = "Attach file", description = "Attaches a file to a message and broadcasts updated message")
+    public void attach(AttachmentDTO dto) {
+        if (dto == null || dto.getMessageId() == null || dto.getChannelId() == null) { return; }
+        var updated = messageService.addAttachment(dto);
+        simpMessagingTemplate.convertAndSend("/topic/room/" + dto.getChannelId(), updated);
     }
 
     @MessageMapping("/chat.edit")
