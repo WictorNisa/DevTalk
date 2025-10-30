@@ -1,7 +1,6 @@
 package com.devtalk.mappers;
 
 
-import com.devtalk.dto.base.GroupBaseDTO;
 import com.devtalk.dto.groups.GroupResponseDTO;
 import com.devtalk.dto.user.UserResponseDTO;
 import com.devtalk.model.Group;
