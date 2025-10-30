@@ -24,17 +24,12 @@ public interface GroupMapper {
     GroupResponseDTO toResponseDTO(Group group);
 
     @AfterMapping
-    default void extractUsersFromMemberships(@MappingTarget GroupResponseDTO dto, Group group) {
+    default void extractUsersFromMemberships(@MappingTarget GroupResponseDTO dto, Group group, UserMapper userMapper) {
         if (group.getMemberships() != null && !group.getMemberships().isEmpty()) {
             Set<UserResponseDTO> users = group.getMemberships().stream()
                     .map(UserGroupMembership::getUser)
                     .filter(user -> user != null)
-                    .map(user -> UserResponseDTO.builder()
-                            .id(user.getId())
-                            .displayName(user.getDisplayName())
-                            .createdAt(user.getCreatedAt())
-                            .updatedAt(user.getUpdatedAt())
-                            .build())
+                    .map(userMapper::toResponseDTO)
                     .collect(Collectors.toSet());
             dto.setMembers(users);
         }
