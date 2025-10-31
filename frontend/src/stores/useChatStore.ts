@@ -76,7 +76,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         try {
           const history = JSON.parse(message.body)
           const transformedMessages = history.map((msg: BackendMessageDTO) => {
-            transformBackendMessage(msg)
+            return transformBackendMessage(msg)
           })
 
           set({ messages: transformedMessages })
