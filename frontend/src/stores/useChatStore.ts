@@ -90,7 +90,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
 
       client.subscribe(`/topic/room/${channelId}`, (message) => {
-        console.log('Recieved message: ', message.body);
+        console.log('Received message: ', message.body);
         try {
           const payload = JSON.parse(message.body)
           console.log('Parsed message:', payload)
