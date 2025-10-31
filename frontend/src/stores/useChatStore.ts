@@ -134,7 +134,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   addMessage: (msg) => set((state) => ({ messages: [...state.messages, msg] })),
   clearMessages: () => set({ messages: [] }),
   sendMessage: (channelId: string, content: string) => {
-    const { stompClient, connected, userId } = get()
+    const { stompClient, connected } = get()
     if (!connected || !stompClient) {
       console.error('Cannot send message: not connected!')
       return
