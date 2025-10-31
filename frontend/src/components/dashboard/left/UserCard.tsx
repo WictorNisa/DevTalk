@@ -16,13 +16,17 @@ type Props = {
 };
 
 export const UserCard = ({ user, collapsed = false }: Props) => {
+  // TODO: when backend is available:
+  // - map backend response to this `User` shape (avatar URL, status, badges)
+  // - normalize avatar URL (CDN / signed URL) here or via a helper
+  // - replace any local fallbacks with real user data / presence subscription
   const statusBg = userStatus(user.status);
 
   if (collapsed) {
     return (
       <div className="flex items-center justify-center p-1">
         <div className="relative">
-          <Avatar className="h-6 w-6 rounded-full">
+          <Avatar className="h-7 w-7 rounded-full">
             <AvatarImage
               src={user.avatar || "https://placehold.co/120"}
               alt={user.username}
@@ -42,10 +46,10 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
   }
 
   return (
-    <Card className="rounded-lg p-2">
-      <CardContent className="flex items-center gap-3 p-0">
+    <Card className="w-full rounded-lg p-2">
+      <CardContent className="flex items-start gap-3 p-0">
         <div className="relative">
-          <Avatar className="h-9 w-9 rounded-full">
+          <Avatar className="h-10 w-10 rounded-full">
             <AvatarImage
               src={user.avatar || "https://placehold.co/120"}
               alt={user.username}
@@ -61,7 +65,7 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
           />
         </div>
 
-        <div className="flex flex-col text-xs font-medium">
+        <div className="flex flex-col items-center text-xs font-medium">
           <span>{user.username}</span>
           <span className="sr-only">{user.status}</span>
         </div>
