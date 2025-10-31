@@ -44,7 +44,7 @@ const CenterBottomWidget = () => {
 
   return (
     <form className="grid w-full" onSubmit={handleSubmit}>
-      <InputGroup className="rounded-xl">
+      <InputGroup className="rounded-lg">
         <InputGroupTextarea
           className="min-h-auto"
           placeholder="Type your message here..."
