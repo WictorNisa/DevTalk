@@ -1,7 +1,7 @@
-import { AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AvatarFallback, AvatarImage, Avatar } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import type { UserCardProps } from "@/types/UserCardProps";
-import { Avatar } from "@/components/ui/avatar";
+import { userStatus } from "@/utils/userStatus";
 
 export const UserListCard = ({
   avatar,
@@ -9,20 +9,7 @@ export const UserListCard = ({
   status,
   collapsed = false,
 }: UserCardProps & { collapsed?: boolean }) => {
-  const s = (status || "").toLowerCase();
-  let statusBg = "bg-gray-400";
-
-  switch (s) {
-    case "online":
-      statusBg = "bg-green-400";
-      break;
-    case "idle":
-      statusBg = "bg-yellow-400";
-      break;
-    case "busy":
-      statusBg = "bg-red-400";
-      break;
-  }
+  const statusBg = userStatus(status);
 
   if (collapsed) {
     return (
