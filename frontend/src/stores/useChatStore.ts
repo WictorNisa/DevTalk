@@ -72,7 +72,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
       const channelId = 1;
 
-      client.subscribe('/user/queue/history', () => {
+      client.subscribe('/user/queue/history', (message) => {
         try {
           const history = JSON.parse(message.body)
           const transformedMessages = history.map((msg: BackendMessageDTO) => {
