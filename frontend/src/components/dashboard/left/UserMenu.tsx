@@ -3,11 +3,10 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Settings } from "lucide-react";
+import { Settings, LogOut, EllipsisVertical, UserPen } from "lucide-react";
 
 export const UserMenu = ({ onSignOut }: { onSignOut?: () => void }) => {
   return (
@@ -19,32 +18,37 @@ export const UserMenu = ({ onSignOut }: { onSignOut?: () => void }) => {
           aria-label="User settings"
           className="cursor-pointer"
         >
-          <Settings />
+          <EllipsisVertical />
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-44">
-        <DropdownMenuLabel>Account</DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-auto">
         <DropdownMenuItem
+          className="cursor-pointer"
           onSelect={() => {
             /* open profile */
           }}
         >
+          <UserPen />
           Profile
         </DropdownMenuItem>
         <DropdownMenuItem
+          className="cursor-pointer"
           onSelect={() => {
             /* open settings */
           }}
         >
+          <Settings />
           Settings
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
+          className="cursor-pointer"
           onSelect={() => {
             onSignOut?.();
           }}
         >
+          <LogOut />
           Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
