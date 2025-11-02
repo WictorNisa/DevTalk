@@ -40,9 +40,10 @@ const LeftBottomWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
 
   return (
     <Card
-      // allow the status dot to overflow and reduce padding when collapsed
-      className={`flex items-center gap-3 rounded-lg ${
-        collapsed ? "justify-center overflow-visible p-1" : "p-2"
+      className={`flex h-auto items-center gap-2 rounded-lg ${
+        collapsed
+          ? "h-auto justify-center overflow-visible rounded-lg p-1"
+          : "p-2"
       }`}
     >
       <UserCard user={user} collapsed={collapsed} />

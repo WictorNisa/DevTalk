@@ -35,7 +35,7 @@ export const UserListCard = ({
           </Avatar>
 
           <span
-            className={`${statusBg} absolute right-0 bottom-0 h-2 w-2 rounded-full ring-1 ring-gray-400`}
+            className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2 w-2 rounded-full ring-1`}
             aria-hidden="true"
           />
         </div>
@@ -58,7 +58,7 @@ export const UserListCard = ({
           </Avatar>
 
           <span
-            className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-3 w-3 rounded-full ring-1`}
+            className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full ring-1`}
             aria-hidden="true"
           />
         </div>

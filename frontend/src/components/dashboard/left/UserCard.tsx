@@ -44,7 +44,7 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
           </Avatar>
 
           <span
-            className={`${statusBg} absolute right-0 bottom-0 h-2 w-2 rounded-full ring-1 ring-gray-400`}
+            className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2 w-2 rounded-full ring-1`}
             aria-hidden="true"
           />
         </div>
@@ -53,8 +53,8 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
   }
 
   return (
-    <Card className="w-full rounded-lg p-2">
-      <CardContent className="flex items-start gap-3 p-0">
+    <Card className="w-full items-start rounded-lg p-2">
+      <CardContent className="flex gap-3 p-2.5">
         <div className="relative">
           <Avatar className="h-10 w-10 rounded-full">
             <AvatarImage
@@ -67,12 +67,12 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
           </Avatar>
 
           <span
-            className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-3 w-3 rounded-full ring-1`}
+            className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full ring-1`}
             aria-hidden="true"
           />
         </div>
 
-        <div className="flex flex-col items-center text-xs font-medium">
+        <div className="flex flex-col items-center text-sm font-medium">
           <span>{user.username}</span>
           <span className="sr-only">{user.status}</span>
         </div>
