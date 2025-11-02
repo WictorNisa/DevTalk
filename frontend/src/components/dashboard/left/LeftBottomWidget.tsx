@@ -1,6 +1,7 @@
 import dummyUsers from "@/data/dummyUsers.json";
 import { Card } from "@/components/ui/card";
 import { UserCard, type User } from "@/components/dashboard/left/UserCard";
+// import { UserMenu } from "@/components/dashboard/left/UserMenu";
 
 /*
  TODO (LeftBottomWidget)
@@ -41,9 +42,7 @@ const LeftBottomWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
   return (
     <Card
       className={`flex h-auto items-center gap-2 rounded-lg ${
-        collapsed
-          ? "h-auto justify-center overflow-visible rounded-lg p-1"
-          : "p-2"
+        collapsed ? "h-auto justify-center overflow-visible p-1" : "p-2"
       }`}
     >
       <UserCard user={user} collapsed={collapsed} />

@@ -1,6 +1,7 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { userStatus } from "@/utils/userStatus";
+import { UserMenu } from "@/components/dashboard/left/UserMenu";
 
 export type User = {
   id?: string | null;
@@ -65,7 +66,6 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
               {user.username.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-
           <span
             className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full ring-1`}
             aria-hidden="true"
@@ -76,6 +76,16 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
           <span>{user.username}</span>
           <span className="sr-only">{user.status}</span>
         </div>
+        {/* Render menu only when expanded */}
+        {!collapsed && (
+          <div className="flex flex-1 justify-center">
+            <UserMenu
+              onSignOut={() => {
+                /* sign out handler goes here */
+              }}
+            />
+          </div>
+        )}
       </CardContent>
     </Card>
   );
