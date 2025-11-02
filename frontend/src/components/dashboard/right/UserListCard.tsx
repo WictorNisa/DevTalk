@@ -3,6 +3,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { UserCardProps } from "@/types/UserCardProps";
 import { userStatus } from "@/utils/userStatus";
 
+/*
+ TODO (UserListCard)
+ - Use backend user DTO -> UserCardProps mapping when API is available.
+ - Add <AvatarImage onError=> handler to swap to a local fallback image.
+ - Normalize & validate avatar URLs in a shared util (reject data: URIs).
+ - Add accessibility improvements: aria-label on wrappers, descriptive alt text.
+ - Add unit tests for collapsed/expanded UI and status mapping.
+*/
+
 export const UserListCard = ({
   avatar,
   username,

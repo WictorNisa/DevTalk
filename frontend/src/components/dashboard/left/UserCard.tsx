@@ -16,10 +16,17 @@ type Props = {
 };
 
 export const UserCard = ({ user, collapsed = false }: Props) => {
-  // TODO: when backend is available:
-  // - map backend response to this `User` shape (avatar URL, status, badges)
-  // - normalize avatar URL (CDN / signed URL) here or via a helper
-  // - replace any local fallbacks with real user data / presence subscription
+  // TODO:
+  // - Map backend response to `User` shape (id, username, avatar, status, badge/roles).
+  // - Normalize & sanitize avatar URLs (CDN / signed URLs); reject unsafe data: URIs.
+  // - Add <AvatarImage onError=> fallback to local default avatar.
+  // - Subscribe to presence (WebSocket / realtime) to update `status` live.
+  // - Render badges/roles from backend and add accessible label/tooltip.
+  // - Add loading / skeleton state while fetching current user.
+  // - Implement caching strategy for avatar images and presence updates.
+  // - Add unit tests for userStatus mapping, avatar fallback and collapsed UI.
+  // - Ensure accessibility: aria-label, alt text, keyboard focus states.
+  // - Log telemetry for avatar load errors / invalid API payloads.
   const statusBg = userStatus(user.status);
 
   if (collapsed) {

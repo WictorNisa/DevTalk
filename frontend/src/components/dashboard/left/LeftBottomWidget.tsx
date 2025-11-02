@@ -2,6 +2,16 @@ import dummyUsers from "@/data/dummyUsers.json";
 import { Card } from "@/components/ui/card";
 import { UserCard, type User } from "@/components/dashboard/left/UserCard";
 
+/*
+ TODO (LeftBottomWidget)
+ - Replace dummyUsers fallback with authenticated current user (from auth/context).
+ - Normalize & sanitize avatar URLs in a shared helper (handle CDN/signed URLs).
+ - Provide loading/skeleton state while user data resolves.
+ - Use presence subscription (WebSocket / realtime) to update `status` live.
+ - Add avatar onError fallback to prevent broken images from clipping layout.
+ - Consider caching avatar & presence data and invalidation strategy.
+*/
+
 const LeftBottomWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
   const fallbackUser: User = {
     id: "me",
