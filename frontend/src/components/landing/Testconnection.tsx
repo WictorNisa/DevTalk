@@ -61,10 +61,11 @@ const Testconnection = () => {
     if (stompClient && connected) {
       const payload = {
         content: messageContent,
-        userId: 123,
+        userId: 1,
         channelId: 1,
         threadId: null,
         parentMessageId: null,
+        destination: `/topic/room/1`
       };
       stompClient.publish({
         destination: "/app/chat.send",
@@ -78,7 +79,7 @@ const Testconnection = () => {
     if (stompClient && connected) {
       const payload = {
         content: null,
-        userId: 123,
+        userId: 1,
         channelId: 1,
         threadId: null,
         parentMessageId: null,
@@ -157,7 +158,7 @@ const Testconnection = () => {
       <div className="h-64 overflow-y-auto rounded border p-4">
         <h3 className="mb-2 font-bold">Messages:</h3>
         {messages.map((message, index) => (
-          <div key={index} className="mb-2 rounded bg-gray-100 p-2">
+          <div key={index} className="mb-2 rounded bg-blue-300 text-amber-800 p-2">
             {message}
           </div>
         ))}
