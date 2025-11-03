@@ -15,41 +15,43 @@ export const UserMenu = ({ onSignOut }: { onSignOut?: () => void }) => {
         <Button
           variant="ghost"
           size="sm"
-          aria-label="User settings"
-          className="cursor-pointer"
+          aria-label="User actions"
+          className="focus-visible:ring-primary/60 p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
         >
-          <EllipsisVertical />
+          <EllipsisVertical className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-auto">
+      <DropdownMenuContent
+        align="end"
+        sideOffset={6}
+        className="w-40"
+        onClick={(e) => e.stopPropagation()}
+      >
         <DropdownMenuItem
-          className="cursor-pointer"
           onSelect={() => {
             /* open profile */
           }}
         >
-          <UserPen />
-          Profile
+          <UserPen className="mr-2 h-4 w-4" /> Profile
         </DropdownMenuItem>
         <DropdownMenuItem
-          className="cursor-pointer"
           onSelect={() => {
             /* open settings */
           }}
         >
-          <Settings />
-          Settings
+          <Settings className="mr-2 h-4 w-4" /> Settings
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className="cursor-pointer"
           onSelect={() => {
             onSignOut?.();
           }}
         >
-          <LogOut />
-          Sign out
+          <LogOut className="mr-2 h-4 w-4" /> Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

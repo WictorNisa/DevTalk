@@ -17,17 +17,6 @@ type Props = {
 };
 
 export const UserCard = ({ user, collapsed = false }: Props) => {
-  // TODO:
-  // - Map backend response to `User` shape (id, username, avatar, status, badge/roles).
-  // - Normalize & sanitize avatar URLs (CDN / signed URLs); reject unsafe data: URIs.
-  // - Add <AvatarImage onError=> fallback to local default avatar.
-  // - Subscribe to presence (WebSocket / realtime) to update `status` live.
-  // - Render badges/roles from backend and add accessible label/tooltip.
-  // - Add loading / skeleton state while fetching current user.
-  // - Implement caching strategy for avatar images and presence updates.
-  // - Add unit tests for userStatus mapping, avatar fallback and collapsed UI.
-  // - Ensure accessibility: aria-label, alt text, keyboard focus states.
-  // - Log telemetry for avatar load errors / invalid API payloads.
   const statusBg = userStatus(user.status);
 
   if (collapsed) {
@@ -55,12 +44,16 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
 
   return (
     <Card className="w-full items-start rounded-lg p-2">
-      <CardContent className="flex gap-3 p-2.5">
-        <div className="relative">
+      <CardContent className="flex items-center gap-3 p-2.5">
+        <div className="relative flex-shrink-0">
           <Avatar className="h-10 w-10 rounded-full">
             <AvatarImage
-              src={user.avatar || "https://placehold.co/120"}
+              src={user.avatar || "/images/default-avatar.jpg"}
               alt={user.username}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src =
+                  "/images/default-avatar.jpg";
+              }}
             />
             <AvatarFallback>
               {user.username.slice(0, 2).toUpperCase()}
@@ -68,24 +61,31 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
           </Avatar>
           <span
             className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full ring-1`}
-            aria-hidden="true"
+            aria-hidden
           />
         </div>
 
-        <div className="flex flex-col items-center text-sm font-medium">
-          <span>{user.username}</span>
-          <span className="sr-only">{user.status}</span>
-        </div>
-        {/* Render menu only when expanded */}
-        {!collapsed && (
-          <div className="flex flex-1 justify-center">
-            <UserMenu
-              onSignOut={() => {
-                /* sign out handler goes here */
-              }}
-            />
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <span className="truncate text-sm font-medium">
+              {user.username}
+            </span>
           </div>
-        )}
+          <div className="text-muted-foreground truncate text-xs">
+            {user.status === "online"
+              ? "Active now"
+              : (user.status ?? "Offline")}
+          </div>
+        </div>
+
+        {/* menu on the far right, won't push text when opened */}
+        <div className="flex-shrink-0">
+          <UserMenu
+            onSignOut={() => {
+              /* sign out */
+            }}
+          />
+        </div>
       </CardContent>
     </Card>
   );
