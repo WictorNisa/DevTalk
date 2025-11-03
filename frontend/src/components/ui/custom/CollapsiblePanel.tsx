@@ -35,7 +35,9 @@ export const CollapsiblePanel = ({ children, side }: CollapsiblePanelProps) => {
   const toggleButton = (
     <Button
       onClick={toggle}
-      className={`text-ring hover:text-foreground absolute h-full cursor-pointer bg-transparent hover:bg-transparent ${side === "left" ? "right-0" : "left-0"}`}
+      className={`text-ring hover:text-foreground absolute z-30 flex w-8 -translate-y-1/2 transform cursor-pointer items-center justify-center bg-transparent hover:bg-transparent ${side === "left" ? "right-0" : "left-0"}`}
+      style={{ top: "50%" }}
+      aria-label={side === "left" ? "Toggle left panel" : "Toggle right panel"}
     >
       {getToggleIcon()}
     </Button>

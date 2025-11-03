@@ -1,6 +1,15 @@
 import dummyUsers from "@/data/dummyUsers.json";
 import { UserListCard } from "./UserListCard";
 
+/*
+ TODO (UserList)
+ - Replace dummyUsers with authenticated / backend users (via auth/context or API).
+ - Move avatar normalisation into a shared helper (handle CDN / signed URLs).
+ - Add loading / skeleton state while users list is fetched.
+ - Deduplicate users by id and ensure stable keys (avoid using undefined ids).
+ - Consider virtualisation if the list grows large.
+*/
+
 type User = {
   id: string | null | undefined;
   username: string;
@@ -10,7 +19,7 @@ type User = {
 };
 
 export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
-  // use dummyUsers when present, otherwise use the local fallback
+  // local fallback users (keeps same shape used elsewhere)
   const fallbackUsers: User[] = [
     {
       username: "AlexCoder",

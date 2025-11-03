@@ -3,7 +3,7 @@ import MessageList from "./MessageList/MessageList";
 
 const CenterTopWidget = () => {
   return (
-    <Card className="bg-background flex h-full w-full flex-col overflow-hidden">
+    <Card className="bg-background flex h-full w-full flex-col overflow-hidden rounded-lg">
       <MessageList />
     </Card>
   );

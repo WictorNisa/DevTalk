@@ -1,7 +1,16 @@
-import { AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AvatarFallback, AvatarImage, Avatar } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import type { UserCardProps } from "@/types/UserCardProps";
-import { Avatar } from "@/components/ui/avatar";
+import { userStatus } from "@/utils/userStatus";
+
+/*
+ TODO (UserListCard)
+ - Use backend user DTO -> UserCardProps mapping when API is available.
+ - Add <AvatarImage onError=> handler to swap to a local fallback image.
+ - Normalize & validate avatar URLs in a shared util (reject data: URIs).
+ - Add accessibility improvements: aria-label on wrappers, descriptive alt text.
+ - Add unit tests for collapsed/expanded UI and status mapping.
+*/
 
 export const UserListCard = ({
   avatar,
@@ -9,20 +18,7 @@ export const UserListCard = ({
   status,
   collapsed = false,
 }: UserCardProps & { collapsed?: boolean }) => {
-  const s = (status || "").toLowerCase();
-  let statusBg = "bg-gray-400";
-
-  switch (s) {
-    case "online":
-      statusBg = "bg-green-400";
-      break;
-    case "idle":
-      statusBg = "bg-yellow-400";
-      break;
-    case "busy":
-      statusBg = "bg-red-400";
-      break;
-  }
+  const statusBg = userStatus(status);
 
   if (collapsed) {
     return (
@@ -39,7 +35,7 @@ export const UserListCard = ({
           </Avatar>
 
           <span
-            className={`${statusBg} absolute right-0 bottom-0 h-2 w-2 rounded-full ring-1 ring-gray-400`}
+            className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2 w-2 rounded-full ring-1`}
             aria-hidden="true"
           />
         </div>
@@ -62,7 +58,7 @@ export const UserListCard = ({
           </Avatar>
 
           <span
-            className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-3 w-3 rounded-full ring-1`}
+            className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full ring-1`}
             aria-hidden="true"
           />
         </div>
