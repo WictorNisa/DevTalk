@@ -26,6 +26,11 @@ type ChatState = {
   connected: boolean;
   stompClient: Client | null;
   activeChannel: string | null;
+  isAtBottom: boolean;
+  unreadCount: number;
+  setIsAtBottom: (atBottom: boolean) => void;
+  incrementUnreadCount: () => void;
+  resetUnreadCount: () => void;
   connect: () => void;
   disconnect: () => void;
   sendMessage: (channelId: string, content: string) => void;
@@ -53,6 +58,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
   messages: [],
   stompClient: null,
   connected: false,
+  isAtBottom: true,
+  unreadCount: 0,
+
+  setIsAtBottom: (atBottom) => {
+    set({ isAtBottom: atBottom })
+    if (atBottom) {
+      set({ unreadCount: 0 })
+    }
+  },
+  incrementUnreadCount: () => set((state) => ({ unreadCount: state.unreadCount + 1 })),
+  resetUnreadCount: () => set({ unreadCount: 0 }),
+
   connect: () => {
     console.log(' Attempting to connect to websocket...')
 
@@ -95,6 +112,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
           console.log('Parsed message:', payload)
 
           const transformedMessage = transformBackendMessage(payload)
+
+          const { isAtBottom } = get()
+          if (!isAtBottom) {
+            get().incrementUnreadCount()
+          }
 
           get().addMessage(transformedMessage);
           console.log('Message added to store')
