@@ -224,6 +224,155 @@ public class ChatController {
         }
     }
 
+    @MessageMapping("/thread.replies")
+    @Operation(summary = "Get thread replies", description = "Retrieves all replies for a parent message (thread)")
+    @ApiResponse(responseCode = "200", description = "Thread replies retrieved successfully")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
+    public void handleThreadReplies(MessageBaseDTO request, Principal principal) {
+        try {
+            if (request.getParentMessageId() == null) {
+                log.warn("Thread replies request without parentMessageId from user: {}", principal != null ? principal.getName() : "Unknown");
+                sendErrorToUser(principal, "ParentMessageId is required");
+                return;
+            }
+
+            List<MessageResponseDTO> replies = messageService.getThreadReplies(request.getParentMessageId());
+            String username = principal != null ? principal.getName() : "Unknown";
+            simpMessagingTemplate.convertAndSendToUser(username, "/queue/thread/replies", replies);
+            log.info("Sent {} thread replies for parent message {} to user {}", replies.size(), request.getParentMessageId(), username);
+
+        } catch (RuntimeException e) {
+            log.error("Error retrieving thread replies: {}", e.getMessage(), e);
+            sendErrorToUser(principal, "Error retrieving thread replies: " + e.getMessage());
+        }
+    }
+
+    @MessageMapping("/thread.messages")
+    @Operation(summary = "Get thread messages", description = "Retrieves all messages in a thread by thread ID")
+    @ApiResponse(responseCode = "200", description = "Thread messages retrieved successfully")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
+    public void handleThreadMessages(MessageBaseDTO request, Principal principal) {
+        try {
+            if (request.getThreadId() == null) {
+                log.warn("Thread messages request without threadId from user: {}", principal != null ? principal.getName() : "Unknown");
+                sendErrorToUser(principal, "ThreadId is required");
+                return;
+            }
+
+            List<MessageResponseDTO> messages = messageService.getThreadMessages(request.getThreadId());
+            String username = principal != null ? principal.getName() : "Unknown";
+            simpMessagingTemplate.convertAndSendToUser(username, "/queue/thread/messages", messages);
+            log.info("Sent {} messages for thread {} to user {}", messages.size(), request.getThreadId(), username);
+
+        } catch (RuntimeException e) {
+            log.error("Error retrieving thread messages: {}", e.getMessage(), e);
+            sendErrorToUser(principal, "Error retrieving thread messages: " + e.getMessage());
+        }
+    }
+
+    @MessageMapping("/thread.list")
+    @Operation(summary = "Get channel threads", description = "Retrieves all threads in a channel")
+    @ApiResponse(responseCode = "200", description = "Channel threads retrieved successfully")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
+    public void handleChannelThreads(MessageBaseDTO request, Principal principal) {
+        try {
+            if (request.getChannelId() == null) {
+                log.warn("Thread list request without channelId from user: {}", principal != null ? principal.getName() : "Unknown");
+                sendErrorToUser(principal, "ChannelId is required");
+                return;
+            }
+
+            List<MessageResponseDTO> threads = messageService.getChannelThreads(request.getChannelId());
+            String username = principal != null ? principal.getName() : "Unknown";
+            simpMessagingTemplate.convertAndSendToUser(username, "/queue/thread/list", threads);
+            log.info("Sent {} threads for channel {} to user {}", threads.size(), request.getChannelId(), username);
+
+        } catch (RuntimeException e) {
+            log.error("Error retrieving channel threads: {}", e.getMessage(), e);
+            sendErrorToUser(principal, "Error retrieving channel threads: " + e.getMessage());
+        }
+    }
+
+    @MessageMapping("/message.search")
+    @Operation(summary = "Search messages", description = "Searches for messages containing the query text")
+    @ApiResponse(responseCode = "200", description = "Search results retrieved successfully")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
+    public void handleMessageSearch(MessageBaseDTO request, Principal principal) {
+        try {
+            if (request.getContent() == null || request.getContent().trim().isEmpty()) {
+                log.warn("Search request without query from user: {}", principal != null ? principal.getName() : "Unknown");
+                sendErrorToUser(principal, "Search query is required");
+                return;
+            }
+
+            int limit = 50; // Default limit
+            List<MessageResponseDTO> results = messageService.searchMessages(request.getContent(), limit);
+            String username = principal != null ? principal.getName() : "Unknown";
+            simpMessagingTemplate.convertAndSendToUser(username, "/queue/search", results);
+            log.info("Sent {} search results for query '{}' to user {}", results.size(), request.getContent(), username);
+
+        } catch (RuntimeException e) {
+            log.error("Error searching messages: {}", e.getMessage(), e);
+            sendErrorToUser(principal, "Error searching messages: " + e.getMessage());
+        }
+    }
+
+    @MessageMapping("/message.get")
+    @Operation(summary = "Get message by ID", description = "Retrieves a single message by its ID")
+    @ApiResponse(responseCode = "200", description = "Message retrieved successfully")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
+    public void handleGetMessage(MessageBaseDTO request, Principal principal) {
+        try {
+            if (request.getId() == null) {
+                log.warn("Get message request without messageId from user: {}", principal != null ? principal.getName() : "Unknown");
+                sendErrorToUser(principal, "MessageId (id) is required");
+                return;
+            }
+
+            MessageResponseDTO message = messageService.getMessageById(request.getId());
+            String username = principal != null ? principal.getName() : "Unknown";
+            simpMessagingTemplate.convertAndSendToUser(username, "/queue/message", message);
+            log.info("Sent message {} to user {}", request.getId(), username);
+
+        } catch (RuntimeException e) {
+            log.error("Error retrieving message: {}", e.getMessage(), e);
+            sendErrorToUser(principal, "Error retrieving message: " + e.getMessage());
+        }
+    }
+
+    @MessageMapping("/message.read.bulk")
+    @Operation(summary = "Bulk read receipts", description = "Marks multiple messages as read at once")
+    @ApiResponse(responseCode = "200", description = "Bulk read receipts processed successfully")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
+    public void handleBulkReadReceipts(ReadReceiptDTO dto, Principal principal) {
+        try {
+            if (dto == null || dto.getChannelId() == null || dto.getUserId() == null) {
+                log.warn("Invalid bulk read receipt request from user: {}", principal != null ? principal.getName() : "Unknown");
+                sendErrorToUser(principal, "ChannelId and UserId are required");
+                return;
+            }
+
+            // Broadcast bulk read receipt (messageId can be null for "read all in channel")
+            if (dto.getReadAt() == null) {
+                dto.setReadAt(System.currentTimeMillis());
+            }
+            
+            // Broadcast to channel
+            simpMessagingTemplate.convertAndSend("/topic/room/" + dto.getChannelId(), dto);
+            log.info("Bulk read receipt broadcast for channel {} by user {}", dto.getChannelId(), dto.getUserId());
+
+        } catch (RuntimeException e) {
+            log.error("Error processing bulk read receipt: {}", e.getMessage(), e);
+            sendErrorToUser(principal, "Error processing bulk read receipt: " + e.getMessage());
+        }
+    }
+
     @Operation(summary = "Send error to user", description = "Sends an error message to the user")
     @ApiResponse(responseCode = "200", description = "Error message sent successfully")
     @ApiResponse(responseCode = "400", description = "Bad request")

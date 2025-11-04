@@ -13,9 +13,11 @@ import com.devtalk.model.Attachment;
 import com.devtalk.model.Message;
 import com.devtalk.model.MessageReaction;
 import com.devtalk.model.User;
+import com.devtalk.model.Thread;
 import com.devtalk.repository.AttachmentRepository;
 import com.devtalk.repository.MessageReactionRepository;
 import com.devtalk.repository.MessageRepository;
+import com.devtalk.repository.ThreadRepository;
 import com.devtalk.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +43,7 @@ public class MessageService {
     private final MessageReactionRepository messageReactionRepository;
     private final AttachmentRepository attachmentRepository;
     private final UserRepository userRepository;
+    private final ThreadRepository threadRepository;
 
 
     @Transactional
@@ -48,13 +51,48 @@ public class MessageService {
         Message message = messageMapper.toEntity(dto);
         message.setUser(userMapper.toEntity(user));
         message.setChannel(channelMapper.toEntity(channel));
+        
+        // Handle threading: if parentMessageId exists, create or find thread
         if (dto.getParentMessageId() != null) {
-            message.setParentMessage(messageRepository.findById(dto.getParentMessageId())
-                    .orElseThrow(() -> new RuntimeException("Parent message not found: " + dto.getParentMessageId())));
+            Message parentMessage = messageRepository.findById(dto.getParentMessageId())
+                    .orElseThrow(() -> new RuntimeException("Parent message not found: " + dto.getParentMessageId()));
+            message.setParentMessage(parentMessage);
+            
+            // Find or create thread for this parent message
+            Thread thread = threadRepository.findByOriginalMessageId(dto.getParentMessageId())
+                    .orElseGet(() -> {
+                        // Create new thread if it doesn't exist
+                        Thread newThread = Thread.builder()
+                                .channel(channelMapper.toEntity(channel))
+                                .originalMessage(parentMessage)
+                                .build();
+                        return threadRepository.save(newThread);
+                    });
+            message.setThread(thread);
+        } else if (dto.getThreadId() != null) {
+            // Message is a reply to an existing thread
+            Thread thread = threadRepository.findById(dto.getThreadId())
+                    .orElseThrow(() -> new RuntimeException("Thread not found: " + dto.getThreadId()));
+            message.setThread(thread);
+            // Set parent message to thread's original message if not explicitly set
+            if (message.getParentMessage() == null) {
+                message.setParentMessage(thread.getOriginalMessage());
+            }
         }
+        
         Message saved = messageRepository.save(message);
         log.info("Saved message {} from user {} to channel {}", saved.getId(), user.getId(), channel.getId());
-        return messageMapper.toResponseDTO(saved);
+        
+        // Fetch with all details including attachments and reactions
+        Message messageWithDetails = messageRepository.findByIdWithAllDetails(saved.getId())
+                .orElse(saved);
+        MessageResponseDTO response = messageMapper.toResponseDTO(messageWithDetails);
+        
+        // Set reply count
+        Long replyCount = messageRepository.countRepliesByMessageId(saved.getId());
+        response.setReplyCount(replyCount != null ? replyCount.intValue() : 0);
+        
+        return response;
     }
 
     // TODO: Return value is never used.
@@ -105,7 +143,18 @@ public class MessageService {
     public List<MessageResponseDTO> searchMessages(String query, int limit) {
         return messageRepository.findByContentContainingIgnoreCase(query).stream()
                 .limit(limit)
-                .map(messageMapper::toResponseDTO)
+                .map(message -> {
+                    // Fetch with all details for search results
+                    Message messageWithDetails = messageRepository.findByIdWithAllDetails(message.getId())
+                            .orElse(message);
+                    MessageResponseDTO dto = messageMapper.toResponseDTO(messageWithDetails);
+                    
+                    // Set reply count
+                    Long replyCount = messageRepository.countRepliesByMessageId(message.getId());
+                    dto.setReplyCount(replyCount != null ? replyCount.intValue() : 0);
+                    
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -117,6 +166,12 @@ public class MessageService {
 
         List<MessageResponseDTO> result = messages.stream()
                 .map(messageMapper::toResponseDTO)
+                .peek(dto -> {
+                    if (dto.getId() != null) {
+                        Long replyCount = messageRepository.countRepliesByMessageId(dto.getId());
+                        dto.setReplyCount(replyCount != null ? replyCount.intValue() : 0);
+                    }
+                })
                 .collect(Collectors.toList());
 
         Collections.reverse(result);
@@ -129,6 +184,12 @@ public class MessageService {
 
         List<MessageResponseDTO> result = messages.stream()
                 .map(messageMapper::toResponseDTO)
+                .peek(dto -> {
+                    if (dto.getId() != null) {
+                        Long replyCount = messageRepository.countRepliesByMessageId(dto.getId());
+                        dto.setReplyCount(replyCount != null ? replyCount.intValue() : 0);
+                    }
+                })
                 .collect(Collectors.toList());
 
         Collections.reverse(result);
@@ -144,6 +205,12 @@ public class MessageService {
 
         List<MessageResponseDTO> result = messages.stream()
                 .map(messageMapper::toResponseDTO)
+                .peek(dto -> {
+                    if (dto.getId() != null) {
+                        Long replyCount = messageRepository.countRepliesByMessageId(dto.getId());
+                        dto.setReplyCount(replyCount != null ? replyCount.intValue() : 0);
+                    }
+                })
                 .collect(Collectors.toList());
         Collections.reverse(result);
         return result;
@@ -182,8 +249,61 @@ public class MessageService {
 
     @Transactional(readOnly = true)
     public MessageResponseDTO getMessageById(Long messageId) {
-        Message message = messageRepository.findByIdWithAuthorAndChannel(messageId)
+        Message message = messageRepository.findByIdWithAllDetails(messageId)
                 .orElseThrow(() -> new RuntimeException("Message not found with id: " + messageId));
-        return messageMapper.toResponseDTO(message);
+        MessageResponseDTO dto = messageMapper.toResponseDTO(message);
+        
+        // Set reply count
+        Long replyCount = messageRepository.countRepliesByMessageId(messageId);
+        dto.setReplyCount(replyCount != null ? replyCount.intValue() : 0);
+        
+        return dto;
+    }
+
+    @Transactional(readOnly = true)
+    public List<MessageResponseDTO> getThreadReplies(Long parentMessageId) {
+        List<Message> replies = messageRepository.findByParentMessageId(parentMessageId);
+        return replies.stream()
+                .map(messageMapper::toResponseDTO)
+                .peek(dto -> {
+                    // Set reply count for each reply
+                    if (dto.getId() != null) {
+                        Long replyCount = messageRepository.countRepliesByMessageId(dto.getId());
+                        dto.setReplyCount(replyCount != null ? replyCount.intValue() : 0);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<MessageResponseDTO> getThreadMessages(Long threadId) {
+        List<Message> messages = messageRepository.findByThreadId(threadId);
+        return messages.stream()
+                .map(messageMapper::toResponseDTO)
+                .peek(dto -> {
+                    // Set reply count for each message
+                    if (dto.getId() != null) {
+                        Long replyCount = messageRepository.countRepliesByMessageId(dto.getId());
+                        dto.setReplyCount(replyCount != null ? replyCount.intValue() : 0);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<MessageResponseDTO> getChannelThreads(Long channelId) {
+        List<Thread> threads = threadRepository.findByChannelId(channelId);
+        return threads.stream()
+                .map(Thread::getOriginalMessage)
+                .map(message -> {
+                    Message messageWithDetails = messageRepository.findByIdWithAllDetails(message.getId())
+                            .orElse(message);
+                    MessageResponseDTO dto = messageMapper.toResponseDTO(messageWithDetails);
+                    // Set reply count
+                    Long replyCount = messageRepository.countRepliesByMessageId(message.getId());
+                    dto.setReplyCount(replyCount != null ? replyCount.intValue() : 0);
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 }

@@ -13,6 +13,7 @@ public interface ChannelMapper {
     ChannelResponseDTO toResponseDTO(Channel channel);
 
     @Mapping(target = "groupId", source = "group.id")
+    @Mapping(target = "messages", ignore = true) // Messages are mapped separately in service layer
     ChannelMessagesDTO toResponseMessagesDTO(Channel channel);
 
     @Mapping(target = "group", ignore = true)
@@ -23,5 +24,6 @@ public interface ChannelMapper {
     @Mapping(target = "group", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "messages", ignore = true) // Messages are not mapped in reverse
     Channel toEntity(ChannelMessagesDTO dto);
 }

@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 public class AttachmentBaseDTO extends BaseDTO {
-    private AttachmentType attachmentType;
+    private AttachmentType type; // Changed from attachmentType to match entity
     private String url;
     private String filename;
     private Long sizeBytes;
