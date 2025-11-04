@@ -12,6 +12,7 @@ import com.devtalk.dto.messages.ReadReceiptDTO;
 import com.devtalk.dto.messages.PingPongMessageDTO;
 import com.devtalk.dto.messages.MessageReactionDTO;
 import com.devtalk.dto.messages.AttachmentDTO;
+import com.devtalk.dto.messages.MentionNotificationDTO;
 import com.devtalk.dto.user.UserResponseDTO;
 import com.devtalk.service.ChannelService;
 import com.devtalk.service.MessageService;
@@ -85,6 +86,36 @@ public class ChatController {
             MessageResponseDTO savedMessage = messageService.saveMessage(message, user, channel);
             simpMessagingTemplate.convertAndSend(message.getDestination(), savedMessage);
             log.info("Broadcasted message {} from user {} to {}", savedMessage.getId(), user.getDisplayName(), message.getDestination());
+
+            // Send notifications to mentioned users
+            if (savedMessage.getMentionedUserIds() != null && !savedMessage.getMentionedUserIds().isEmpty()) {
+                for (Long mentionedUserId : savedMessage.getMentionedUserIds()) {
+                    // Don't notify the sender if they mentioned themselves
+                    if (!mentionedUserId.equals(savedMessage.getUserId())) {
+                        UserResponseDTO mentionedUser = userService.getUserDTOById(mentionedUserId);
+                        String preview = savedMessage.getContent() != null && savedMessage.getContent().length() > 100 
+                                ? savedMessage.getContent().substring(0, 100) + "..." 
+                                : savedMessage.getContent();
+                        
+                        MentionNotificationDTO notification = MentionNotificationDTO.builder()
+                                .mentionedUserId(mentionedUserId)
+                                .mentionedUserName(mentionedUser.getDisplayName())
+                                .senderDisplayName(user.getDisplayName())
+                                .senderAvatarUrl(user.getAvatarUrl())
+                                .channelName(channel.getName())
+                                .channelId(savedMessage.getChannelId())
+                                .messageId(savedMessage.getId())
+                                .userId(savedMessage.getUserId())
+                                .messagePreview(preview)
+                                .timestamp(savedMessage.getTimestamp())
+                                .build();
+                        
+                        // Send to mentioned user's personal queue
+                        simpMessagingTemplate.convertAndSendToUser(mentionedUser.getExternalId(), "/queue/notifications", notification);
+                        log.info("Sent mention notification to user {} for message {}", mentionedUser.getDisplayName(), savedMessage.getId());
+                    }
+                }
+            }
 
             // Send delivery confirmation to the sender (all active sessions)
             if (principal != null) {
@@ -370,6 +401,30 @@ public class ChatController {
         } catch (RuntimeException e) {
             log.error("Error processing bulk read receipt: {}", e.getMessage(), e);
             sendErrorToUser(principal, "Error processing bulk read receipt: " + e.getMessage());
+        }
+    }
+
+    @MessageMapping("/mentions.list")
+    @Operation(summary = "Get user mentions", description = "Retrieves all messages where the user was mentioned")
+    @ApiResponse(responseCode = "200", description = "Mentions retrieved successfully")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
+    public void handleGetMentions(MessageBaseDTO request, Principal principal) {
+        try {
+            if (request.getUserId() == null) {
+                log.warn("Mentions request without userId from user: {}", principal != null ? principal.getName() : "Unknown");
+                sendErrorToUser(principal, "UserId is required");
+                return;
+            }
+
+            List<MessageResponseDTO> mentions = messageService.getMessagesWhereUserMentioned(request.getUserId());
+            String username = principal != null ? principal.getName() : "Unknown";
+            simpMessagingTemplate.convertAndSendToUser(username, "/queue/mentions", mentions);
+            log.info("Sent {} mentions for user {} to user {}", mentions.size(), request.getUserId(), username);
+
+        } catch (RuntimeException e) {
+            log.error("Error retrieving mentions: {}", e.getMessage(), e);
+            sendErrorToUser(principal, "Error retrieving mentions: " + e.getMessage());
         }
     }
 

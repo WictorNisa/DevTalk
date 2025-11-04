@@ -31,6 +31,7 @@ public interface MessageMapper {
     @Mapping(target = "reactions", ignore = true)
     @Mapping(target = "reactionUsers", ignore = true)
     @Mapping(target = "replyCount", ignore = true)
+    @Mapping(target = "mentionedUserIds", ignore = true)
     MessageResponseDTO toResponseDTO(Message message);
 
     @AfterMapping
@@ -97,6 +98,19 @@ public interface MessageMapper {
         // Reply count will be set by service layer after mapping
         // Set to 0 initially, service will update if message is a parent
         dto.setReplyCount(0);
+    }
+
+    @AfterMapping
+    default void setMentionedUserIds(@MappingTarget MessageResponseDTO dto, Message message) {
+        if (message.getMentions() != null && !message.getMentions().isEmpty()) {
+            List<Long> mentionedIds = message.getMentions().stream()
+                    .map(mention -> mention.getMentionedUser().getId())
+                    .distinct()
+                    .collect(Collectors.toList());
+            dto.setMentionedUserIds(mentionedIds);
+        } else {
+            dto.setMentionedUserIds(Collections.emptyList());
+        }
     }
 
     default AttachmentBaseDTO mapAttachment(Attachment attachment) {

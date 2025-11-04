@@ -59,6 +59,12 @@ public class Message extends BaseEntity {
                orphanRemoval = true)
     @Builder.Default
     private Set<MessageReaction> reactions = new HashSet<>();
+
+    @OneToMany(mappedBy = "message", 
+               cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, 
+               orphanRemoval = true)
+    @Builder.Default
+    private Set<MessageMention> mentions = new HashSet<>();
 }
 
 

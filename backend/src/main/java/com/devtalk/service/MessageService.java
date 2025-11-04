@@ -11,6 +11,7 @@ import com.devtalk.mappers.MessageMapper;
 import com.devtalk.mappers.UserMapper;
 import com.devtalk.model.Attachment;
 import com.devtalk.model.Message;
+import com.devtalk.model.MessageMention;
 import com.devtalk.model.MessageReaction;
 import com.devtalk.model.User;
 import com.devtalk.model.Thread;
@@ -44,6 +45,7 @@ public class MessageService {
     private final AttachmentRepository attachmentRepository;
     private final UserRepository userRepository;
     private final ThreadRepository threadRepository;
+    private final MentionService mentionService;
 
 
     @Transactional
@@ -83,7 +85,10 @@ public class MessageService {
         Message saved = messageRepository.save(message);
         log.info("Saved message {} from user {} to channel {}", saved.getId(), user.getId(), channel.getId());
         
-        // Fetch with all details including attachments and reactions
+        // Parse and save mentions from message content
+        mentionService.parseAndSaveMentions(saved, dto.getContent());
+        
+        // Fetch with all details including attachments, reactions, and mentions
         Message messageWithDetails = messageRepository.findByIdWithAllDetails(saved.getId())
                 .orElse(saved);
         MessageResponseDTO response = messageMapper.toResponseDTO(messageWithDetails);
@@ -228,7 +233,14 @@ public class MessageService {
 
         message.setContent(newContent);
         message.setEditedAt(Instant.now());
+        
+        // Remove old mentions and parse new ones
+        message.getMentions().clear();
         Message updated = messageRepository.save(message);
+        
+        // Parse and save new mentions
+        mentionService.parseAndSaveMentions(updated, newContent);
+        
         log.info("Edited message {}", messageId);
         return updated;
     }
@@ -304,6 +316,24 @@ public class MessageService {
                     dto.setReplyCount(replyCount != null ? replyCount.intValue() : 0);
                     return dto;
                 })
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<MessageResponseDTO> getMessagesWhereUserMentioned(Long userId) {
+        List<MessageMention> mentions = mentionService.getMentionsForUser(userId);
+        return mentions.stream()
+                .map(MessageMention::getMessage)
+                .map(message -> {
+                    Message messageWithDetails = messageRepository.findByIdWithAllDetails(message.getId())
+                            .orElse(message);
+                    MessageResponseDTO dto = messageMapper.toResponseDTO(messageWithDetails);
+                    // Set reply count
+                    Long replyCount = messageRepository.countRepliesByMessageId(message.getId());
+                    dto.setReplyCount(replyCount != null ? replyCount.intValue() : 0);
+                    return dto;
+                })
+                .sorted((a, b) -> Long.compare(b.getTimestamp(), a.getTimestamp())) // Sort by newest first
                 .collect(Collectors.toList());
     }
 }

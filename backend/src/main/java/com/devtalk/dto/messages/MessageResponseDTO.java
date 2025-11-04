@@ -23,4 +23,5 @@ public class MessageResponseDTO extends MessageBaseDTO {
     private Map<com.devtalk.enums.MessageReactionType, Long> reactions; // Reaction type -> count
     private Map<com.devtalk.enums.MessageReactionType, List<Long>> reactionUsers; // Reaction type -> list of user IDs who reacted
     private Integer replyCount; // Number of replies if this is a parent message
+    private List<Long> mentionedUserIds; // List of user IDs mentioned in this message
 }
