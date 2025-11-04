@@ -44,7 +44,7 @@ export const ChannelItem = ({
       <span className="flex min-w-0 items-center gap-2">
         <span className="truncate">{channel.name}</span>
         {!collapsed && channel.topic ? (
-          <span className="text-muted-foreground truncate text-xs">
+          <span className="text-muted-foreground truncate text-sm">
             {channel.topic}
           </span>
         ) : null}
