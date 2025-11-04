@@ -3,13 +3,18 @@ package com.devtalk.controller;
 
 import com.devtalk.dto.channel.ChannelMessagesDTO;
 import com.devtalk.dto.channel.ChannelResponseDTO;
+import com.devtalk.dto.channel.CreateChannelRequest;
+import com.devtalk.dto.messages.MessageResponseDTO;
 import com.devtalk.service.ChannelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/channels")
 @Tag(name = "Channels", description = "Channel management and retrieval operations")
 public class ChannelController {
@@ -44,7 +50,53 @@ public class ChannelController {
     public ResponseEntity<ChannelMessagesDTO> getChannelWithMessages(
             @Parameter(description = "Channel ID", required = true, example = "1")
             @PathVariable Long id) {
-        ChannelMessagesDTO channelMessagesDTO = channelService.getChannelWithMessages(id);
-        return ResponseEntity.ok(channelMessagesDTO);
+        try {
+            ChannelMessagesDTO channelMessagesDTO = channelService.getChannelWithMessages(id);
+            return ResponseEntity.ok(channelMessagesDTO);
+        } catch (RuntimeException e) {
+            log.error("Error retrieving channel {}: {}", id, e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/messages")
+    @Operation(summary = "Get channel messages", description = "Retrieves all messages for a specific channel")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved channel messages"),
+        @ApiResponse(responseCode = "404", description = "Channel not found"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<List<MessageResponseDTO>> getChannelMessages(
+            @Parameter(description = "Channel ID", required = true, example = "1")
+            @PathVariable Long id) {
+        try {
+            List<MessageResponseDTO> messages = channelService.getChannelMessagesOnly(id);
+            return ResponseEntity.ok(messages);
+        } catch (RuntimeException e) {
+            log.error("Error retrieving messages for channel {}: {}", id, e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping
+    @Operation(summary = "Create new channel", description = "Creates a new channel in the specified group")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Channel created successfully"),
+        @ApiResponse(responseCode = "400", description = "Bad request - invalid input"),
+        @ApiResponse(responseCode = "404", description = "Group not found"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<ChannelResponseDTO> createChannel(
+            @Valid @RequestBody CreateChannelRequest request) {
+        try {
+            ChannelResponseDTO channel = channelService.createChannel(request.getName(), request.getGroupId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(channel);
+        } catch (RuntimeException e) {
+            log.error("Error creating channel: {}", e.getMessage());
+            if (e.getMessage().contains("not found")) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

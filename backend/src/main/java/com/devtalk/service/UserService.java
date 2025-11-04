@@ -1,5 +1,6 @@
 package com.devtalk.service;
 
+import com.devtalk.dto.user.UpdateUserRequest;
 import com.devtalk.dto.user.UserResponseDTO;
 import com.devtalk.enums.PresenceStatus;
 import com.devtalk.mappers.UserMapper;
@@ -76,5 +77,25 @@ public class UserService {
         return userRepository.findAll().stream()
                 .map(userMapper::toResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public UserResponseDTO updateUser(Long id, UpdateUserRequest request) {
+        User user = getUserById(id);
+        if (request.getDisplayName() != null) {
+            user.setDisplayName(request.getDisplayName());
+        }
+        if (request.getAvatarUrl() != null) {
+            user.setAvatarUrl(request.getAvatarUrl());
+        }
+        if (request.getLanguage() != null) {
+            user.setLanguage(request.getLanguage());
+        }
+        if (request.getTheme() != null) {
+            user.setTheme(request.getTheme());
+        }
+        User updated = userRepository.save(user);
+        log.info("Updated user {}", id);
+        return userMapper.toResponseDTO(updated);
     }
 }

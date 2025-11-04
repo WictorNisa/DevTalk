@@ -7,8 +7,10 @@ import com.devtalk.dto.messages.MessageResponseDTO;
 import com.devtalk.mappers.ChannelMapper;
 import com.devtalk.mappers.MessageMapper;
 import com.devtalk.model.Channel;
+import com.devtalk.model.Group;
 import com.devtalk.model.Message;
 import com.devtalk.repository.ChannelRepository;
+import com.devtalk.repository.GroupRepository;
 import com.devtalk.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,7 @@ public class ChannelService {
     private final ChannelMapper channelMapper;
     private final MessageMapper messageMapper;
     private final MessageRepository messageRepository;
+    private final GroupRepository groupRepository;
 
     @Transactional(readOnly = true)
     public List<ChannelResponseDTO> getAllChannels() {
@@ -111,5 +114,31 @@ public class ChannelService {
                 .messages(messageDTOs)
                 .hasMore(hasMore)
                 .build();
+    }
+
+    @Transactional
+    public ChannelResponseDTO createChannel(String name, Long groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new RuntimeException("Group not found with id: " + groupId));
+
+        Channel channel = Channel.builder()
+                .name(name)
+                .group(group)
+                .build();
+
+        Channel saved = channelRepository.save(channel);
+        log.info("Created channel {} in group {}", name, groupId);
+        return channelMapper.toResponseDTO(saved);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MessageResponseDTO> getChannelMessagesOnly(Long channelId) {
+        if (!channelRepository.existsById(channelId)) {
+            throw new RuntimeException("Channel not found with id: " + channelId);
+        }
+        List<Message> messages = messageRepository.findByChannelIdWithAuthorAndChannel(channelId);
+        return messages.stream()
+                .map(messageMapper::toResponseDTO)
+                .collect(java.util.stream.Collectors.toList());
     }
 }
