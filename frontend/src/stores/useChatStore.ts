@@ -1,10 +1,8 @@
-import { mockMessages } from "@/data/mockMessages";
 import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
 // Basic chat store exempel
-// TODO: Connecta med WebSocket när backend är redo.
 export type Message = {
   id: string;
   avatar: string;
@@ -32,6 +30,8 @@ type ChatState = {
   disconnect: () => void;
   sendMessage: (channelId: string, content: string) => void;
   addMessage: (message: Message) => void;
+  clearMessages: () => void;
+  setActiveChannel: (channel: string) => void;
   loadMessages: (channelId: string) => Promise<void>;
 };
 
@@ -71,6 +71,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set({ connected: true })
 
       const channelId = 1;
+      const userId = 1;
 
       client.subscribe('/user/queue/history', (message) => {
         try {
@@ -80,14 +81,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
           })
 
           set({ messages: transformedMessages })
+          console.log(`Loaded ${transformedMessages.length} messages from database`);
+
         } catch (error) {
           console.error('Error parsing history', error)
         }
       })
-
-
-
-
 
       client.subscribe(`/topic/room/${channelId}`, (message) => {
         console.log('Received message: ', message.body);
@@ -109,7 +108,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
       client.publish({
         destination: '/app/message.history',
-        body: JSON.stringify({ channelId: channelId, userId: 2, beforeTimestamp: null, threadId: null })
+        body: JSON.stringify({ channelId: channelId, userId: userId, beforeTimestamp: null, threadId: null })
       })
     }
 
@@ -141,15 +140,44 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
 
     const messagePayload = {
-      channelId: parseInt(channelId),
-      userId: 2,
       content: content,
+      userId: 1,
+      channelId: parseInt(channelId),
+      threadId: null,
+      parentMessageId: null,
       destination: `/topic/room/${channelId}`
     };
 
     stompClient.publish({
       destination: '/app/chat.send',
       body: JSON.stringify(messagePayload),
+      headers: { 'content-type': 'application/json' }
     });
+
+    console.log("Message sent!");
+
+  },
+  loadMessages: async (channelId: string) => {
+    const { stompClient, connected } = get()
+
+    if (!connected || !stompClient) {
+      console.error('Cannot load messages: not connected')
+      return
+    }
+
+    const userId = 1;
+
+    console.log('requesting message history for channel');
+
+    stompClient.publish({
+      destination: '/app/message.history',
+      body: JSON.stringify({
+        channelId: parseInt(channelId),
+        userId: userId,
+        beforeTimestamp: null,
+        threadId: null
+      })
+    })
+
   }
 }));
