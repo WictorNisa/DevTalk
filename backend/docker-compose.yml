@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: devtalk-postgres
+    environment:
+      POSTGRES_DB: devtalk
+      POSTGRES_USER: devtalk
+      POSTGRES_PASSWORD: devtalk123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - devtalk-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  devtalk-network:
+    driver: bridge
