@@ -21,5 +21,7 @@ public class AuthController {
     @ApiResponse(responseCode = "500", description = "Internal server error")
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal OAuth2User user){
         return ResponseEntity.ok(user.getAttributes());
+
+
     }
 }

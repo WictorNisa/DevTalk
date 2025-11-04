@@ -31,16 +31,25 @@ public class SecurityConfig {
     // Temporarily disabling security config for development purposes
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+        http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .httpBasic(basic -> basic.disable())
+                .oauth2Login(oauth2 -> oauth2
+                        .defaultSuccessUrl("http://localhost:5173/dashboard", true)
+                        .failureUrl("http://localhost:5173/error"))
                 .formLogin(formLogin -> formLogin.disable())
-                .logout(logout -> logout.logoutUrl("/logout")
+                .logout(logout -> logout.logoutUrl("/api/logout")
                         .deleteCookies("JSESSIONID")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
-                        .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT)));
+                        .permitAll()
+                        .logoutSuccessHandler((req, res, auth) -> {
+                            res.setStatus(HttpServletResponse.SC_OK);
+                            res.setContentType("application/json");
+                            res.getWriter().write("{\"message\":\"Logout successful\"}");
+                        }));
+        http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
         return http.build();
     }
 }
