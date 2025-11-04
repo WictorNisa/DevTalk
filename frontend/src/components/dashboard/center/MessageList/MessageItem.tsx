@@ -24,7 +24,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
     },
   );
   return (
-    <div className="bg-background mt-3 flex w-full gap-2 rounded-lg border text-white">
+    <div className="bg-background mt-3 flex w-full gap-2 rounded-lg border text-primary">
       <div className="m-auto ml-2 h-max w-max shrink-0">
         <Avatar>
           <AvatarImage
