@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,13 +37,20 @@ public class MessageController {
     @Operation(summary = "Get message by ID", description = "Retrieves a specific message by its unique identifier")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved message"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized - authentication required"),
         @ApiResponse(responseCode = "404", description = "Message not found"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<MessageResponseDTO> getMessageById(
             @Parameter(description = "Message ID", required = true, example = "1")
-            @PathVariable Long id) {
+            @PathVariable Long id,
+            @AuthenticationPrincipal OAuth2User oauth2User) {
         try {
+            // Authentication check
+            if (oauth2User == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            
             MessageResponseDTO message = messageService.getMessageById(id);
             return ResponseEntity.ok(message);
         } catch (RuntimeException e) {
@@ -55,20 +64,35 @@ public class MessageController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Message created successfully"),
         @ApiResponse(responseCode = "400", description = "Bad request - invalid input"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized - authentication required"),
         @ApiResponse(responseCode = "404", description = "Channel or user not found"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<MessageResponseDTO> createMessage(
             @Valid @RequestBody CreateMessageRequest request,
-            @RequestParam Long userId) {
+            @AuthenticationPrincipal OAuth2User oauth2User) {
         try {
-            UserResponseDTO user = userService.getUserDTOById(userId);
+            // Authentication check
+            if (oauth2User == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            
+            // Get or create user from OAuth2 principal
+            String externalId = oauth2User.getAttribute("login"); // GitHub login
+            if (externalId == null) {
+                externalId = oauth2User.getName();
+            }
+            String displayName = oauth2User.getAttribute("name");
+            if (displayName == null) {
+                displayName = externalId;
+            }
+            UserResponseDTO user = userService.createOrGetUser(externalId, displayName);
             ChannelResponseDTO channel = channelService.getChannelDTOById(request.getChannelId());
 
             ChatMessageDTO chatMessageDTO = ChatMessageDTO.builder()
                     .channelId(request.getChannelId())
                     .content(request.getContent())
-                    .userId(userId)
+                    .userId(user.getId())
                     .parentMessageId(request.getParentMessageId())
                     .threadId(request.getThreadId())
                     .build();
@@ -88,6 +112,7 @@ public class MessageController {
     @Operation(summary = "Delete message", description = "Deletes a message. Only the message sender can delete their own messages")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Message deleted successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized - authentication required"),
         @ApiResponse(responseCode = "403", description = "Forbidden - user not authorized to delete this message"),
         @ApiResponse(responseCode = "404", description = "Message not found"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
@@ -95,9 +120,25 @@ public class MessageController {
     public ResponseEntity<Void> deleteMessage(
             @Parameter(description = "Message ID", required = true, example = "1")
             @PathVariable Long id,
-            @RequestParam Long userId) {
+            @AuthenticationPrincipal OAuth2User oauth2User) {
         try {
-            messageService.deleteMessage(id, userId);
+            // Authentication check
+            if (oauth2User == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            
+            // Get or create user from OAuth2 principal
+            String externalId = oauth2User.getAttribute("login"); // GitHub login
+            if (externalId == null) {
+                externalId = oauth2User.getName();
+            }
+            String displayName = oauth2User.getAttribute("name");
+            if (displayName == null) {
+                displayName = externalId;
+            }
+            UserResponseDTO user = userService.createOrGetUser(externalId, displayName);
+            
+            messageService.deleteMessage(id, user.getId());
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
             log.error("Error deleting message {}: {}", id, e.getMessage());
