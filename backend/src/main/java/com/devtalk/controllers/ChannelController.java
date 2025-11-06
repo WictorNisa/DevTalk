@@ -1,12 +1,24 @@
 package com.devtalk.controllers;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.devtalk.dtos.channel.ChannelMessagesDTO;
 import com.devtalk.dtos.channel.ChannelResponseDTO;
 import com.devtalk.dtos.channel.CreateChannelRequest;
 import com.devtalk.dtos.messages.MessageResponseDTO;
+import com.devtalk.facades.ChannelMessageFacade;
 import com.devtalk.services.ChannelService;
 import com.devtalk.services.MessageService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,11 +27,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +37,7 @@ public class ChannelController {
 
     private final ChannelService channelService;
     private final MessageService messageService;
+    private final ChannelMessageFacade channelMessageFacade;
 
     @GetMapping
     @Operation(summary = "Get all channels", description = "Retrieves a list of all available channels")
@@ -52,7 +60,7 @@ public class ChannelController {
     public ResponseEntity<ChannelMessagesDTO> getChannelWithMessages(
             @Parameter(description = "Channel ID", required = true, example = "1")
             @PathVariable Long id) {
-        ChannelMessagesDTO channelMessagesDTO = channelService.getChannelWithMessages(id);
+        ChannelMessagesDTO channelMessagesDTO = channelMessageFacade.getChannelWithMessages(id);
         return ResponseEntity.ok(channelMessagesDTO);
     }
 

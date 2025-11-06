@@ -1,10 +1,28 @@
 package com.devtalk.services;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.devtalk.dtos.channel.ChannelResponseDTO;
 import com.devtalk.dtos.messages.AttachmentDTO;
 import com.devtalk.dtos.messages.ChatMessageDTO;
 import com.devtalk.dtos.messages.CreateMessageRequest;
 import com.devtalk.dtos.messages.MessageResponseDTO;
+import com.devtalk.dtos.messages.MessagesWithMetadataDTO;
 import com.devtalk.dtos.user.UserResponseDTO;
 import com.devtalk.enums.MessageReactionType;
 import com.devtalk.exceptions.ForbiddenException;
@@ -16,9 +34,8 @@ import com.devtalk.models.Attachment;
 import com.devtalk.models.Message;
 import com.devtalk.models.MessageMention;
 import com.devtalk.models.MessageReaction;
-import com.devtalk.models.User;
 import com.devtalk.models.Thread;
-import com.devtalk.dtos.messages.MessagesWithMetadataDTO;
+import com.devtalk.models.User;
 import com.devtalk.repositories.AttachmentRepository;
 import com.devtalk.repositories.ChannelRepository;
 import com.devtalk.repositories.MessageMentionRepository;
@@ -26,18 +43,9 @@ import com.devtalk.repositories.MessageReactionRepository;
 import com.devtalk.repositories.MessageRepository;
 import com.devtalk.repositories.ThreadRepository;
 import com.devtalk.repositories.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,29 +62,27 @@ public class MessageService {
     private final UserRepository userRepository;
     private final ThreadRepository threadRepository;
     private final ChannelRepository channelRepository;
-    private final ChannelService channelService;
-
 
     @Transactional
     public MessageResponseDTO saveMessage(ChatMessageDTO dto, UserResponseDTO user, ChannelResponseDTO channel) {
         Message message = messageMapper.toEntity(dto, user, channel, userMapper, channelMapper);
-        
+
         // Handle threading: if parentMessageId exists, create or find thread
         handleThreading(message, dto, channel);
-        
+
         Message saved = messageRepository.save(message);
         log.info("Saved message {} from user {} to channel {}", saved.getId(), user.getId(), channel.getId());
-        
+
         // Parse and save mentions from message content
         parseAndSaveMentions(saved, dto.getContent());
-        
+
         // Fetch with all details including attachments, reactions, and mentions
         Message messageWithDetails = messageRepository.findByIdWithAllDetails(saved.getId())
                 .orElse(saved);
         MessageResponseDTO response = messageMapper.toResponseDTO(messageWithDetails);
-        
+
         setReplyCount(response, saved.getId());
-        
+
         return response;
     }
 
@@ -128,17 +134,16 @@ public class MessageService {
         List<Message> messages = messageRepository.findByContentContainingIgnoreCase(query).stream()
                 .limit(limit)
                 .map(message -> messageRepository.findByIdWithAllDetails(message.getId())
-                        .orElse(message))
+                .orElse(message))
                 .collect(Collectors.toList());
-        
+
         List<MessageResponseDTO> result = messages.stream()
                 .map(messageMapper::toResponseDTO)
                 .collect(Collectors.toList());
-        
+
         setReplyCountsBatch(result);
         return result;
     }
-
 
     @Transactional(readOnly = true)
     public List<MessageResponseDTO> getChannelMessages(Long channelId, int limit) {
@@ -177,12 +182,11 @@ public class MessageService {
         List<MessageResponseDTO> result = messages.stream()
                 .map(messageMapper::toResponseDTO)
                 .collect(Collectors.toList());
-        
+
         setReplyCountsBatch(result);
         Collections.reverse(result);
         return result;
     }
-
 
     @Transactional
     public Message editMessage(Long messageId, String newContent, Long userId) {
@@ -195,18 +199,17 @@ public class MessageService {
 
         message.setContent(newContent);
         message.setEditedAt(Instant.now());
-        
+
         // Remove old mentions and parse new ones
         message.clearMentions();
         Message updated = messageRepository.save(message);
-        
+
         // Parse and save new mentions
         parseAndSaveMentions(updated, newContent);
-        
+
         log.info("Edited message {}", messageId);
         return updated;
     }
-
 
     @Transactional
     public void deleteMessage(Long messageId, Long userId) {
@@ -226,9 +229,9 @@ public class MessageService {
         Message message = messageRepository.findByIdWithAllDetails(messageId)
                 .orElseThrow(() -> new NotFoundException("Message not found with id: " + messageId));
         MessageResponseDTO dto = messageMapper.toResponseDTO(message);
-        
+
         setReplyCount(dto, messageId);
-        
+
         return dto;
     }
 
@@ -238,7 +241,7 @@ public class MessageService {
         List<MessageResponseDTO> result = replies.stream()
                 .map(messageMapper::toResponseDTO)
                 .collect(Collectors.toList());
-        
+
         setReplyCountsBatch(result);
         return result;
     }
@@ -249,7 +252,7 @@ public class MessageService {
         List<MessageResponseDTO> result = messages.stream()
                 .map(messageMapper::toResponseDTO)
                 .collect(Collectors.toList());
-        
+
         setReplyCountsBatch(result);
         return result;
     }
@@ -287,11 +290,13 @@ public class MessageService {
 
     @Transactional
     public MessageResponseDTO createMessage(CreateMessageRequest request, UserResponseDTO user) {
-        ChannelResponseDTO channel = channelService.getChannelDTOById(request.getChannelId());
-        
+        var channel = channelRepository.findById(request.getChannelId())
+                .orElseThrow(() -> new NotFoundException("Channel not found with id: " + request.getChannelId()));
+
+        ChannelResponseDTO channelDTO = channelMapper.toResponseDTO(channel);
         ChatMessageDTO chatMessageDTO = messageMapper.toChatMessageDTO(request, user.getId());
 
-        return saveMessage(chatMessageDTO, user, channel);
+        return saveMessage(chatMessageDTO, user, channelDTO);
     }
 
     @Transactional(readOnly = true)
@@ -303,7 +308,7 @@ public class MessageService {
         List<MessageResponseDTO> result = messages.stream()
                 .map(messageMapper::toResponseDTO)
                 .collect(Collectors.toList());
-        
+
         setReplyCountsBatch(result);
         return result;
     }
@@ -334,7 +339,7 @@ public class MessageService {
         List<MessageResponseDTO> messageDTOs = messages.stream()
                 .map(messageMapper::toResponseDTO)
                 .collect(Collectors.toList());
-        
+
         setReplyCountsBatch(messageDTOs);
         Collections.reverse(messageDTOs);
 
@@ -342,13 +347,12 @@ public class MessageService {
     }
 
     // Private helper methods
-
     private void handleThreading(Message message, ChatMessageDTO dto, ChannelResponseDTO channel) {
         if (dto.getParentMessageId() != null) {
             Message parentMessage = messageRepository.findById(dto.getParentMessageId())
                     .orElseThrow(() -> new NotFoundException("Parent message not found: " + dto.getParentMessageId()));
             message.setParentMessage(parentMessage);
-            
+
             // Find or create thread for this parent message
             Thread thread = threadRepository.findByOriginalMessageId(dto.getParentMessageId())
                     .orElseGet(() -> {
@@ -381,24 +385,24 @@ public class MessageService {
         if (dtos == null || dtos.isEmpty()) {
             return;
         }
-        
+
         List<Long> messageIds = dtos.stream()
                 .map(MessageResponseDTO::getId)
                 .filter(id -> id != null)
                 .distinct()
                 .collect(Collectors.toList());
-        
+
         if (messageIds.isEmpty()) {
             return;
         }
-        
+
         List<Object[]> replyCounts = messageRepository.findReplyCountsByMessageIds(messageIds);
         Map<Long, Long> replyCountMap = replyCounts.stream()
                 .collect(Collectors.toMap(
-                    row -> (Long) row[0],
-                    row -> (Long) row[1]
+                        row -> (Long) row[0],
+                        row -> (Long) row[1]
                 ));
-        
+
         dtos.forEach(dto -> {
             if (dto.getId() != null) {
                 Long replyCount = replyCountMap.get(dto.getId());
@@ -408,7 +412,6 @@ public class MessageService {
     }
 
     // Mention management methods (following same pattern as attachments and reactions)
-
     private static final Pattern MENTION_PATTERN = Pattern.compile("@([A-Za-z0-9_\\-]+)");
 
     @Transactional
@@ -435,14 +438,14 @@ public class MessageService {
             }
 
             Optional<User> userOpt = userRepository.findByDisplayNameIgnoreCase(username);
-            
+
             if (userOpt.isPresent()) {
                 User mentionedUser = userOpt.get();
-                
+
                 // Check if mention already exists (shouldn't happen, but safety check)
                 Optional<MessageMention> existing = messageMentionRepository
                         .findByMessageIdAndMentionedUserId(message.getId(), mentionedUser.getId());
-                
+
                 if (existing.isEmpty()) {
                     MessageMention mention = MessageMention.builder()
                             .message(message)
@@ -450,11 +453,11 @@ public class MessageService {
                             .startPosition(startPos)
                             .endPosition(endPos)
                             .build();
-                    
+
                     MessageMention saved = messageMentionRepository.save(mention);
                     mentions.add(saved);
                     processedUsernames.add(usernameLower);
-                    
+
                     log.debug("Created mention for user {} in message {}", mentionedUser.getDisplayName(), message.getId());
                 } else {
                     // Mention already exists, mark as processed
