@@ -1,19 +1,19 @@
 package com.devtalk.mappers;
 
-import com.devtalk.dto.base.AttachmentBaseDTO;
-import com.devtalk.dto.channel.ChannelResponseDTO;
-import com.devtalk.dto.messages.ChatMessageDTO;
-import com.devtalk.dto.messages.CreateMessageRequest;
-import com.devtalk.dto.messages.DeliveryAckDTO;
-import com.devtalk.dto.messages.MentionNotificationDTO;
-import com.devtalk.dto.messages.MessageResponseDTO;
-import com.devtalk.dto.messages.MessagesWithMetadataDTO;
-import com.devtalk.dto.messages.PingPongMessageDTO;
-import com.devtalk.dto.user.UserResponseDTO;
+import com.devtalk.dtos.base.AttachmentBaseDTO;
+import com.devtalk.dtos.channel.ChannelResponseDTO;
+import com.devtalk.dtos.messages.ChatMessageDTO;
+import com.devtalk.dtos.messages.CreateMessageRequest;
+import com.devtalk.dtos.messages.DeliveryAckDTO;
+import com.devtalk.dtos.messages.MentionNotificationDTO;
+import com.devtalk.dtos.messages.MessageResponseDTO;
+import com.devtalk.dtos.messages.MessagesWithMetadataDTO;
+import com.devtalk.dtos.messages.PingPongMessageDTO;
+import com.devtalk.dtos.user.UserResponseDTO;
 import com.devtalk.enums.MessageReactionType;
-import com.devtalk.model.Attachment;
-import com.devtalk.model.Message;
-import com.devtalk.model.MessageReaction;
+import com.devtalk.models.Attachment;
+import com.devtalk.models.Message;
+import com.devtalk.models.MessageReaction;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -162,7 +162,7 @@ public interface MessageMapper {
 
     // DTO to DTO mappings
 
-    default PingPongMessageDTO toPingPongMessageDTO(com.devtalk.dto.base.MessageBaseDTO messageBase) {
+    default PingPongMessageDTO toPingPongMessageDTO(com.devtalk.dtos.base.MessageBaseDTO messageBase) {
         return PingPongMessageDTO.builder()
                 .userId(messageBase.getUserId())
                 .channelId(messageBase.getChannelId())
