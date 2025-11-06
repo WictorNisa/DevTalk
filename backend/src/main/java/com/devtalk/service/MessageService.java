@@ -393,7 +393,7 @@ public class MessageService {
         }
         
         List<Object[]> replyCounts = messageRepository.findReplyCountsByMessageIds(messageIds);
-        java.util.Map<Long, Long> replyCountMap = replyCounts.stream()
+        Map<Long, Long> replyCountMap = replyCounts.stream()
                 .collect(Collectors.toMap(
                     row -> (Long) row[0],
                     row -> (Long) row[1]
@@ -420,17 +420,20 @@ public class MessageService {
         List<MessageMention> mentions = new ArrayList<>();
         Matcher matcher = MENTION_PATTERN.matcher(content);
 
-        // Track found usernames to avoid duplicates
-        Set<String> foundUsernames = new HashSet<>();
+        // Track processed usernames to avoid duplicates and repeated DB lookups
+        Set<String> processedUsernames = new HashSet<>();
 
         while (matcher.find()) {
             String username = matcher.group(1);
             int startPos = matcher.start();
             int endPos = matcher.end();
+            String usernameLower = username.toLowerCase();
 
-            if (foundUsernames.contains(username.toLowerCase())) {
+            // Skip if we've already processed this username (found or not found)
+            if (processedUsernames.contains(usernameLower)) {
                 continue;
             }
+
             Optional<User> userOpt = userRepository.findByDisplayNameIgnoreCase(username);
             
             if (userOpt.isPresent()) {
@@ -450,11 +453,16 @@ public class MessageService {
                     
                     MessageMention saved = messageMentionRepository.save(mention);
                     mentions.add(saved);
-                    foundUsernames.add(username.toLowerCase());
+                    processedUsernames.add(usernameLower);
                     
                     log.debug("Created mention for user {} in message {}", mentionedUser.getDisplayName(), message.getId());
+                } else {
+                    // Mention already exists, mark as processed
+                    processedUsernames.add(usernameLower);
                 }
             } else {
+                // User not found, mark as processed to avoid repeated DB lookups
+                processedUsernames.add(usernameLower);
                 log.debug("Mentioned user '{}' not found in message {}", username, message.getId());
             }
         }

@@ -156,7 +156,7 @@ public class ChatController {
     @ApiResponse(responseCode = "200", description = "Bulk read receipts processed successfully")
     @ApiResponse(responseCode = "400", description = "Bad request")
     @ApiResponse(responseCode = "500", description = "Internal server error")
-    public void handleBulkReadReceipts(ReadReceiptDTO dto, Principal principal) {
+    public void handleBulkReadReceipts(ReadReceiptDTO dto) {
         chatService.broadcastBulkReadReceipt(dto);
     }
 
