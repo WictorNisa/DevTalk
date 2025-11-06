@@ -18,8 +18,6 @@ const MessageList = () => {
 
   const { user, checkAuth, isLoading } = useAuthStore();
 
-  console.log(user);
-
   const [showScrollButton, setShowScrollButton] = useState(false);
   const virtuosoRef = useRef<VirtuosoHandle>(null);
 

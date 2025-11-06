@@ -18,7 +18,7 @@ type Props = {
 };
 
 export const UserCard = ({ collapsed = false }: Props) => {
-  const { user, checkAuth, isLoading } = useAuthStore();
+  const { user, isLoading } = useAuthStore();
 
   if (collapsed) {
     return (
