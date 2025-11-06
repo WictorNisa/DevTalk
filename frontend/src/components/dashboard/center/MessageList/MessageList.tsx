@@ -1,7 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Virtuoso } from "react-virtuoso";
 import type { VirtuosoHandle } from "react-virtuoso";
 import { useChatStore } from "../../../../stores/useChatStore";
+import { useAuthStore } from "../../../../stores/useAuthStore";
 import { Button } from "../../../ui/button";
 import { ArrowDown } from "lucide-react";
 import MessageItem from "./MessageItem";
@@ -15,8 +16,18 @@ const MessageList = () => {
     (state) => state.incrementUnreadCount,
   );
 
+  const { user, checkAuth, isLoading } = useAuthStore();
+
+  console.log(user);
+
   const [showScrollButton, setShowScrollButton] = useState(false);
   const virtuosoRef = useRef<VirtuosoHandle>(null);
+
+  useEffect(() => {
+    if (!user && !isLoading) {
+      checkAuth();
+    }
+  }, [user, checkAuth, isLoading]);
 
   const scrollToBottom = () => {
     virtuosoRef.current?.scrollToIndex({

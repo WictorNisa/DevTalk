@@ -2,6 +2,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { userStatus } from "@/utils/userStatus";
 import { UserMenu } from "@/components/dashboard/left/UserMenu";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export type User = {
   id?: string | null;
@@ -16,8 +17,8 @@ type Props = {
   collapsed?: boolean;
 };
 
-export const UserCard = ({ user, collapsed = false }: Props) => {
-  const statusBg = userStatus(user.status);
+export const UserCard = ({ collapsed = false }: Props) => {
+  const { user, checkAuth, isLoading } = useAuthStore();
 
   if (collapsed) {
     return (
@@ -25,18 +26,18 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
         <div className="relative">
           <Avatar className="h-7 w-7 rounded-full">
             <AvatarImage
-              src={user.avatar || "https://placehold.co/120"}
-              alt={user.username}
+              src={user?.avatarUrl || "https://placehold.co/120"}
+              alt={user?.displayName}
             />
             <AvatarFallback>
-              {user.username.slice(0, 2).toUpperCase()}
+              {user?.displayName.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
 
-          <span
+          {/* <span
             className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2 w-2 rounded-full ring-1`}
             aria-hidden="true"
-          />
+          /> */}
         </div>
       </div>
     );
@@ -48,33 +49,33 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
         <div className="relative flex-shrink-0">
           <Avatar className="h-10 w-10 rounded-full">
             <AvatarImage
-              src={user.avatar || "/images/default-avatar.jpg"}
-              alt={user.username}
+              src={user?.avatarUrl || "/images/default-avatar.jpg"}
+              alt={user?.displayName}
               onError={(e) => {
                 (e.target as HTMLImageElement).src =
                   "/images/default-avatar.jpg";
               }}
             />
             <AvatarFallback>
-              {user.username.slice(0, 2).toUpperCase()}
+              {user?.displayName.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <span
+          {/* <span
             className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full ring-1`}
             aria-hidden="true"
-          />
+          /> */}
         </div>
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="truncate text-sm font-medium">
-              {user.username}
+              {user?.displayName}
             </span>
           </div>
           <div className="text-muted-foreground truncate text-xs">
-            {user.status === "online"
+            {/* {user?.status === "online"
               ? "Active now"
-              : (user.status ?? "Offline")}
+              : (user.status ?? "Offline")} */}
           </div>
         </div>
 

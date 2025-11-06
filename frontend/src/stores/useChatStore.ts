@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import { useAuthStore } from "./useAuthStore";
+
 
 // Basic chat store exempel
 export type Message = {
@@ -156,6 +158,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   clearMessages: () => set({ messages: [] }),
   sendMessage: (channelId: string, content: string) => {
     const { stompClient, connected } = get()
+    const userId = useAuthStore.getState().user?.id
     if (!connected || !stompClient) {
       console.error('Cannot send message: not connected!')
       return
