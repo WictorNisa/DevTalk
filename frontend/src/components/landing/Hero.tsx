@@ -81,7 +81,7 @@ export default function Hero() {
           <Button
             variant="outline"
             size="lg"
-            className="border-input/20 text-secondary hover:text-secondary hover:bg-secondary/10 dark:text-primary bg-accent/5 cursor w-auto rounded-lg sm:w-auto"
+            className="border-input/20 text-secondary hover:text-secondary hover:bg-secondary/10 dark:text-primary bg-accent/5 cursor-pointer w-auto rounded-lg sm:w-auto"
             onClick={login}
           >
             <GitHubLogoIcon className="mr-2 h-5 w-5" />
