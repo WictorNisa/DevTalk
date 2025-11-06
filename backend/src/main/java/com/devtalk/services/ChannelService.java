@@ -55,7 +55,6 @@ public class ChannelService {
     }
 
     // Moved getChannelWithMessages(), it now lives in ChannelMessageFacade. 
-    // I did this to address the circular dependency.
     @Transactional
     public ChannelResponseDTO createChannel(String name, Long groupId) {
         Group group = groupRepository.findById(groupId)
