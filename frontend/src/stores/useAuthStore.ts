@@ -39,7 +39,7 @@ export const useAuthStore = create<AuthState>()(
           window.location.href = "/"
         } catch (error) {
           console.error("Logout failed:", error)
-          //This will force logout on the frontend even tho if the backend would fail
+          // This will force logout on the frontend even if the backend would fail
           set({ user: null, isAuthenticated: false })
         }
       },
