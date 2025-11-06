@@ -61,7 +61,7 @@ export const useAuthStore = create<AuthState>()(
                 id: userData.id?.toString() || "",
                 externalId: userData.externalId || "",
                 displayName: userData.displayName || "",
-                avatarUrl: userData.avatar_url || "",
+                avatarUrl: userData.avatarUrl || "",
               },
               isAuthenticated: true,
               isLoading: false
