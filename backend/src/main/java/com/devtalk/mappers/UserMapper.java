@@ -1,8 +1,8 @@
 package com.devtalk.mappers;
 
-import com.devtalk.dto.base.UserBaseDTO;
-import com.devtalk.dto.user.UserResponseDTO;
-import com.devtalk.model.User;
+import com.devtalk.dtos.base.UserBaseDTO;
+import com.devtalk.dtos.user.UserResponseDTO;
+import com.devtalk.models.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

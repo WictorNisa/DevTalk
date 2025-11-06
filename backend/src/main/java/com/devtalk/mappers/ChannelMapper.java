@@ -1,9 +1,9 @@
 package com.devtalk.mappers;
 
-import com.devtalk.dto.channel.ChannelMessagesDTO;
-import com.devtalk.dto.channel.ChannelResponseDTO;
-import com.devtalk.dto.messages.MessageResponseDTO;
-import com.devtalk.model.Channel;
+import com.devtalk.dtos.channel.ChannelMessagesDTO;
+import com.devtalk.dtos.channel.ChannelResponseDTO;
+import com.devtalk.dtos.messages.MessageResponseDTO;
+import com.devtalk.models.Channel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

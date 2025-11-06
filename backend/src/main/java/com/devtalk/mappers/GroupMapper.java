@@ -1,10 +1,10 @@
 package com.devtalk.mappers;
 
 
-import com.devtalk.dto.groups.GroupResponseDTO;
-import com.devtalk.dto.user.UserResponseDTO;
-import com.devtalk.model.Group;
-import com.devtalk.model.UserGroupMembership;
+import com.devtalk.dtos.groups.GroupResponseDTO;
+import com.devtalk.dtos.user.UserResponseDTO;
+import com.devtalk.models.Group;
+import com.devtalk.models.UserGroupMembership;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
