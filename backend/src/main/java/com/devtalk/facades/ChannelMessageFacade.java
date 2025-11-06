@@ -16,6 +16,21 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+/**
+ * Facade for coordinating operations between ChannelService and MessageService.
+ * <p>
+ * This class exists to resolve the circular dependency between MessageService and ChannelService
+ * by acting as an intermediary for operations that require both services. It provides methods
+ * that aggregate data from both services and maps them to appropriate DTOs for use by controllers
+ * or other consumers.
+ * <p>
+ * Responsibilities:
+ * <ul>
+ *   <li>Retrieves channel information and associated messages in a single operation.</li>
+ *   <li>Coordinates between ChannelService and MessageService to avoid direct circular dependencies.</li>
+ *   <li>Maps combined data to response DTOs using ChannelMapper.</li>
+ * </ul>
+ */
 public class ChannelMessageFacade {
 
     private final ChannelService channelService;
