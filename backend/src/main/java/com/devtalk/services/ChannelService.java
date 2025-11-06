@@ -1,22 +1,21 @@
 package com.devtalk.services;
 
-import com.devtalk.dtos.channel.ChannelMessagesDTO;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.devtalk.dtos.channel.ChannelResponseDTO;
-import com.devtalk.dtos.messages.MessageResponseDTO;
 import com.devtalk.exceptions.NotFoundException;
 import com.devtalk.mappers.ChannelMapper;
 import com.devtalk.models.Channel;
 import com.devtalk.models.Group;
 import com.devtalk.repositories.ChannelRepository;
 import com.devtalk.repositories.GroupRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +25,8 @@ public class ChannelService {
     private final ChannelRepository channelRepository;
     private final ChannelMapper channelMapper;
     private final GroupRepository groupRepository;
-    @Lazy
-    private final MessageService messageService;
 
+    // Removed @Lazy MessageService dependency!
     @Transactional(readOnly = true)
     public List<ChannelResponseDTO> getAllChannels() {
         return channelRepository.findAll().stream()
@@ -56,13 +54,8 @@ public class ChannelService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public ChannelMessagesDTO getChannelWithMessages(Long channelId) {
-        Channel channel = getChannelById(channelId);
-        List<MessageResponseDTO> messages = messageService.getChannelMessagesOnly(channelId);
-        return channelMapper.toResponseMessagesDTO(channel, messages);
-    }
-
+    // Moved getChannelWithMessages(), it now lives in ChannelMessageFacade. 
+    // I did this to address the circular dependency.
     @Transactional
     public ChannelResponseDTO createChannel(String name, Long groupId) {
         Group group = groupRepository.findById(groupId)
