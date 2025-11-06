@@ -15,7 +15,6 @@ import jakarta.validation.constraints.NotNull;
 @AllArgsConstructor
 @ToString
 @SuperBuilder(toBuilder = true)
-@ToString
 public class MessageMention extends BaseEntity {
 
     @NotNull
