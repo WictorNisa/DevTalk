@@ -26,7 +26,6 @@ public class ChannelService {
     private final ChannelMapper channelMapper;
     private final GroupRepository groupRepository;
 
-    // Removed @Lazy MessageService dependency!
     @Transactional(readOnly = true)
     public List<ChannelResponseDTO> getAllChannels() {
         return channelRepository.findAll().stream()
