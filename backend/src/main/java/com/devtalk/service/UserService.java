@@ -3,6 +3,7 @@ package com.devtalk.service;
 import com.devtalk.dto.user.UpdateUserRequest;
 import com.devtalk.dto.user.UserResponseDTO;
 import com.devtalk.enums.PresenceStatus;
+import com.devtalk.exception.NotFoundException;
 import com.devtalk.mappers.UserMapper;
 import com.devtalk.model.User;
 import com.devtalk.repository.UserRepository;
@@ -47,7 +48,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
     }
 
     @Transactional(readOnly = true)

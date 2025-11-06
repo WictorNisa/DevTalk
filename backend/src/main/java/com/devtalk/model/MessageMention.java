@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @SuperBuilder(toBuilder = true)
 public class MessageMention extends BaseEntity {
 

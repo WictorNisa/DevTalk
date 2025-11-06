@@ -40,6 +40,9 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Query("select count(m) from Message m where m.parentMessage.id = :messageId")
     Long countRepliesByMessageId(@Param("messageId") Long messageId);
 
+    @Query("select m.parentMessage.id, count(m) from Message m where m.parentMessage.id in :messageIds group by m.parentMessage.id")
+    List<Object[]> findReplyCountsByMessageIds(@Param("messageIds") List<Long> messageIds);
+
     @Query("select distinct m from Message m join fetch m.user u left join fetch m.attachments a " +
            "left join fetch m.reactions r left join fetch r.user left join fetch m.mentions men left join fetch men.mentionedUser " +
            "where m.parentMessage.id = :parentMessageId order by m.createdAt asc")

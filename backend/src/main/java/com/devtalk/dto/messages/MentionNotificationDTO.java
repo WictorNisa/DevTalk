@@ -13,7 +13,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class MentionNotificationDTO extends MessageBaseDTO {
-    private final String type = "MENTION";
+    public static final String TYPE = "MENTION";
+    @lombok.Builder.Default
+    private String type = TYPE;
     private Long mentionedUserId;
     private String mentionedUserName;
     private String senderDisplayName;

@@ -52,7 +52,6 @@ class MessageRepositoryTests {
         User user = seed.user();
 
         // Create 100 messages
-        Instant base = Instant.now().minusSeconds(200);
         for (int i = 0; i < 100; i++) {
             Message m = Message.builder()
                     .content("m" + i)

@@ -2,12 +2,8 @@ package com.devtalk.controller;
 
 import com.devtalk.dto.messages.CreateMessageRequest;
 import com.devtalk.dto.messages.MessageResponseDTO;
-import com.devtalk.service.ChannelService;
+import com.devtalk.service.AuthService;
 import com.devtalk.service.MessageService;
-import com.devtalk.service.UserService;
-import com.devtalk.dto.channel.ChannelResponseDTO;
-import com.devtalk.dto.messages.ChatMessageDTO;
-import com.devtalk.dto.user.UserResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,8 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class MessageController {
 
     private final MessageService messageService;
-    private final UserService userService;
-    private final ChannelService channelService;
+    private final AuthService authService;
 
     @GetMapping("/{id}")
     @Operation(summary = "Get message by ID", description = "Retrieves a specific message by its unique identifier")
@@ -43,20 +38,9 @@ public class MessageController {
     })
     public ResponseEntity<MessageResponseDTO> getMessageById(
             @Parameter(description = "Message ID", required = true, example = "1")
-            @PathVariable Long id,
-            @AuthenticationPrincipal OAuth2User oauth2User) {
-        try {
-            // Authentication check
-            if (oauth2User == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-            
-            MessageResponseDTO message = messageService.getMessageById(id);
-            return ResponseEntity.ok(message);
-        } catch (RuntimeException e) {
-            log.error("Error retrieving message {}: {}", id, e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
+            @PathVariable Long id) {
+        MessageResponseDTO message = messageService.getMessageById(id);
+        return ResponseEntity.ok(message);
     }
 
     @PostMapping
@@ -71,41 +55,9 @@ public class MessageController {
     public ResponseEntity<MessageResponseDTO> createMessage(
             @Valid @RequestBody CreateMessageRequest request,
             @AuthenticationPrincipal OAuth2User oauth2User) {
-        try {
-            // Authentication check
-            if (oauth2User == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-            
-            // Get or create user from OAuth2 principal
-            String externalId = oauth2User.getAttribute("login"); // GitHub login
-            if (externalId == null) {
-                externalId = oauth2User.getName();
-            }
-            String displayName = oauth2User.getAttribute("name");
-            if (displayName == null) {
-                displayName = externalId;
-            }
-            UserResponseDTO user = userService.createOrGetUser(externalId, displayName);
-            ChannelResponseDTO channel = channelService.getChannelDTOById(request.getChannelId());
-
-            ChatMessageDTO chatMessageDTO = ChatMessageDTO.builder()
-                    .channelId(request.getChannelId())
-                    .content(request.getContent())
-                    .userId(user.getId())
-                    .parentMessageId(request.getParentMessageId())
-                    .threadId(request.getThreadId())
-                    .build();
-
-            MessageResponseDTO savedMessage = messageService.saveMessage(chatMessageDTO, user, channel);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedMessage);
-        } catch (RuntimeException e) {
-            log.error("Error creating message: {}", e.getMessage());
-            if (e.getMessage().contains("not found")) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.badRequest().build();
-        }
+        var user = authService.getAuthenticatedUser(oauth2User);
+        MessageResponseDTO savedMessage = messageService.createMessage(request, user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedMessage);
     }
 
     @DeleteMapping("/{id}")
@@ -121,35 +73,9 @@ public class MessageController {
             @Parameter(description = "Message ID", required = true, example = "1")
             @PathVariable Long id,
             @AuthenticationPrincipal OAuth2User oauth2User) {
-        try {
-            // Authentication check
-            if (oauth2User == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-            
-            // Get or create user from OAuth2 principal
-            String externalId = oauth2User.getAttribute("login"); // GitHub login
-            if (externalId == null) {
-                externalId = oauth2User.getName();
-            }
-            String displayName = oauth2User.getAttribute("name");
-            if (displayName == null) {
-                displayName = externalId;
-            }
-            UserResponseDTO user = userService.createOrGetUser(externalId, displayName);
-            
-            messageService.deleteMessage(id, user.getId());
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            log.error("Error deleting message {}: {}", id, e.getMessage());
-            if (e.getMessage().contains("not found")) {
-                return ResponseEntity.notFound().build();
-            }
-            if (e.getMessage().contains("not authorized")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        var user = authService.getAuthenticatedUser(oauth2User);
+        messageService.deleteMessage(id, user.getId());
+        return ResponseEntity.noContent().build();
     }
 }
 

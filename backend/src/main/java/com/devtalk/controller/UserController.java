@@ -46,13 +46,8 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> getUserById(
             @Parameter(description = "User ID", required = true, example = "1")
             @PathVariable Long id) {
-        try {
-            UserResponseDTO user = userService.getUserDTOById(id);
-            return ResponseEntity.ok(user);
-        } catch (RuntimeException e) {
-            log.error("Error retrieving user {}: {}", id, e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
+        UserResponseDTO user = userService.getUserDTOById(id);
+        return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}")
@@ -67,15 +62,7 @@ public class UserController {
             @Parameter(description = "User ID", required = true, example = "1")
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserRequest request) {
-        try {
-            UserResponseDTO updated = userService.updateUser(id, request);
-            return ResponseEntity.ok(updated);
-        } catch (RuntimeException e) {
-            log.error("Error updating user {}: {}", id, e.getMessage());
-            if (e.getMessage().contains("not found")) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.badRequest().build();
-        }
+        UserResponseDTO updated = userService.updateUser(id, request);
+        return ResponseEntity.ok(updated);
     }
 }

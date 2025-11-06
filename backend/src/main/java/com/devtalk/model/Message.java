@@ -65,6 +65,14 @@ public class Message extends BaseEntity {
                orphanRemoval = true)
     @Builder.Default
     private Set<MessageMention> mentions = new HashSet<>();
+
+    public Set<MessageMention> getMentions() {
+        return java.util.Collections.unmodifiableSet(mentions);
+    }
+    
+    public void clearMentions() {
+        mentions.clear();
+    }
 }
 
 
