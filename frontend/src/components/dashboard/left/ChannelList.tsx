@@ -39,7 +39,7 @@ export const ChannelItem = ({
       }}
       aria-pressed={active}
       title={channel.topic}
-      className={`w-full justify-between px-3 py-2 text-sm ${active ? "font-semibold" : "font-normal"} ${collapsed ? "justify-center px-1" : ""}`}
+      className={`w-full justify-between px-3 py-2 text-sm ${active ? "font-semibold" : "font-normal"} ${collapsed ? "justify-center px-2" : "px-2"}`}
     >
       <span className="flex min-w-0 items-center gap-2">
         <span className="truncate">{channel.name}</span>

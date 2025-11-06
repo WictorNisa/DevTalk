@@ -8,7 +8,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Settings, LogOut, EllipsisVertical, UserPen } from "lucide-react";
 
-export const UserMenu = ({ onSignOut }: { onSignOut?: () => void }) => {
+// 1. Update props type to include the new handlers
+type UserMenuProps = {
+  onSignOut?: () => void;
+  onOpenProfile?: () => void;
+  onOpenSettings?: () => void;
+};
+
+// 2. Destructure the new props
+export const UserMenu = ({
+  onSignOut,
+  onOpenProfile,
+  onOpenSettings,
+}: UserMenuProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -16,7 +28,7 @@ export const UserMenu = ({ onSignOut }: { onSignOut?: () => void }) => {
           variant="ghost"
           size="sm"
           aria-label="User actions"
-          className="focus-visible:ring-primary/60 p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="cursor-pointer p-2 focus:outline-none"
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
@@ -27,31 +39,36 @@ export const UserMenu = ({ onSignOut }: { onSignOut?: () => void }) => {
 
       <DropdownMenuContent
         align="end"
-        sideOffset={6}
-        className="w-40"
+        sideOffset={8}
+        className="w-auto"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* 3. Call onOpenProfile when Profile is clicked */}
         <DropdownMenuItem
           onSelect={() => {
-            /* open profile */
+            onOpenProfile?.();
           }}
         >
-          <UserPen className="mr-2 h-4 w-4" /> Profile
+          <UserPen className="mr-3 h-4 w-4" /> Profile
         </DropdownMenuItem>
+
+        {/* 4. Call onOpenSettings when Settings is clicked */}
         <DropdownMenuItem
           onSelect={() => {
-            /* open settings */
+            onOpenSettings?.();
           }}
         >
-          <Settings className="mr-2 h-4 w-4" /> Settings
+          <Settings className="mr-3 h-4 w-4" /> Settings
         </DropdownMenuItem>
+
         <DropdownMenuSeparator />
+
         <DropdownMenuItem
           onSelect={() => {
             onSignOut?.();
           }}
         >
-          <LogOut className="mr-2 h-4 w-4" /> Sign out
+          <LogOut className="mr-3 h-4 w-4" /> Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -8,9 +8,9 @@ const ThemeSwitcher = () => {
   return (
     <div className="flex items-center space-x-2">
       {theme === "light" ? (
-        <Sun strokeWidth={2} className="h-5 w-5" />
+        <Sun strokeWidth={1.5} className="h-5 w-5" />
       ) : (
-        <Moon strokeWidth={2} className="h-5 w-5" />
+        <Moon strokeWidth={1.5} className="h-5 w-5" />
       )}
       <Switch
         id="theme-switch"

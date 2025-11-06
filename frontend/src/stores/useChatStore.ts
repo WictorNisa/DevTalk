@@ -1,4 +1,4 @@
-import { mockMessages } from "@/data/mockMessages";
+// import { mockMessages } from "@/data/mockMessages";
 import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
@@ -11,7 +11,13 @@ export type Message = {
   user: string;
   text: string;
   timestamp: string;
-}
+};
+
+type Channel = {
+  id: string;
+  name: string;
+  messages?: Message[];
+};
 
 type BackendMessageDTO = {
   id: number;
@@ -21,7 +27,7 @@ type BackendMessageDTO = {
   timestamp: number;
   userId: number;
   channelId: number;
-}
+};
 
 type ChatState = {
   messages: Message[];
@@ -32,19 +38,19 @@ type ChatState = {
   disconnect: () => void;
   sendMessage: (channelId: string, content: string) => void;
   addMessage: (message: Message) => void;
-  loadMessages: (channelId: string) => Promise<void>;
+  loadMessages?: (channelId: string) => Promise<void>;
 };
 
-
-//Helper function to transform backend messages to frontend format 
+//Helper function to transform backend messages to frontend format
 const transformBackendMessage = (payload: BackendMessageDTO): Message => {
   return {
     id: payload.id?.toString() || crypto.randomUUID(),
-    user: payload.senderDisplayName || 'Unknown User',
-    avatar: payload.senderAvatarUrl ||
+    user: payload.senderDisplayName || "Unknown User",
+    avatar:
+      payload.senderAvatarUrl ||
       `https://api.dicebear.com/7.x/avataaars/svg?seed=${payload.senderDisplayName}`,
-    text: payload.content || '',
-    timestamp: new Date(payload.timestamp || Date.now()).toISOString()
+    text: payload.content || "",
+    timestamp: new Date(payload.timestamp || Date.now()).toISOString(),
   };
 };
 
@@ -54,102 +60,102 @@ export const useChatStore = create<ChatState>((set, get) => ({
   stompClient: null,
   connected: false,
   connect: () => {
-    console.log(' Attempting to connect to websocket...')
+    console.log(" Attempting to connect to websocket...");
 
-    const socket = new SockJS('http://localhost:8080/ws')
+    const socket = new SockJS("http://localhost:8080/ws");
 
     const client = new Client({
       webSocketFactory: () => socket,
-      debug: (str) => console.log('[STOMP Debug]', str),
+      debug: (str) => console.log("[STOMP Debug]", str),
       reconnectDelay: 5000,
       heartbeatIncoming: 10000,
       heartbeatOutgoing: 10000,
-    })
+    });
 
     client.onConnect = () => {
-      console.log(' STOMP connected successfully');
-      set({ connected: true })
+      console.log(" STOMP connected successfully");
+      set({ connected: true });
 
       const channelId = 1;
 
-      client.subscribe('/user/queue/history', (message) => {
+      client.subscribe("/user/queue/history", (message) => {
         try {
-          const history = JSON.parse(message.body)
+          const history = JSON.parse(message.body);
           const transformedMessages = history.map((msg: BackendMessageDTO) => {
-            return transformBackendMessage(msg)
-          })
+            return transformBackendMessage(msg);
+          });
 
-          set({ messages: transformedMessages })
+          set({ messages: transformedMessages });
         } catch (error) {
-          console.error('Error parsing history', error)
+          console.error("Error parsing history", error);
         }
-      })
-
-
-
-
+      });
 
       client.subscribe(`/topic/room/${channelId}`, (message) => {
-        console.log('Received message: ', message.body);
+        console.log("Received message: ", message.body);
         try {
-          const payload = JSON.parse(message.body)
-          console.log('Parsed message:', payload)
+          const payload = JSON.parse(message.body);
+          console.log("Parsed message:", payload);
 
-          const transformedMessage = transformBackendMessage(payload)
+          const transformedMessage = transformBackendMessage(payload);
 
           get().addMessage(transformedMessage);
-          console.log('Message added to store')
+          console.log("Message added to store");
         } catch (error) {
-          console.error('Error parsing message', error)
+          console.error("Error parsing message", error);
         }
-      })
+      });
       console.log(`📡 Subscribed to /topic/room/${channelId}`);
       set({ activeChannel: channelId.toString() });
 
-
       client.publish({
-        destination: '/app/message.history',
-        body: JSON.stringify({ channelId: channelId, userId: 2, beforeTimestamp: null, threadId: null })
-      })
-    }
+        destination: "/app/message.history",
+        body: JSON.stringify({
+          channelId: channelId,
+          userId: 2,
+          beforeTimestamp: null,
+          threadId: null,
+        }),
+      });
+    };
 
     client.onStompError = (frame) => {
-      console.error(' STOMP error:', frame)
-      set({ connected: false })
-    }
+      console.error(" STOMP error:", frame);
+      set({ connected: false });
+    };
 
-    client.activate()
+    client.activate();
 
-    set({ stompClient: client })
+    set({ stompClient: client });
   },
   disconnect: () => {
-    const { stompClient } = get()
+    const { stompClient } = get();
     if (stompClient) {
-      console.log(' Disconnecting from WebSocket...')
+      console.log(" Disconnecting from WebSocket...");
       stompClient.deactivate();
-      set({ stompClient: null, connected: false })
+      set({ stompClient: null, connected: false });
     }
   },
   setActiveChannel: (channel) => set({ activeChannel: channel, messages: [] }),
   addMessage: (msg) => set((state) => ({ messages: [...state.messages, msg] })),
   clearMessages: () => set({ messages: [] }),
   sendMessage: (channelId: string, content: string) => {
-    const { stompClient, connected } = get()
+    const { stompClient, connected } = get();
     if (!connected || !stompClient) {
-      console.error('Cannot send message: not connected!')
-      return
+      console.error("Cannot send message: not connected!");
+      return;
     }
 
     const messagePayload = {
       channelId: parseInt(channelId),
       userId: 2,
       content: content,
-      destination: `/topic/room/${channelId}`
+      destination: `/topic/room/${channelId}`,
     };
 
     stompClient.publish({
-      destination: '/app/chat.send',
+      destination: "/app/chat.send",
       body: JSON.stringify(messagePayload),
     });
-  }
+  },
 }));
