@@ -18,4 +18,5 @@ public class MessageBaseDTO extends BaseDTO {
     private Long threadId;
     private Long parentMessageId;
     private Long beforeTimestamp;
+    private Long messageId; // For endpoints that need to reference a specific message
 }

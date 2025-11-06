@@ -26,6 +26,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.presenceStatus = :status")
     List<User> findByPresenceStatus(@Param("status") com.devtalk.enums.PresenceStatus status);
+
+    Optional<User> findByDisplayNameIgnoreCase(String displayName);
 }
 
 

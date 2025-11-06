@@ -1,0 +1,36 @@
+package com.devtalk.service;
+
+import com.devtalk.dto.user.UserResponseDTO;
+import com.devtalk.exception.UnauthorizedException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class AuthService {
+
+    private final UserService userService;
+
+    @Transactional
+    public UserResponseDTO getAuthenticatedUser(OAuth2User oauth2User) {
+        if (oauth2User == null) {
+            throw new UnauthorizedException("User not authenticated");
+        }
+
+        String externalId = oauth2User.getAttribute("login"); // GitHub login
+        if (externalId == null) {
+            externalId = oauth2User.getName();
+        }
+        String displayName = oauth2User.getAttribute("name");
+        if (displayName == null) {
+            displayName = externalId;
+        }
+
+        return userService.createOrGetUser(externalId, displayName);
+    }
+}
+

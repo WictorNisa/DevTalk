@@ -1,6 +1,7 @@
 package com.devtalk.service;
 
 import com.devtalk.dto.groups.GroupResponseDTO;
+import com.devtalk.exception.NoGroupsFoundException;
 import com.devtalk.mappers.GroupMapper;
 import com.devtalk.model.Group;
 import com.devtalk.repository.GroupRepository;
@@ -26,12 +27,4 @@ public class GroupService {
                         .orElseThrow(() -> new NoGroupsFoundException("No groups found in the system")));
         return groupMapper.toResponseDTO(group);
     }
-
-    // Custom exception for no groups found
-    public static class NoGroupsFoundException extends RuntimeException {
-        public NoGroupsFoundException(String message) {
-            super(message);
-        }
-    }
-
 }
