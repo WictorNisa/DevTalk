@@ -14,6 +14,10 @@ import java.util.Map;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class MessageResponseDTO extends MessageBaseDTO {
+    /**
+     * The actual text content of the message.
+     */
+    private String content;
     private String senderDisplayName;
     private String senderAvatarUrl;
     private Long timestamp;
