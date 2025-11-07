@@ -14,7 +14,6 @@ const ThemeSwitcher = () => {
       )}
       <Switch
         id="theme-switch"
-        className="cursor-pointer"
         checked={theme === "dark"}
         onCheckedChange={toggleTheme}
       />

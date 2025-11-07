@@ -41,7 +41,7 @@ export const SettingsDialog = ({ open, onOpenChange }: Props) => {
   //       .then(res => res.json())
   //       .then(data => {
   //         setNotifications(data.notifications ?? true);
-  //         // set other settings...
+  //         setOtherSettings(data);
   //       });
   //   }
   // }, [open]);
@@ -62,7 +62,7 @@ export const SettingsDialog = ({ open, onOpenChange }: Props) => {
   //       headers: { 'Content-Type': 'application/json' },
   //       body: JSON.stringify({
   //         notifications,
-  //         // other settings...
+  //         otherSettings,
   //       }),
   //     });
   //

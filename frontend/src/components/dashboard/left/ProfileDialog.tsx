@@ -4,6 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -81,11 +82,11 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
     //
     //   if (!response.ok) throw new Error('Failed to save profile');
     //
-    //   // Show success toast
+    //   Show success toast
     //   toast.success('Profile updated successfully');
     //   onOpenChange(false);
     // } catch (error) {
-    //   // Show error toast
+    //   Show error toast
     //   toast.error('Failed to save profile');
     // } finally {
     //   setIsSaving(false);
@@ -98,10 +99,13 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Profile Settings</DialogTitle>
+          <DialogTitle className="pb-1.5 font-semibold">
+            Profile Settings
+          </DialogTitle>
           <DialogDescription>
             Update your bio here. Avatar and username are managed by GitHub
-            OAuth and will sync automatically.{" "}
+            OAuth and will sync automatically.
+            <br />
             <span className="text-muted-foreground text-xs">
               (Please visit the GitHub settings to change your avatar or
               username.)
@@ -113,7 +117,7 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
           {/* TODO: Avatar and username synced from GitHub OAuth via backend */}
           {/* Backend should provide: GET /api/users/me with { username, avatar, githubId } */}
           <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
+            <Avatar className="h-18 w-18">
               <AvatarImage
                 src={user.avatar}
                 alt={user.username}
@@ -142,7 +146,7 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
               id="bio"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              placeholder="Tell us something about you..."
+              placeholder="Tell us about yourself..."
               rows={4}
               maxLength={200}
               className="max-w-svh"
@@ -155,14 +159,18 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
         </div>
 
         <div className="flex justify-end gap-2">
+          <DialogClose asChild>
+            <Button
+              className="cursor-pointer"
+              variant="outline"
+              // disabled={isSaving}
+            >
+              Cancel
+            </Button>
+          </DialogClose>
           <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            // disabled={isSaving}
-          >
-            Cancel
-          </Button>
-          <Button
+            className="cursor-pointer"
+            variant={"default"}
             onClick={handleSave}
             // disabled={isSaving}
           >

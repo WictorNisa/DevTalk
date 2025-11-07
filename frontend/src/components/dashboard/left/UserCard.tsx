@@ -51,9 +51,9 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
 
   if (collapsed) {
     return (
-      <div className="flex items-center justify-center p-1">
+      <Card className="flex items-center justify-center rounded-lg p-2.5">
         <div className="relative">
-          <Avatar className="h-7 w-7 rounded-full">
+          <Avatar className="h-8 w-8 rounded-full">
             <AvatarImage
               src={user.avatar || "https://placehold.co/120"}
               alt={user.username}
@@ -68,14 +68,14 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
             aria-hidden="true"
           />
         </div>
-      </div>
+      </Card>
     );
   }
 
   return (
     <>
       <Card className="w-full min-w-0 items-start rounded-lg p-2">
-        <CardContent className="flex min-w-0 items-center gap-3 p-2.5">
+        <CardContent className="flex min-w-0 items-center gap-2.5 p-1">
           <UserMenu
             onSignOut={() => {
               // TODO: Implement sign out logic
@@ -90,7 +90,7 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
             onOpenSettings={() => setSettingsOpen(true)}
           >
             <div className="relative flex-shrink-0">
-              <Avatar className="h-10 w-10 rounded-full">
+              <Avatar className="h-12 w-12 rounded-full">
                 <AvatarImage
                   src={user.avatar || "/images/default-avatar.jpg"}
                   alt={user.username}
@@ -111,9 +111,9 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
             </div>
           </UserMenu>
 
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <span className="truncate text-sm font-medium">
+          <div className="min-w-0 flex-1 overflow-hidden">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="block truncate text-sm font-medium">
                 {user.username}
               </span>
               {/* TODO: Display user badge/role from backend */}

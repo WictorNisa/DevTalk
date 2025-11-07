@@ -46,20 +46,20 @@ export const UserMenu = ({
             variant="ghost"
             size="icon"
             aria-label="User actions"
-            className="absolute inset-0 flex h-full w-full cursor-pointer items-center justify-center rounded-full border-0 p-0 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="absolute inset-0 flex h-full w-full cursor-pointer items-center justify-center rounded-full border-0 p-0 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
           >
             <div className="bg-background/40 rounded-full p-1.5 backdrop-blur-sm">
-              <Ellipsis strokeWidth={2.5} className="text-foreground h-4 w-4" />
+              <Ellipsis strokeWidth={2} className="text-foreground h-5 w-5" />
             </div>
           </Button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent
           align="start"
-          sideOffset={10}
+          sideOffset={8}
           className="w-auto"
           onClick={(e) => e.stopPropagation()}
         >

@@ -32,14 +32,14 @@ export const ChannelItem = ({
 }: ChannelItemProps) => {
   return (
     <Button
-      variant={active ? "outline" : "ghost"}
+      variant={active ? "secondary" : "ghost"}
       onClick={(e) => {
         e.stopPropagation();
         onSelect?.(channel);
       }}
       aria-pressed={active}
       title={channel.topic}
-      className={`w-full justify-between px-3 py-2 text-sm ${active ? "font-semibold" : "font-normal"} ${collapsed ? "justify-center px-2" : "px-2"}`}
+      className={`w-full justify-between px-3 py-2 text-sm ${active ? "font-semibold" : "font-light"} ${collapsed ? "justify-center px-2.5" : "px-2.5"}`}
     >
       <span className="flex min-w-0 items-center gap-2">
         <span className="truncate">{channel.name}</span>
@@ -51,7 +51,7 @@ export const ChannelItem = ({
       </span>
 
       {!collapsed && channel.unread ? (
-        <Badge variant="secondary" className="ml-2">
+        <Badge variant="destructive" className="h-5 w-5 rounded-full">
           {channel.unread}
         </Badge>
       ) : null}

@@ -29,10 +29,10 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
   };
 
   return (
-    <Card className="h-full w-full min-w-0 rounded-lg">
-      <CardContent className="min-w-0 p-2">
+    <Card className="h-full w-full rounded-lg">
+      <CardContent className="p-2">
         <div className="mb-4 flex w-full items-center justify-center">
-          <span className="font-regular text-sm">Channels</span>
+          <span className="font-regular text-sm">Channel List</span>
         </div>
 
         <ChannelList
