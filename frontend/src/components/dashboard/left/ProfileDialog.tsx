@@ -12,14 +12,29 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
 import dummyUsers from "@/data/dummyUsers.json";
 
+/*
+ TODO (ProfileDialog)
+ - Replace dummyUsers with authenticated user from auth context (useAuth hook)
+ - Fetch user profile data from backend: GET /api/users/me/profile
+ - Implement bio save functionality: PUT /api/users/me/profile with { bio }
+ - Add loading state while fetching profile data
+ - Add loading/disabled state on save button while submitting
+ - Show toast/notification on save success/error
+ - Add form validation for bio (min/max length, no special characters if needed)
+ - Handle avatar upload: POST /api/users/me/avatar with FormData
+ - Add error handling for failed avatar loads
+ - Sync GitHub OAuth data: username and avatar auto-update from backend
+ - Add ability to refresh GitHub data manually
+*/
+
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
 export const ProfileDialog = ({ open, onOpenChange }: Props) => {
-  // TODO: Replace with authenticated user from auth context (useAuth hook)
-  // For now, use first dummy user as fallback
+  // TODO: Replace with authenticated user from auth context
+  // const { user, isLoading } = useAuth();
   const fallbackUser = {
     username: "You",
     avatar: "/images/default-avatar.jpg",
@@ -41,12 +56,40 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
         : fallbackUser.avatar,
   };
 
-  // Local state for bio (will be synced with backend when auth is ready)
+  // TODO: Fetch bio from backend when dialog opens
+  // useEffect(() => {
+  //   if (open) {
+  //     fetch('/api/users/me/profile')
+  //       .then(res => res.json())
+  //       .then(data => setBio(data.bio || ''));
+  //   }
+  // }, [open]);
   const [bio, setBio] = useState("");
 
-  const handleSave = () => {
-    // TODO: POST bio to backend API
-    // TODO: Show toast/notification on success/error
+  // TODO: Add loading state for save action
+  // const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    // TODO: Implement backend save logic
+    // setIsSaving(true);
+    // try {
+    //   const response = await fetch('/api/users/me/profile', {
+    //     method: 'PUT',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ bio }),
+    //   });
+    //
+    //   if (!response.ok) throw new Error('Failed to save profile');
+    //
+    //   // Show success toast
+    //   toast.success('Profile updated successfully');
+    //   onOpenChange(false);
+    // } catch (error) {
+    //   // Show error toast
+    //   toast.error('Failed to save profile');
+    // } finally {
+    //   setIsSaving(false);
+    // }
     console.log("Saving bio:", bio);
     onOpenChange(false);
   };
@@ -67,13 +110,15 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
         </DialogHeader>
 
         <div className="flex flex-col gap-4 py-4">
-          {/* Avatar and username from GitHub OAuth */}
+          {/* TODO: Avatar and username synced from GitHub OAuth via backend */}
+          {/* Backend should provide: GET /api/users/me with { username, avatar, githubId } */}
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16">
               <AvatarImage
                 src={user.avatar}
                 alt={user.username}
                 onError={(e) => {
+                  // TODO: Track failed avatar loads and report to backend
                   (e.target as HTMLImageElement).src =
                     "/images/default-avatar.jpg";
                 }}
@@ -90,7 +135,7 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
             </div>
           </div>
 
-          {/* Bio (can edit) */}
+          {/* TODO: Bio field - save to backend PUT /api/users/me/profile */}
           <div className="flex flex-col gap-3">
             <Label htmlFor="bio">Bio</Label>
             <Textarea
@@ -101,6 +146,7 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
               rows={4}
               maxLength={200}
               className="max-w-svh"
+              // disabled={isSaving}
             />
             <span className="text-muted-foreground text-xs">
               {bio.length}/200 characters
@@ -109,10 +155,20 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
         </div>
 
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            // disabled={isSaving}
+          >
             Cancel
           </Button>
-          <Button onClick={handleSave}>Save</Button>
+          <Button
+            onClick={handleSave}
+            // disabled={isSaving}
+          >
+            {/* {isSaving ? 'Saving...' : 'Save'} */}
+            Save
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

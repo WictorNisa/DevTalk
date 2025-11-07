@@ -42,7 +42,7 @@ const LeftBottomWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
 
   return (
     <Card
-      className={`flex h-auto items-center gap-2 rounded-lg ${
+      className={`flex h-auto w-full min-w-0 items-center gap-2 rounded-lg ${
         collapsed ? "h-auto justify-center overflow-visible p-1" : "p-2"
       }`}
     >
