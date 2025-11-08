@@ -25,7 +25,7 @@ const MessageList = () => {
     if (!user && !isLoading) {
       checkAuth();
     }
-  }, [user, checkAuth, isLoading]);
+  }, [user, isLoading]);
 
   const scrollToBottom = () => {
     virtuosoRef.current?.scrollToIndex({
