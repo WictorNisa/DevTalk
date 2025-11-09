@@ -13,6 +13,7 @@ import com.devtalk.models.Channel;
 import com.devtalk.models.Group;
 import com.devtalk.repositories.ChannelRepository;
 import com.devtalk.repositories.GroupRepository;
+import com.devtalk.repositories.UserGroupMembershipRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class ChannelService {
     private final ChannelRepository channelRepository;
     private final ChannelMapper channelMapper;
     private final GroupRepository groupRepository;
+    private final UserGroupMembershipRepository userGroupMembershipRepository;
 
     @Transactional(readOnly = true)
     public List<ChannelResponseDTO> getAllChannels() {
@@ -67,6 +69,14 @@ public class ChannelService {
         Channel saved = channelRepository.save(channel);
         log.info("Created channel {} in group {}", name, groupId);
         return channelMapper.toResponseDTO(saved);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean hasUserAccessToChannel(Long userId, Long channelId) {
+        Channel channel = getChannelById(channelId);
+        Group group = channel.getGroup();
+        return userGroupMembershipRepository.findByUserIdAndGroupIdWithDetails(userId, group.getId())
+                .isPresent();
     }
 
 }
