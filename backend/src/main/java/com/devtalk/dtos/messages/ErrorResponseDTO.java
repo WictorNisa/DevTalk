@@ -1,4 +1,4 @@
-package com.devtalk.dtos;
+package com.devtalk.dtos.messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
