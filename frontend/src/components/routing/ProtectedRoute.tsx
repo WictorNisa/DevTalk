@@ -10,6 +10,7 @@ interface ProtectedRouteProps {
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
 
+  // It's safe to omit checkAuth from the dependency array because it is stable from the store.
   useEffect(() => {
     checkAuth();
   }, []);
