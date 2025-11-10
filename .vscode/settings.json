@@ -1,5 +1,6 @@
 {
   "css.lint.unknownAtRules": "ignore",
   "java.configuration.updateBuildConfiguration": "interactive",
-  "java.compile.nullAnalysis.mode": "automatic"
+  "java.compile.nullAnalysis.mode": "automatic",
+  "cSpell.words": ["springdoc"]
 }
