@@ -31,7 +31,7 @@ const CenterBottomWidget = () => {
     //   return;
     // }
     if (inputValue.trim() && activeChannel) {
-      console.log("Sending message... from", user.displayName);
+      console.log("Sending message... from", user?.displayName);
       sendMessage(activeChannel, inputValue.trim());
       setInputValue("");
     } else {
