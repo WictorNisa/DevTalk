@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware"
 
 // Enkel auth store exempel
-// TODO: Connecta med WebSocket när backend är redo.
+// TODO: Connect with WebSocket when backend is ready.
 type User = {
   id: string;
   externalId: string;
