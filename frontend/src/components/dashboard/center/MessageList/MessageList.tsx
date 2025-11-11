@@ -38,6 +38,20 @@ const MessageList = () => {
     }
   };
 
+  const shouldGroupMessage = (currentIndex: number): boolean => {
+    if (currentIndex === 0) return false;
+
+    const currentMsg = messages[currentIndex];
+    const previousMsg = messages[currentIndex - 1];
+
+    //Atm we are grouping messages if they are from the same user and within 2 minutes. Opinions about the time?
+    const timeDiff =
+      new Date(currentMsg.timestamp).getTime() -
+      new Date(previousMsg.timestamp).getTime();
+
+    return currentMsg.user === previousMsg.user && timeDiff < 2 * 60 * 1000;
+  };
+
   return (
     <div className="relative h-full w-full">
       {showScrollButton && (
@@ -73,6 +87,7 @@ const MessageList = () => {
               mockMessageUser={msg.user}
               mockMessageText={msg.text}
               mockMessageTimeStamp={msg.timestamp}
+              isGrouped={shouldGroupMessage(index)}
             />
           </div>
         )}

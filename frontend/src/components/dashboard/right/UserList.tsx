@@ -1,5 +1,7 @@
-import dummyUsers from "@/data/dummyUsers.json";
+import { useEffect, useState } from "react";
 import { UserListCard } from "./UserListCard";
+import { fetchAllUsers } from "@/services/fetchAllUsers";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 /*
  TODO (UserList)
@@ -19,77 +21,84 @@ type User = {
 };
 
 export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
-  // local fallback users (keeps same shape used elsewhere)
-  const fallbackUsers: User[] = [
-    {
-      username: "AlexCoder",
-      avatar: "/images/alex.jpg",
-      status: "online",
-      id: undefined,
-    },
-    {
-      username: "SarahDev",
-      avatar: "/images/sarah.jpg",
-      status: "idle",
-      id: undefined,
-    },
-    {
-      username: "MikeDesign",
-      avatar: "/images/mike.jpg",
-      status: "busy",
-      id: undefined,
-    },
-    {
-      username: "Pedro",
-      avatar: "/images/pedro.jpg",
-      status: "busy",
-      id: undefined,
-    },
-    {
-      username: "DeezNuts",
-      avatar: "/images/deeznuts.jpg",
-      status: "online",
-      id: undefined,
-    },
-    {
-      username: "MustafaJunior",
-      avatar: "/images/mustafajunior.jpg",
-      status: "idle",
-      id: undefined,
-    },
-    {
-      username: "MuricanCitizen",
-      avatar: "/images/muricancitizen.jpg",
-      status: "offline",
-      id: undefined,
-    },
-    {
-      username: "JaneTester",
-      status: undefined,
-      id: undefined,
-    },
-  ];
+  const {
+    user: currentUser,
+    isAuthenticated,
+    isLoading: authLoading,
+  } = useAuthStore();
 
-  const usersFromJson = Array.isArray(dummyUsers)
-    ? (dummyUsers as User[]).map((u) => ({
-        ...u,
-        // ensure avatar path is resolvable by the app (prepend slash if missing)
-        avatar:
-          typeof u.avatar === "string"
-            ? u.avatar.startsWith("/") || u.avatar.startsWith("http")
-              ? u.avatar
-              : `/${u.avatar}`
-            : u.avatar,
-      }))
-    : [];
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const users: User[] = usersFromJson.length ? usersFromJson : fallbackUsers;
+  const offlineUsers = users.filter(
+    (userStatus) => userStatus.status === "offline",
+  );
+
+  const activeUsers = users.filter(
+    (userStatus) => userStatus.status !== "offline",
+  );
+
+  useEffect(() => {
+    const loadUsers = async () => {
+      if (authLoading) return;
+
+      if (!isAuthenticated) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const fetchedUsers = await fetchAllUsers();
+        setUsers(fetchedUsers);
+        setError(null);
+      } catch (error) {
+        console.error("Error loading users:", error);
+        setError(
+          error instanceof Error ? error.message : "Failed to load users",
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadUsers();
+  }, [isAuthenticated, authLoading]);
+
+  if (authLoading || isLoading) {
+    return (
+      <div className={`flex flex-col gap-2 ${collapsed ? "items-center" : ""}`}>
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="bg-muted h-12 animate-pulse rounded-lg" />
+        ))}
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="text-destructive text-sm">Error: {error}</div>;
+  }
+
+  if (users.length === 0) {
+    return <div className="text-muted-foreground text-sm">No users found</div>;
+  }
 
   return (
     <div className={`flex flex-col gap-2 ${collapsed ? "items-center" : ""}`}>
-      {users.map((u) => (
-        <UserListCard key={u.id} {...u} collapsed={collapsed} />
-      ))}
+      <div className="mb-2 flex flex-col gap-3 text-gray-500">
+        <span>{`Active - ${activeUsers.length}`} </span>
+        {activeUsers.map((user) => (
+          <UserListCard key={user.id} {...user} collapsed={collapsed} />
+        ))}
+      </div>
+
+      <div className="mb-2 flex flex-col gap-3 text-gray-500">
+        <span>{`Inactive - ${offlineUsers.length}`} </span>
+        {offlineUsers.map((user) => (
+          <UserListCard key={user.id} {...user} collapsed={collapsed} />
+        ))}
+      </div>
     </div>
   );
 };
