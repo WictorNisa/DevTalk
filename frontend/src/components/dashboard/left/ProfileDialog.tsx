@@ -149,7 +149,7 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
               placeholder="Tell us about yourself..."
               rows={4}
               maxLength={200}
-              className="max-w-svh"
+              className="max-w-full"
               // disabled={isSaving}
             />
             <span className="text-muted-foreground text-xs">
