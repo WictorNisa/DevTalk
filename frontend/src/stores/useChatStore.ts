@@ -127,7 +127,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           if (!isAtBottom) {
             get().incrementUnreadCount();
           }
-          useNotificationSound()
+          useNotificationSound();
 
           get().addMessage(transformedMessage);
           console.log("Message added to store");
