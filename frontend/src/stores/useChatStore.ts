@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-// import { mockMessages } from "@/data/mockMessages";
-=======
->>>>>>> main
 import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import { useAuthStore } from "./useAuthStore";
-
 
 // Basic chat store exempel
 export type Message = {
@@ -15,12 +9,6 @@ export type Message = {
   user: string;
   text: string;
   timestamp: string;
-};
-
-type Channel = {
-  id: string;
-  name: string;
-  messages?: Message[];
 };
 
 type BackendMessageDTO = {
@@ -47,13 +35,9 @@ type ChatState = {
   disconnect: () => void;
   sendMessage: (channelId: string, content: string) => void;
   addMessage: (message: Message) => void;
-<<<<<<< HEAD
-  loadMessages?: (channelId: string) => Promise<void>;
-=======
   clearMessages: () => void;
   setActiveChannel: (channel: string) => void;
   loadMessages: (channelId: string) => Promise<void>;
->>>>>>> main
 };
 
 //Helper function to transform backend messages to frontend format
@@ -78,12 +62,13 @@ export const useChatStore = create<ChatState>((set, get) => ({
   unreadCount: 0,
 
   setIsAtBottom: (atBottom) => {
-    set({ isAtBottom: atBottom })
+    set({ isAtBottom: atBottom });
     if (atBottom) {
-      set({ unreadCount: 0 })
+      set({ unreadCount: 0 });
     }
   },
-  incrementUnreadCount: () => set((state) => ({ unreadCount: state.unreadCount + 1 })),
+  incrementUnreadCount: () =>
+    set((state) => ({ unreadCount: state.unreadCount + 1 })),
   resetUnreadCount: () => set({ unreadCount: 0 }),
 
   connect: () => {
@@ -113,21 +98,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
             return transformBackendMessage(msg);
           });
 
-<<<<<<< HEAD
           set({ messages: transformedMessages });
-=======
-          set({ messages: transformedMessages })
-          console.log(`Loaded ${transformedMessages.length} messages from database`);
-
->>>>>>> main
+          console.log(
+            `Loaded ${transformedMessages.length} messages from database`,
+          );
         } catch (error) {
           console.error("Error parsing history", error);
         }
-<<<<<<< HEAD
       });
-=======
-      })
->>>>>>> main
 
       client.subscribe(`/topic/room/${channelId}`, (message) => {
         console.log("Received message: ", message.body);
@@ -137,9 +115,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
           const transformedMessage = transformBackendMessage(payload);
 
-          const { isAtBottom } = get()
+          const { isAtBottom } = get();
           if (!isAtBottom) {
-            get().incrementUnreadCount()
+            get().incrementUnreadCount();
           }
 
           get().addMessage(transformedMessage);
@@ -152,22 +130,15 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set({ activeChannel: channelId.toString() });
 
       client.publish({
-<<<<<<< HEAD
         destination: "/app/message.history",
         body: JSON.stringify({
           channelId: channelId,
-          userId: 2,
+          userId: userId,
           beforeTimestamp: null,
           threadId: null,
         }),
       });
     };
-=======
-        destination: '/app/message.history',
-        body: JSON.stringify({ channelId: channelId, userId: userId, beforeTimestamp: null, threadId: null })
-      })
-    }
->>>>>>> main
 
     client.onStompError = (frame) => {
       console.error(" STOMP error:", frame);
@@ -190,12 +161,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
   addMessage: (msg) => set((state) => ({ messages: [...state.messages, msg] })),
   clearMessages: () => set({ messages: [] }),
   sendMessage: (channelId: string, content: string) => {
-<<<<<<< HEAD
     const { stompClient, connected } = get();
-=======
-    const { stompClient, connected } = get()
-    const userId = useAuthStore.getState().user?.id
->>>>>>> main
+    // const userId = useAuthStore.getState().user?.id
     if (!connected || !stompClient) {
       console.error("Cannot send message: not connected!");
       return;
@@ -203,52 +170,41 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     const messagePayload = {
       content: content,
-<<<<<<< HEAD
-      destination: `/topic/room/${channelId}`,
-=======
       userId: 1,
       channelId: parseInt(channelId),
       threadId: null,
       parentMessageId: null,
-      destination: `/topic/room/${channelId}`
->>>>>>> main
+      destination: `/topic/room/${channelId}`,
     };
 
     stompClient.publish({
       destination: "/app/chat.send",
       body: JSON.stringify(messagePayload),
-      headers: { 'content-type': 'application/json' }
+      headers: { "content-type": "application/json" },
     });
-<<<<<<< HEAD
-  },
-}));
-=======
 
     console.log("Message sent!");
-
   },
   loadMessages: async (channelId: string) => {
-    const { stompClient, connected } = get()
+    const { stompClient, connected } = get();
 
     if (!connected || !stompClient) {
-      console.error('Cannot load messages: not connected')
-      return
+      console.error("Cannot load messages: not connected");
+      return;
     }
 
     const userId = 1;
 
-    console.log('requesting message history for channel');
+    console.log("requesting message history for channel");
 
     stompClient.publish({
-      destination: '/app/message.history',
+      destination: "/app/message.history",
       body: JSON.stringify({
         channelId: parseInt(channelId),
         userId: userId,
         beforeTimestamp: null,
-        threadId: null
-      })
-    })
-
-  }
+        threadId: null,
+      }),
+    });
+  },
 }));
->>>>>>> main
