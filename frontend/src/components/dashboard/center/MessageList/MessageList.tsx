@@ -21,12 +21,6 @@ const MessageList = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const virtuosoRef = useRef<VirtuosoHandle>(null);
 
-  useEffect(() => {
-    if (!user && !isLoading) {
-      checkAuth();
-    }
-  }, [user, isLoading]);
-
   const scrollToBottom = () => {
     virtuosoRef.current?.scrollToIndex({
       index: messages.length - 1,
