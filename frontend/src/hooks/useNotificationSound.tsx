@@ -1,9 +1,15 @@
+import notificationSound from "../../public/media/notification.mp3";
+
 const useNotificationSound = () => {
-  const playNotificationSound = () => {
-    const audio = new Audio(pingNotification);
-    audio.play();
-  };
-  return playNotificationSound;
+  try {
+    const audio = new Audio(notificationSound);
+    audio.volume = 0.5;
+    audio.play().catch((error) => {
+      console.warn("Could not play notifications sounds", error);
+    });
+  } catch (error) {
+    console.error("Error loading notification sound: ", error);
+  }
 };
 
 export default useNotificationSound;
