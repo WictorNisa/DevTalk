@@ -6,9 +6,18 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useNavigation } from "@/hooks/useNavigate";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { Settings, LogOut, EllipsisVertical, UserPen } from "lucide-react";
 
 export const UserMenu = ({ onSignOut }: { onSignOut?: () => void }) => {
+  const { goToLandingPage } = useNavigation();
+  const { logout } = useAuthStore();
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -46,11 +55,7 @@ export const UserMenu = ({ onSignOut }: { onSignOut?: () => void }) => {
           <Settings className="mr-2 h-4 w-4" /> Settings
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onSelect={() => {
-            onSignOut?.();
-          }}
-        >
+        <DropdownMenuItem onSelect={handleLogout}>
           <LogOut className="mr-2 h-4 w-4" /> Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
