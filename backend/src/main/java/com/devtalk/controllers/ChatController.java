@@ -170,7 +170,7 @@ public class ChatController {
     }
 
     @MessageMapping("/ping.latency")
-    @SendTo("/topic/pong")
+    @SendTo("/topic/latency-pong")
     @Operation(summary = "Latency test", description = "Measures round-trip latency by echoing server timestamp")
     @ApiResponse(responseCode = "200", description = "Latency test completed successfully")
     @ApiResponse(responseCode = "400", description = "Bad request")
