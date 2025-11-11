@@ -15,23 +15,27 @@ import {
 import { SmilePlus, PlusIcon, SendHorizontal, FileUp } from "lucide-react";
 import { useState } from "react";
 import { useChatStore } from "@/stores/useChatStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const CenterBottomWidget = () => {
   const [inputValue, setInputValue] = useState<string>("");
 
   const sendMessage = useChatStore((state) => state.sendMessage);
   const activeChannel = useChatStore((state) => state.activeChannel);
+  const user = useAuthStore((state) => state.user);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("🔍 activeChannel:", activeChannel); // ADD THIS
-    console.log("🔍 inputValue:", inputValue);
+    // if (!user) {
+    //   console.error("User not authed");
+    //   return;
+    // }
     if (inputValue.trim() && activeChannel) {
-      console.log("✅ Sending message..."); // ADD THIS
+      console.log("Sending message... from", user?.displayName);
       sendMessage(activeChannel, inputValue.trim());
       setInputValue("");
     } else {
-      console.log("❌ Cannot send - missing channel or empty input"); // ADD THIS
+      console.log("Cannot send - missing channel or empty input");
     }
   };
 

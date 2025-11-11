@@ -14,7 +14,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
   mockMessageText,
   mockMessageTimeStamp,
 }) => {
-  const formattedDate = new Date(mockMessageTimeStamp).toLocaleDateString();
+  // const formattedDate = new Date(mockMessageTimeStamp).toLocaleDateString();
   const formattedTime = new Date(mockMessageTimeStamp).toLocaleTimeString(
     "en-US",
     {
@@ -24,10 +24,14 @@ const MessageItem: React.FC<MessageItemProps> = ({
     },
   );
   return (
-    <div className="bg-foreground mt-3 flex w-full gap-2 text-black">
-      <div className="m-auto h-max w-max shrink-0 ml-2">
+    <div className="bg-background mt-3 flex w-full gap-2 rounded-lg border text-primary">
+      <div className="m-auto ml-2 h-max w-max shrink-0">
         <Avatar>
-          <AvatarImage src={mockMessageAvatar} alt={mockMessageUser} className="object-cover"/>
+          <AvatarImage
+            src={mockMessageAvatar}
+            alt={mockMessageUser}
+            className="object-cover"
+          />
           <AvatarFallback>LB</AvatarFallback>
         </Avatar>
       </div>
