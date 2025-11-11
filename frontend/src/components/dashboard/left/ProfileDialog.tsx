@@ -117,7 +117,7 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
           {/* TODO: Avatar and username synced from GitHub OAuth via backend */}
           {/* Backend should provide: GET /api/users/me with { username, avatar, githubId } */}
           <div className="flex items-center gap-4">
-            <Avatar className="h-18 w-18">
+            <Avatar className="h-[4.5rem] w-[4.5rem]">
               <AvatarImage
                 src={user.avatar}
                 alt={user.username}
