@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import useNotificationSound from "@/hooks/useNotificationSound";
 
 // Basic chat store exempel
 export type Message = {
@@ -113,12 +114,20 @@ export const useChatStore = create<ChatState>((set, get) => ({
           const payload = JSON.parse(message.body);
           console.log("Parsed message:", payload);
 
+
+          // Uncomment this code block in order to have the notification sound play ONLY when other people send a message
+          // const currentUserId = 1;
+          // if(payload.userId !== currentUserId){
+          //    useNotificationSound()
+          // }
+
           const transformedMessage = transformBackendMessage(payload);
 
           const { isAtBottom } = get();
           if (!isAtBottom) {
             get().incrementUnreadCount();
           }
+          useNotificationSound();
 
           get().addMessage(transformedMessage);
           console.log("Message added to store");

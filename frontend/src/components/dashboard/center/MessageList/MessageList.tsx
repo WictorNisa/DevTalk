@@ -7,6 +7,7 @@ import { Button } from "../../../ui/button";
 import { ArrowDown } from "lucide-react";
 import MessageItem from "./MessageItem";
 
+
 const MessageList = () => {
   const messages = useChatStore((state) => state.messages);
   const unreadCount = useChatStore((state) => state.unreadCount);
@@ -16,7 +17,7 @@ const MessageList = () => {
     (state) => state.incrementUnreadCount,
   );
 
-  const { user, checkAuth, isLoading } = useAuthStore();
+  // const { user, checkAuth, isLoading } = useAuthStore();
 
   const [showScrollButton, setShowScrollButton] = useState(false);
   const virtuosoRef = useRef<VirtuosoHandle>(null);
