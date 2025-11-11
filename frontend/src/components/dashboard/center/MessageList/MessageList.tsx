@@ -6,7 +6,6 @@ import { useAuthStore } from "../../../../stores/useAuthStore";
 import { Button } from "../../../ui/button";
 import { ArrowDown } from "lucide-react";
 import MessageItem from "./MessageItem";
-import useNotificationSound from "@/hooks/useNotificationSound";
 
 
 const MessageList = () => {
