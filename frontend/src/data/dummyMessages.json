@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "content": "Hello, how are you?",
+    "sender": "user1",
+    "timestamp": "2023-03-01T12:00:00Z"
+  },
+  {
+    "id": "2",
+    "content": "I'm good, thanks! How about you?",
+    "sender": "user2",
+    "timestamp": "2023-03-01T12:01:00Z"
+  },
+  {
+    "id": "3",
+    "content": "Just working on some code.",
+    "sender": "user1",
+    "timestamp": "2023-03-01T12:02:00Z"
+  }
+]
