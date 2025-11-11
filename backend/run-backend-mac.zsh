@@ -5,4 +5,4 @@ if [[ ! -x "./mvnw" ]]; then
   chmod +x ./mvnw
 fi
 ./mvnw spring-boot:run
-read "?Press any key to continue..."
+read -p 'Press any key to continue...' -n1 -r
