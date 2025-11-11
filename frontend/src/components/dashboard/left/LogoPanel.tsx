@@ -7,7 +7,7 @@ import { NavLink } from "react-router";
 const LogoPanel = () => {
   const { isLeftCollapsed } = useSidebarStates();
   return (
-    <Card className="h-13 min-w-0 rounded-lg p-0">
+    <Card className="h-[3.25rem] min-w-0 rounded-lg p-0">
       <CardContent className="flex h-full items-center justify-center p-0">
         <NavLink
           to={ROUTES.HOME}
