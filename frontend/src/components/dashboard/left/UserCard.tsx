@@ -106,7 +106,7 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
               </Avatar>
               <span
                 className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full ring-1`}
-                aria-hidden
+                aria-hidden="true"
               />
             </div>
           </UserMenu>
