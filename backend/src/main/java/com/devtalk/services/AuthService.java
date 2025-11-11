@@ -22,13 +22,7 @@ public class AuthService {
         }
 
         String externalId = oauth2User.getAttribute("login"); // GitHub login
-        if (externalId == null) {
-            externalId = oauth2User.getName();
-        }
         String displayName = oauth2User.getAttribute("name");
-        if (displayName == null) {
-            displayName = externalId;
-        }
 
         return userService.createOrGetUser(externalId, displayName);
     }
