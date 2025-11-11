@@ -29,7 +29,7 @@ type ChatState = {
   isAtBottom: boolean;
   unreadCount: number;
   isLoadingHistory: boolean;
-  setIsLoadingHistory: (loading: boolean) => void
+  setIsLoadingHistory: (loading: boolean) => void;
   setIsAtBottom: (atBottom: boolean) => void;
   incrementUnreadCount: () => void;
   resetUnreadCount: () => void;
