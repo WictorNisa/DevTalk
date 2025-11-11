@@ -28,6 +28,8 @@ type ChatState = {
   activeChannel: string | null;
   isAtBottom: boolean;
   unreadCount: number;
+  isLoadingHistory: boolean;
+  setIsLoadingHistory: (loading: boolean) => void
   setIsAtBottom: (atBottom: boolean) => void;
   incrementUnreadCount: () => void;
   resetUnreadCount: () => void;
@@ -60,7 +62,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
   connected: false,
   isAtBottom: true,
   unreadCount: 0,
-
+  isLoadingHistory: false,
+  setIsLoadingHistory: (loading) => set({ isLoadingHistory: loading }),
   setIsAtBottom: (atBottom) => {
     set({ isAtBottom: atBottom })
     if (atBottom) {
@@ -90,6 +93,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const channelId = 1;
       const userId = 1;
 
+      set({ isLoadingHistory: true })
+
       client.subscribe('/user/queue/history', (message) => {
         try {
           const history = JSON.parse(message.body)
@@ -97,11 +102,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
             return transformBackendMessage(msg)
           })
 
-          set({ messages: transformedMessages })
-          console.log(`Loaded ${transformedMessages.length} messages from database`);
+          set({
+            messages: transformedMessages,
+            isLoadingHistory: false
+          })
 
         } catch (error) {
           console.error('Error parsing history', error)
+          set({ isLoadingHistory: false })
         }
       })
 
@@ -127,6 +135,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       console.log(`📡 Subscribed to /topic/room/${channelId}`);
       set({ activeChannel: channelId.toString() });
 
+      set({ isLoadingHistory: true })
 
       client.publish({
         destination: '/app/message.history',
@@ -136,7 +145,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     client.onStompError = (frame) => {
       console.error(' STOMP error:', frame)
-      set({ connected: false })
+      set({ connected: false, isLoadingHistory: false })
     }
 
     client.activate()
@@ -190,6 +199,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
     const userId = 1;
 
     console.log('requesting message history for channel');
+
+    set({ isLoadingHistory: true })
 
     stompClient.publish({
       destination: '/app/message.history',
