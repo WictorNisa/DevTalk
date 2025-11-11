@@ -16,7 +16,6 @@ export const UserMenu = ({ onSignOut }: { onSignOut?: () => void }) => {
 
   const handleLogout = async () => {
     await logout();
-    goToLandingPage();
   };
 
   return (
