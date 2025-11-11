@@ -5,7 +5,7 @@ const useNotificationSound = () => {
     const audio = new Audio(notificationSound);
     audio.volume = 0.5;
     audio.play().catch((error) => {
-      console.warn("Could not play notifications sounds", error);
+      console.warn("Could not play notification sound", error);
     });
   } catch (error) {
     console.error("Error loading notification sound: ", error);
