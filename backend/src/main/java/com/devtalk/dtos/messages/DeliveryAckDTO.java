@@ -11,9 +11,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class DeliveryAckDTO extends MessageBaseDTO {
-    private String status; // e.g., "DELIVERED"
+    private String status; 
     private Long serverTimestamp;
     private Long messageId;
+    private Long recipientId; 
+    private Long deliveredAt; 
 }
 
 

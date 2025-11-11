@@ -15,10 +15,14 @@ public class PresenceService {
 
     private final Map<String, Set<String>> subscriptions = new ConcurrentHashMap<>();
 
+    private final Map<String, Set<String>> userSessions = new ConcurrentHashMap<>();
+
     public void registerSession(String sessionId, String username){
         if(sessionId == null) return;
-        sessions.put(sessionId, username == null ? "Unknown" : username);
+        String normalizedUsername = username == null ? "Unknown" : username;
+        sessions.put(sessionId, normalizedUsername);
         subscriptions.putIfAbsent(sessionId, ConcurrentHashMap.newKeySet());
+        userSessions.computeIfAbsent(normalizedUsername, k -> ConcurrentHashMap.newKeySet()).add(sessionId);
     }
 
     public void addSubscription(String sessionId, String destination){
@@ -34,8 +38,20 @@ public class PresenceService {
 
     public Set<String> removeSession(String sessionId){
         if(sessionId == null) return Collections.emptySet();
+        String username = sessions.get(sessionId);
         Set<String> removed = subscriptions.remove(sessionId);
         sessions.remove(sessionId);
+        
+        if(username != null) {
+            Set<String> userSessionSet = userSessions.get(username);
+            if(userSessionSet != null) {
+                userSessionSet.remove(sessionId);
+                if(userSessionSet.isEmpty()) {
+                    userSessions.remove(username);
+                }
+            }
+        }
+        
         return removed == null ? Collections.emptySet() : new java.util.HashSet<>(removed);
     }
 
@@ -46,5 +62,17 @@ public class PresenceService {
     public Set<String> getSubscriptions(String sessionId){
         Set<String> subSet = subscriptions.get(sessionId);
         return subSet == null ? Collections.emptySet() : new HashSet<>(subSet);
+    }
+
+    public Set<String> getUserSessions(String username){
+        if(username == null) return Collections.emptySet();
+        Set<String> sessionSet = userSessions.get(username);
+        return sessionSet == null ? Collections.emptySet() : new HashSet<>(sessionSet);
+    }
+
+    public boolean isUserOnline(String username){
+        if(username == null) return false;
+        Set<String> sessionSet = userSessions.get(username);
+        return sessionSet != null && !sessionSet.isEmpty();
     }
 }

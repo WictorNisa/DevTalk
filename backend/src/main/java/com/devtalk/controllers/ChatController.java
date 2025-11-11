@@ -168,4 +168,14 @@ public class ChatController {
     public void handleGetMentions(MessageBaseDTO request, Principal principal) {
         chatService.sendUserMentions(request, principal);
     }
+
+    @MessageMapping("/ping.latency")
+    @SendTo("/topic/pong")
+    @Operation(summary = "Latency test", description = "Measures round-trip latency by echoing server timestamp")
+    @ApiResponse(responseCode = "200", description = "Latency test completed successfully")
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
+    public PingPongMessageDTO handleLatencyTest(MessageBaseDTO pingMessage, Principal principal) {
+        return chatService.handleLatencyTest(pingMessage);
+    }
 }
