@@ -311,8 +311,8 @@ public class ChatService {
     }
 
     public PingPongMessageDTO handleLatencyTest(MessageBaseDTO pingMessage) {
+        PingPongMessageDTO pong = handlePing(pingMessage);
         long serverTimestamp = System.currentTimeMillis();
-        PingPongMessageDTO pong = messageMapper.toPingPongMessageDTO(pingMessage);
         pong.setTimestamp(serverTimestamp);
         log.debug("Latency test: server timestamp {}", serverTimestamp);
         return pong;
