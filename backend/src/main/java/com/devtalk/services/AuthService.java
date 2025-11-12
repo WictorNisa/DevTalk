@@ -1,6 +1,7 @@
 package com.devtalk.services;
 
 import com.devtalk.dtos.user.UserResponseDTO;
+import com.devtalk.exceptions.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -18,11 +19,9 @@ public class AuthService {
         Object idAttribute = oauth2User.getAttribute("id");
 
         if (idAttribute == null) {
-            throw new IllegalArgumentException("OAuth2User does not contain 'id' attribute");
+            throw new UnauthorizedException("OAuth2User does not contain 'id' attribute");
         }
 
-        String externalId = idAttribute.toString();
-
-        return userService.createOrGetUser(oauth2User);
+        return userService.getUserByExternalId(idAttribute.toString());
     }
 }
