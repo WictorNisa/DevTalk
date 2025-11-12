@@ -8,19 +8,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Settings, LogOut, Ellipsis, UserPen } from "lucide-react";
 
-/*
- TODO (UserMenu)
- - Add loading state for sign out action
- - Add confirmation dialog before sign out
- - Add keyboard shortcuts (e.g., Cmd+, for settings)
- - Track analytics for menu interactions
- - Add more menu items when backend supports:
-   * Account settings
-   * Privacy settings
-   * Notification preferences
-   * Help/Support
-*/
-
 type UserMenuProps = {
   onSignOut?: () => void;
   onOpenProfile?: () => void;
