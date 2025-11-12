@@ -37,7 +37,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     .avatarUrl(avatarUrl)
                     .build();
             return userRepository.save(newUser);
-
         });
         return oAuth2User;
     }

@@ -65,9 +65,11 @@ public class MessageMentionService {
                             .startPosition(startPos)
                             .endPosition(endPos)
                             .build();
-
+                    if(mention == null) return new ArrayList<>();
                     MessageMention saved = messageMentionRepository.save(mention);
+                    if(saved != null){
                     mentions.add(saved);
+                    }
                     processedUsernames.add(usernameLower);
                     log.debug("Created mention for user {} in message {}", mentionedUser.getDisplayName(), message.getId());
                 } else {
