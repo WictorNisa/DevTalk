@@ -23,6 +23,6 @@ public class AuthService {
 
         String externalId = idAttribute.toString();
 
-        return userService.getUserByExternalId(externalId);
+        return userService.createOrGetUser(oauth2User);
     }
 }
