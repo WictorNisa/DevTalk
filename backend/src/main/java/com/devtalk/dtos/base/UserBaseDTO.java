@@ -7,6 +7,7 @@ import com.devtalk.enums.Theme;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.Instant;
 
 @Data
 @SuperBuilder
@@ -21,4 +22,6 @@ public abstract class UserBaseDTO extends BaseDTO {
     private Language language;
     private Theme theme;
     private String avatarUrl;
+    private Instant lastActivityAt;
+    private String customStatusMessage;
 }

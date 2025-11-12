@@ -1,7 +1,9 @@
 package com.devtalk.controllers;
 
 import com.devtalk.dtos.user.UpdateUserRequest;
+import com.devtalk.dtos.user.UpdateUserStatusRequest;
 import com.devtalk.dtos.user.UserResponseDTO;
+import com.devtalk.dtos.user.UserStatusDTO;
 import com.devtalk.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -63,6 +65,22 @@ public class UserController {
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserRequest request) {
         UserResponseDTO updated = userService.updateUser(id, request);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PutMapping("/{id}/status")
+    @Operation(summary = "Update user status", description = "Updates a user's presence status and optional custom status message")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User status updated successfully"),
+        @ApiResponse(responseCode = "400", description = "Bad request - invalid input"),
+        @ApiResponse(responseCode = "404", description = "User not found"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<UserStatusDTO> updateUserStatus(
+            @Parameter(description = "User ID", required = true)
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateUserStatusRequest request) {
+        UserStatusDTO updated = userService.updateUserStatus(id, request);
         return ResponseEntity.ok(updated);
     }
 }
