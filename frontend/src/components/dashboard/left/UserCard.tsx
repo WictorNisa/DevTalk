@@ -1,70 +1,45 @@
 import { useState } from "react";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { userStatus } from "@/utils/userStatus";
 import { UserMenu } from "@/components/dashboard/left/UserMenu";
 import { ProfileDialog } from "@/components/dashboard/left/ProfileDialog";
 import { SettingsDialog } from "@/components/dashboard/left/SettingsDialog";
 
-/*
- TODO (UserCard)
- - Get authenticated user data from auth context/store instead of props
- - Subscribe to real-time presence updates (WebSocket) to update user status
- - Add loading state while user data is being fetched
- - Handle avatar upload/update functionality
- - Implement actual sign out logic that calls backend /auth/logout endpoint
- - Add error handling for failed avatar loads
- - Cache user data to reduce API calls
- - Add user badge/role display (admin, moderator, etc.)
- - Implement user settings persistence to backend
-*/
+type Props = { collapsed?: boolean };
 
-export type User = {
-  id?: string | null;
-  username: string;
-  avatar?: string;
-  status?: string; // TODO: Backend should provide: 'online' | 'away' | 'busy' | 'offline'
-  badge?: string | boolean; // TODO: Backend should provide user role/badge type
-};
-
-type Props = {
-  user: User;
-  collapsed?: boolean;
-};
-
-export const UserCard = ({ user, collapsed = false }: Props) => {
+export const UserCard = ({ collapsed = false }: Props) => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const { user, isLoading } = useAuthStore();
 
-  const statusBg = userStatus(user.status);
-
-  // TODO: Add loading state for user data
-  // const [isLoading, setIsLoading] = useState(false);
-
-  // TODO: Subscribe to presence updates
-  // useEffect(() => {
-  //   const unsubscribe = subscribeToPresence(user.id, (newStatus) => {
-  //     Update user status in real-time
-  //   });
-  //   return () => unsubscribe();
-  // }, [user.id]);
+  const initials = (
+    user?.displayName?.slice(0, 2) ||
+    user?.externalId?.slice(0, 2) ||
+    "?"
+  ).toUpperCase();
 
   if (collapsed) {
     return (
       <Card className="flex items-center justify-center rounded-lg p-2.5">
         <div className="relative">
-          <Avatar className="h-8 w-8 rounded-full">
-            <AvatarImage
-              src={user.avatar || "https://placehold.co/120"}
-              alt={user.username}
-            />
-            <AvatarFallback>
-              {user.username.slice(0, 2).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-
+          {isLoading ? (
+            <div className="bg-muted h-8 w-8 animate-pulse rounded-full" />
+          ) : (
+            <Avatar className="h-8 w-8 rounded-full">
+              <AvatarImage
+                src={user?.avatarUrl || undefined}
+                alt={user?.displayName || "User avatar"}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src =
+                    "/images/default-avatar.jpg";
+                }}
+              />
+              <AvatarFallback>{initials}</AvatarFallback>
+            </Avatar>
+          )}
           <span
-            className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2 w-2 rounded-full ring-1`}
+            className="ring-primary-foreground bg-muted-foreground/60 absolute right-0 bottom-0 h-2 w-2 rounded-full ring-1"
             aria-hidden="true"
           />
         </div>
@@ -78,69 +53,57 @@ export const UserCard = ({ user, collapsed = false }: Props) => {
         <CardContent className="flex min-w-0 items-center gap-2.5 p-1">
           <UserMenu
             onSignOut={() => {
-              // TODO: Implement sign out logic
-              // 1. Call backend POST /api/auth/logout to invalidate session/token
-              // 2. Clear auth token from localStorage/cookies
-              // 3. Clear user data from auth store/context
-              // 4. Disconnect WebSocket connection
-              // 5. Redirect to login page
-              console.log("Sign out clicked - TODO: implement");
+              // TODO: handle sign out
             }}
             onOpenProfile={() => setProfileOpen(true)}
             onOpenSettings={() => setSettingsOpen(true)}
           >
             <div className="relative flex-shrink-0">
-              <Avatar className="h-12 w-12 rounded-full">
-                <AvatarImage
-                  src={user.avatar || "/images/default-avatar.jpg"}
-                  alt={user.username}
-                  onError={(e) => {
-                    // TODO: Track failed avatar loads and report to backend
-                    (e.target as HTMLImageElement).src =
-                      "/images/default-avatar.jpg";
-                  }}
-                />
-                <AvatarFallback>
-                  {user.username.slice(0, 2).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              {isLoading ? (
+                <div className="bg-muted h-12 w-12 animate-pulse rounded-full" />
+              ) : (
+                <Avatar className="h-12 w-12 rounded-full">
+                  <AvatarImage
+                    src={user?.avatarUrl || undefined}
+                    alt={user?.displayName || "User avatar"}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        "/images/default-avatar.jpg";
+                    }}
+                  />
+                  <AvatarFallback>{initials}</AvatarFallback>
+                </Avatar>
+              )}
               <span
-                className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full ring-1`}
+                className="ring-primary-foreground bg-muted-foreground/60 absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full ring-1"
                 aria-hidden="true"
               />
             </div>
           </UserMenu>
 
           <div className="min-w-0 flex-1 overflow-hidden">
-            <div className="flex min-w-0 items-center gap-2">
-              <span className="block truncate text-sm font-medium">
-                {user.username}
-              </span>
-              {/* TODO: Display user badge/role from backend */}
-              {/* {user.badge && <Badge variant="secondary">{user.badge}</Badge>} */}
-            </div>
-            <div className="text-muted-foreground truncate text-xs">
-              {user.status === "online"
-                ? "Active now"
-                : (user.status ?? "Offline")}
-            </div>
+            {isLoading ? (
+              <div className="w-full space-y-2">
+                <div className="bg-muted h-3 w-1/3 animate-pulse rounded" />
+                <div className="bg-muted h-3 w-1/4 animate-pulse rounded" />
+              </div>
+            ) : (
+              <div>
+                <div className="flex min-w-0 items-center gap-2">
+                  <span className="block truncate text-sm font-medium">
+                    {user?.displayName || user?.externalId || "User"}
+                  </span>
+                </div>
+                <div className="text-muted-foreground truncate text-xs">
+                  {/* status text goes here when available */}
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
 
-      {/* TODO: Pass user data to dialogs and implement save functionality */}
-      {/* ProfileDialog should: 
-          - GET /api/users/:id for full profile data
-          - PUT /api/users/:id to update profile
-          - POST /api/users/:id/avatar to upload new avatar
-      */}
       <ProfileDialog open={profileOpen} onOpenChange={setProfileOpen} />
-
-      {/* TODO: SettingsDialog should:
-          - GET /api/users/:id/settings
-          - PUT /api/users/:id/settings to save preferences
-          - Handle notification preferences, privacy settings, etc.
-      */}
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </>
   );

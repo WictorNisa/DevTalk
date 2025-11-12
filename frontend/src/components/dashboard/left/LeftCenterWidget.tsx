@@ -9,7 +9,7 @@ import { ChannelList, type Channel } from "./ChannelList";
 */
 
 const defaultChannels: Channel[] = [
-  { id: "general", name: "General", topic: "", unread: 2 },
+  { id: "general", name: "General", topic: "", unread: 3 },
   {
     id: "frontend",
     name: "Frontend",
