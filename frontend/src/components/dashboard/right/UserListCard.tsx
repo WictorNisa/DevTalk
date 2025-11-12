@@ -44,9 +44,9 @@ export const UserListCard = ({
   }
 
   return (
-    <Card className="rounded-lg p-2">
-      <CardContent className="flex items-center gap-3 p-0">
-        <div className="relative">
+    <Card className="w-full min-w-0 rounded-lg p-2">
+      <CardContent className="flex min-w-0 items-center gap-3 p-0">
+        <div className="relative flex-shrink-0">
           <Avatar className="h-9 w-9 rounded-full">
             <AvatarImage
               src={avatar || "https://placehold.co/120"}
@@ -63,8 +63,8 @@ export const UserListCard = ({
           />
         </div>
 
-        <div className="flex flex-col text-xs font-medium">
-          <span>{username}</span>
+        <div className="min-w-0 flex-1 flex-col text-xs font-medium">
+          <span className="block truncate">{username}</span>
           <span className="sr-only">{status}</span>
         </div>
       </CardContent>

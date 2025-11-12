@@ -1,0 +1,48 @@
+[
+  {
+    "id": "general",
+    "name": "general",
+    "topic": "General discussion for everyone"
+  },
+  {
+    "id": "random",
+    "name": "random",
+    "topic": "Off-topic conversations",
+    "unread": 5
+  },
+  {
+    "id": "announcements",
+    "name": "announcements",
+    "topic": "Important team announcements"
+  },
+  {
+    "id": "development",
+    "name": "development",
+    "topic": "Development discussions",
+    "unread": 12
+  },
+  {
+    "id": "design",
+    "name": "design",
+    "topic": "Design feedback and reviews",
+    "unread": 3,
+    "mentions": 2
+  },
+  {
+    "id": "help",
+    "name": "help",
+    "topic": "Ask questions and get help",
+    "mentions": 1
+  },
+  {
+    "id": "bugs",
+    "name": "bugs",
+    "topic": "Bug reports and tracking"
+  },
+  {
+    "id": "features",
+    "name": "features",
+    "topic": "Feature requests and ideas",
+    "unread": 7
+  }
+]
