@@ -25,7 +25,7 @@ public class UserService {
     private final UserMapper userMapper;
 
     @Transactional
-    public UserResponseDTO createOrGetUser(String externalId, String displayName) {
+    public UserResponseDTO createOrGetUser(String externalId, String displayName, String avatarUrl) {
         Optional<User> existingUser = userRepository.findByExternalId(externalId);
         if (existingUser.isPresent()) {
             log.info("User found: {} ({})", displayName, externalId);
@@ -35,6 +35,7 @@ public class UserService {
         User newUser = User.builder()
                 .externalId(externalId)
                 .displayName(displayName)
+                .avatarUrl(avatarUrl)
                 .presenceStatus(PresenceStatus.ONLINE)
                 .build();
 
@@ -49,6 +50,13 @@ public class UserService {
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponseDTO getUserByExternalId(String externalId) {
+        User user = userRepository.findByExternalId(externalId)
+                .orElseThrow(() -> new NotFoundException("User not found with externalId: " + externalId));
+        return userMapper.toResponseDTO(user);
     }
 
     @Transactional(readOnly = true)
