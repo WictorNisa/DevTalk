@@ -1,25 +1,23 @@
 import { useChatStore } from "@/stores/useChatStore";
 
 export const useSendMessage = () => {
-  const addMessage = useChatStore((state) => state.addMessage);
+  const sendMessage = useChatStore((state) => state.sendMessage);
+  const activeChannel = useChatStore((state) => state.activeChannel);
 
-  const sendMessage = ({
-    text,
-    user,
-    avatar,
-  }: {
-    text: string;
-    user: string;
-    avatar: string;
-  }) => {
-    const newMessage = {
-      id: crypto.randomUUID(),
-      user: user,
-      avatar: avatar,
-      text: text,
-      timestamp: new Date().toISOString(),
-    };
-    addMessage(newMessage);
+  const handleSendMessage = (content: string) => {
+    if (!activeChannel) {
+      console.error(" No active channel selected");
+      return;
+    }
+
+    if (!content.trim()) {
+      console.error(" Cannot send empty message");
+      return;
+    }
+
+    // Use the WebSocket sendMessage from store
+    sendMessage(activeChannel, content.trim());
   };
-  return { sendMessage };
+
+  return { sendMessage: handleSendMessage };
 };
