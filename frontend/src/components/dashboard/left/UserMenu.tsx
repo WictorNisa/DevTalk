@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,19 +9,6 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Settings, LogOut, Ellipsis, UserPen } from "lucide-react";
-
-/*
- TODO (UserMenu)
- - Add loading state for sign out action
- - Add confirmation dialog before sign out
- - Add keyboard shortcuts (e.g., Cmd+, for settings)
- - Track analytics for menu interactions
- - Add more menu items when backend supports:
-   * Account settings
-   * Privacy settings
-   * Notification preferences
-   * Help/Support
-*/
 
 type UserMenuProps = {
   onSignOut?: () => void;
@@ -34,6 +23,8 @@ export const UserMenu = ({
   onOpenSettings,
   children,
 }: UserMenuProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="group relative">
       {/* Avatar */}
@@ -71,7 +62,7 @@ export const UserMenu = ({
               onOpenProfile?.();
             }}
           >
-            <UserPen className="mr-3 h-4 w-4" /> Profile
+            <UserPen className="mr-3 h-4 w-4" /> {t("userMenu.profile")}
           </DropdownMenuItem>
 
           {/* TODO: Load user settings from backend */}
@@ -82,7 +73,7 @@ export const UserMenu = ({
               onOpenSettings?.();
             }}
           >
-            <Settings className="mr-3 h-4 w-4" /> Settings
+            <Settings className="mr-3 h-4 w-4" /> {t("userMenu.settings")}
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -101,7 +92,7 @@ export const UserMenu = ({
               onSignOut?.();
             }}
           >
-            <LogOut className="mr-3 h-4 w-4" /> Sign out
+            <LogOut className="mr-3 h-4 w-4" /> {t("userMenu.signOut")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

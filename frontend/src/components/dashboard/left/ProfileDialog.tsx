@@ -10,23 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useState } from "react";
-import dummyUsers from "@/data/dummyUsers.json";
-
-/*
- TODO (ProfileDialog)
- - Replace dummyUsers with authenticated user from auth context (useAuth hook)
- - Fetch user profile data from backend: GET /api/users/me/profile
- - Implement bio save functionality: PUT /api/users/me/profile with { bio }
- - Add loading state while fetching profile data
- - Add loading/disabled state on save button while submitting
- - Show toast/notification on save success/error
- - Add form validation for bio (min/max length, no special characters if needed)
- - Handle avatar upload: POST /api/users/me/avatar with FormData
- - Add error handling for failed avatar loads
- - Sync GitHub OAuth data: username and avatar auto-update from backend
- - Add ability to refresh GitHub data manually
-*/
+import { useState, useEffect } from "react";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 type Props = {
   open: boolean;
@@ -34,65 +19,51 @@ type Props = {
 };
 
 export const ProfileDialog = ({ open, onOpenChange }: Props) => {
-  // TODO: Replace with authenticated user from auth context
-  // const { user, isLoading } = useAuth();
-  const fallbackUser = {
-    username: "You",
-    avatar: "/images/default-avatar.jpg",
-  };
-
-  const userFromJson =
-    Array.isArray(dummyUsers) && dummyUsers.length > 0
-      ? dummyUsers[0]
-      : fallbackUser;
-
-  const user = {
-    username: userFromJson.username || fallbackUser.username,
-    avatar:
-      typeof userFromJson.avatar === "string"
-        ? userFromJson.avatar.startsWith("/") ||
-          userFromJson.avatar.startsWith("http")
-          ? userFromJson.avatar
-          : `/${userFromJson.avatar}`
-        : fallbackUser.avatar,
-  };
-
-  // TODO: Fetch bio from backend when dialog opens
-  // useEffect(() => {
-  //   if (open) {
-  //     fetch('/api/users/me/profile')
-  //       .then(res => res.json())
-  //       .then(data => setBio(data.bio || ''));
-  //   }
-  // }, [open]);
+  const { user, isLoading } = useAuthStore();
   const [bio, setBio] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
-  // TODO: Add loading state for save action
-  // const [isSaving, setIsSaving] = useState(false);
+  // Fetch bio (when backend adds it) when dialog opens
+  useEffect(() => {
+    if (!open) return;
+    (async () => {
+      try {
+        const res = await fetch("http://localhost:8080/api/me", {
+          credentials: "include",
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        // If backend later provides bio, use data.bio || ""
+        if (data.bio) setBio(data.bio);
+      } catch {
+        // Silent fail for simplicity
+      }
+    })();
+  }, [open]);
+
+  const initials = (
+    user?.displayName?.slice(0, 2) ||
+    user?.externalId?.slice(0, 2) ||
+    "?"
+  ).toUpperCase();
 
   const handleSave = async () => {
-    // TODO: Implement backend save logic
-    // setIsSaving(true);
-    // try {
-    //   const response = await fetch('/api/users/me/profile', {
-    //     method: 'PUT',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ bio }),
-    //   });
-    //
-    //   if (!response.ok) throw new Error('Failed to save profile');
-    //
-    //   Show success toast
-    //   toast.success('Profile updated successfully');
-    //   onOpenChange(false);
-    // } catch (error) {
-    //   Show error toast
-    //   toast.error('Failed to save profile');
-    // } finally {
-    //   setIsSaving(false);
-    // }
-    console.log("Saving bio:", bio);
-    onOpenChange(false);
+    setIsSaving(true);
+    try {
+      // Placeholder until backend provides /api/me/profile
+      // await fetch("http://localhost:8080/api/me/profile", {
+      //   method: "PUT",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ bio }),
+      //   credentials: "include",
+      // });
+      console.log("Bio to save:", bio);
+      onOpenChange(false);
+    } catch {
+      // Minimal error handling
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -103,43 +74,38 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
             Profile Settings
           </DialogTitle>
           <DialogDescription>
-            Update your bio here. Avatar and username are managed by GitHub
-            OAuth and will sync automatically.
-            <br />
-            <span className="text-muted-foreground text-xs">
-              (Please visit the GitHub settings to change your avatar or
-              username.)
-            </span>
+            Avatar & name sync from GitHub. Bio is local until backend adds
+            profile endpoint.
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4 py-4">
-          {/* TODO: Avatar and username synced from GitHub OAuth via backend */}
-          {/* Backend should provide: GET /api/users/me with { username, avatar, githubId } */}
           <div className="flex items-center gap-4">
-            <Avatar className="h-[4.5rem] w-[4.5rem]">
-              <AvatarImage
-                src={user.avatar}
-                alt={user.username}
-                onError={(e) => {
-                  // TODO: Track failed avatar loads and report to backend
-                  (e.target as HTMLImageElement).src =
-                    "/images/default-avatar.jpg";
-                }}
-              />
-              <AvatarFallback>
-                {user.username.slice(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+            {isLoading ? (
+              <div className="bg-muted h-[4.5rem] w-[4.5rem] animate-pulse rounded-full" />
+            ) : (
+              <Avatar className="h-[4.5rem] w-[4.5rem]">
+                <AvatarImage
+                  src={user?.avatarUrl || undefined}
+                  alt={user?.displayName || "User avatar"}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src =
+                      "/images/default-avatar.jpg";
+                  }}
+                />
+                <AvatarFallback>{initials}</AvatarFallback>
+              </Avatar>
+            )}
             <div className="flex flex-col">
-              <span className="text-sm font-medium">{user.username}</span>
+              <span className="text-sm font-medium">
+                {user?.displayName || user?.externalId || "User"}
+              </span>
               <span className="text-muted-foreground text-xs">
                 Synced from GitHub
               </span>
             </div>
           </div>
 
-          {/* TODO: Bio field - save to backend PUT /api/users/me/profile */}
           <div className="flex flex-col gap-3">
             <Label htmlFor="bio">Bio</Label>
             <Textarea
@@ -149,33 +115,22 @@ export const ProfileDialog = ({ open, onOpenChange }: Props) => {
               placeholder="Tell us about yourself..."
               rows={4}
               maxLength={200}
-              className="max-w-full"
-              // disabled={isSaving}
+              disabled={isSaving}
             />
             <span className="text-muted-foreground text-xs">
-              {bio.length}/200 characters
+              {bio.length}/200
             </span>
           </div>
         </div>
 
         <div className="flex justify-end gap-2">
           <DialogClose asChild>
-            <Button
-              className="cursor-pointer"
-              variant="outline"
-              // disabled={isSaving}
-            >
+            <Button variant="outline" disabled={isSaving}>
               Cancel
             </Button>
           </DialogClose>
-          <Button
-            className="cursor-pointer"
-            variant={"default"}
-            onClick={handleSave}
-            // disabled={isSaving}
-          >
-            {/* {isSaving ? 'Saving...' : 'Save'} */}
-            Save
+          <Button onClick={handleSave} disabled={isSaving}>
+            {isSaving ? "Saving..." : "Save"}
           </Button>
         </div>
       </DialogContent>

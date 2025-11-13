@@ -86,7 +86,19 @@
     "roles": {
       "frontend": "Frontend, UI/UX",
       "backend": "Backend, Database Design",
-      "scrum": "Scrum Master"
+      "scrum": "Scrum Master, UI/UX"
     }
+  },
+
+  "userMenu": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "signOut": "Sign out"
+  },
+
+  "profileSettings": {
+    "profile": "Profil",
+    "settings": "Inställningar",
+    "signOut": "Logga ut"
   }
 }
