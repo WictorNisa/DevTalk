@@ -11,7 +11,6 @@ const MessageList = () => {
   const unreadCount = useChatStore((state) => state.unreadCount);
   const resetUnreadCount = useChatStore((state) => state.resetUnreadCount);
   const setIsAtBottom = useChatStore((state) => state.setIsAtBottom);
-  const activeChannelId = useChatStore((state) => state.activeChannel);
   const switchChannel = useChatStore((state) => state.switchChannel);
   const connected = useChatStore((state) => state.connected);
 
