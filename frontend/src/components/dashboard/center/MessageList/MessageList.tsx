@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { Virtuoso } from "react-virtuoso";
 import type { VirtuosoHandle } from "react-virtuoso";
 import { useChatStore } from "../../../../stores/useChatStore";
-import { useAuthStore } from "../../../../stores/useAuthStore";
 import { Button } from "../../../ui/button";
 import { ArrowDown } from "lucide-react";
 import MessageItem from "./MessageItem";
@@ -13,6 +12,8 @@ const MessageList = () => {
   const unreadCount = useChatStore((state) => state.unreadCount);
   const resetUnreadCount = useChatStore((state) => state.resetUnreadCount);
   const setIsAtBottom = useChatStore((state) => state.setIsAtBottom);
+  const switchChannel = useChatStore((state) => state.switchChannel);
+  const connected = useChatStore((state) => state.connected);
   const incrementUnreadCount = useChatStore(
     (state) => state.incrementUnreadCount,
   );
@@ -38,6 +39,31 @@ const MessageList = () => {
       resetUnreadCount();
     }
   };
+
+  const shouldGroupMessage = (currentIndex: number): boolean => {
+    if (currentIndex === 0) return false;
+
+    const currentMsg = messages[currentIndex];
+    const previousMsg = messages[currentIndex - 1];
+
+    const timeDiff =
+      new Date(currentMsg.timestamp).getTime() -
+      new Date(previousMsg.timestamp).getTime();
+
+    return (
+      currentMsg.senderDisplayName === previousMsg.senderDisplayName &&
+      timeDiff < 2 * 60 * 1000
+    );
+  };
+
+
+  if (!connected) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p className="text-muted-foreground">Connecting to chat...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative h-full w-full">
@@ -68,18 +94,18 @@ const MessageList = () => {
         itemContent={(index, msg) => (
           <div className="px-4 py-1">
             <MessageItem
-              key={msg.id || index}
-              mockMessageId={msg.id}
-              mockMessageAvatar={msg.avatar}
-              mockMessageUser={msg.user}
-              mockMessageText={msg.text}
-              mockMessageTimeStamp={msg.timestamp}
+              key={msg.id}
+              messageId={msg.id}
+              messageAvatar={msg.senderAvatarUrl}
+              messageUser={msg.senderDisplayName}
+              messageText={msg.content}
+              messageTimeStamp={msg.timestamp}
+              isGrouped={shouldGroupMessage(index)}
             />
           </div>
         )}
         components={{
-          // Optional: Custom loading indicator for infinite scroll
-          Footer: () => <div className="h-4" />, // Spacer at bottom
+          Footer: () => <div className="h-4" />,
         }}
       />
     </div>
