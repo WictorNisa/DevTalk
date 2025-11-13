@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import useNotificationSound from "@/hooks/useNotificationSound";
 
 export type Message = {
   id: string;

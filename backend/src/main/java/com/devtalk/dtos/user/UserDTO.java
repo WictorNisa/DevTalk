@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -17,6 +16,7 @@ public class UserDTO {
     private String displayName;
     private String githubToken;
     private String externalId;
+    private String avatarUrl;
     private Instant createdAt;
     private Instant updatedAt;
 }
