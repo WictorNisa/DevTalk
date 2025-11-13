@@ -41,7 +41,7 @@ public class WebSocketEventListener {
         log.info("WebSocket connected. Session ID: {}, user: {}", sessionId, username);
 
         // Update user status to ONLINE in database
-        updateUserStatusToOnline(username);
+        updateUserStatus(username, PresenceStatus.ONLINE);
 
         UserStatusMessageDTO message = UserStatusMessageDTO.of(
                 ConnectionType.JOIN,
@@ -89,7 +89,7 @@ public class WebSocketEventListener {
 
         // Update user status to OFFLINE in database if no other sessions exist
         if (!presenceService.isUserOnline(username)) {
-            updateUserStatusToOffline(username);
+            updateUserStatus(username, PresenceStatus.OFFLINE);
         }
 
         UserStatusMessageDTO leaveMsg = UserStatusMessageDTO.of(
@@ -118,27 +118,16 @@ public class WebSocketEventListener {
         }
     }
 
-    private void updateUserStatusToOnline(String username) {
+    // FIX: Made this into one method to update user status, instead of duplicating code.
+    private void updateUserStatus(String username, PresenceStatus status) {
         if (username == null || "Unknown".equals(username)) {
             return;
         }
         try {
-            userService.getUserByExternalId(username)
-                    .ifPresent(user -> userStatusService.updatePresenceStatus(user.getId(), PresenceStatus.ONLINE));
+            var user = userService.getUserByExternalId(username);
+            userStatusService.updatePresenceStatus(user.getId(), status);
         } catch (Exception e) {
-            log.warn("Failed to update user status to ONLINE for {}: {}", username, e.getMessage());
-        }
-    }
-
-    private void updateUserStatusToOffline(String username) {
-        if (username == null || "Unknown".equals(username)) {
-            return;
-        }
-        try {
-            userService.getUserByExternalId(username)
-                    .ifPresent(user -> userStatusService.updatePresenceStatus(user.getId(), PresenceStatus.OFFLINE));
-        } catch (Exception e) {
-            log.warn("Failed to update user status to OFFLINE for {}: {}", username, e.getMessage());
+            log.warn("Failed to update user status to {} for {}: {}", status, username, e.getMessage());
         }
     }
 }

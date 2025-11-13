@@ -1,5 +1,6 @@
 package com.devtalk.configs;
 
+import com.devtalk.dtos.user.UserResponseDTO;
 import com.devtalk.exceptions.NotFoundException;
 import com.devtalk.services.UserActivityService;
 import com.devtalk.services.UserService;
@@ -43,20 +44,25 @@ public class UserActivityInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    // FIX: Changed this to use existing methods and DTOs
     private void updateUserActivityIfAuthenticated() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
-        
+
         if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User)) {
             return;
         }
 
         OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
         String externalId = extractExternalId(oauth2User);
-        
+
         if (externalId != null) {
-            userService.getUserByExternalId(externalId)
-                    .ifPresent(user -> updateActivityForUser(user.getId(), externalId));
+            try {
+                UserResponseDTO user = userService.getUserByExternalId(externalId);
+                updateActivityForUser(user.getId(), externalId);
+            } catch (NotFoundException e) {
+                log.debug("User not found when updating activity: {}", externalId);
+            }
         }
     }
 

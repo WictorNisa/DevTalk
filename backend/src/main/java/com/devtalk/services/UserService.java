@@ -66,11 +66,6 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserByExternalId(String externalId) {
-        return userRepository.findByExternalId(externalId);
-    }
-
-    @Transactional(readOnly = true)
     public List<UserResponseDTO> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(userMapper::toResponseDTO)
