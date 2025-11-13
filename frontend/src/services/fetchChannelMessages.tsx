@@ -1,4 +1,11 @@
-export const fetchChannelMessages = async (channelId: number): Promise<any[]> => {
+export interface ChannelMessage {
+  id: number;
+  content: string;
+  author: string;
+  timestamp: string; // or Date, depending on API
+}
+
+export const fetchChannelMessages = async (channelId: number): Promise<ChannelMessage[]> => {
   try {
     const response = await fetch(
       `http://localhost:8080/api/channels/${channelId}/messages`,
