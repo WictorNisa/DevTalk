@@ -65,22 +65,6 @@ public class UserService {
         return userMapper.toResponseDTO(user);
     }
 
-    @Transactional
-    public void updatePresenceStatus(Long userId, PresenceStatus status) {
-        User user = getUserById(userId);
-        user.setPresenceStatus(status);
-        userRepository.save(user);
-        log.info("Updated user {} presence to {}", userId, status);
-    }
-
-
-    @Transactional(readOnly = true)
-    public List<UserResponseDTO> getUsersByPresenceStatus(PresenceStatus status) {
-        return userRepository.findByPresenceStatus(status).stream()
-                .map(userMapper::toResponseDTO)
-                .collect(Collectors.toList());
-    }
-
     @Transactional(readOnly = true)
     public List<UserResponseDTO> getAllUsers() {
         return userRepository.findAll().stream()
