@@ -17,9 +17,14 @@ export async function fetchCurrentUser(): Promise<CurrentUser | null> {
     credentials: "include",
   });
   if (!res.ok) return null;
+
   const data = await res.json();
 
-  const avatar = data.avatarUrl || deriveGitHubAvatar(data.externalId) || "";
+  const avatar =
+    data.avatarUrl ||
+    data.avatar_url ||
+    deriveGitHubAvatar(data.externalId) ||
+    "";
 
   return {
     id: String(data.id ?? ""),

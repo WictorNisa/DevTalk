@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -5,9 +6,11 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import ThemeSwitcher from "@/components/ui/custom/ThemeSwitcher";
+import LanguageSelector from "@/components/ui/custom/LanguageSelector";
 import { useState } from "react";
 
 /*
@@ -34,6 +37,7 @@ type Props = {
 };
 
 export const SettingsDialog = ({ open, onOpenChange }: Props) => {
+  const { t } = useTranslation();
   // TODO: Fetch settings from backend when dialog opens
   // useEffect(() => {
   //   if (open) {
@@ -86,9 +90,9 @@ export const SettingsDialog = ({ open, onOpenChange }: Props) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Settings</DialogTitle>
+          <DialogTitle>{t("profileSettings.settings")}</DialogTitle>
           <DialogDescription>
-            Customize your app experience. Changes are saved automatically.
+            {t("profileSettings.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -97,8 +101,13 @@ export const SettingsDialog = ({ open, onOpenChange }: Props) => {
           {/* TODO: Also save theme preference to backend for cross-device sync */}
           {/* PUT /api/users/me/settings with { theme: 'light' | 'dark' | 'system' } */}
           <div className="flex items-center justify-between">
-            <Label htmlFor="theme">Theme</Label>
+            <Label htmlFor="theme">{t("settings.theme")}</Label>
             <ThemeSwitcher />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Label htmlFor="language">{t("settings.language")}</Label>
+            <LanguageSelector />
           </div>
 
           {/* TODO: Wire to backend - GET/PUT /api/users/me/settings */}
@@ -109,7 +118,7 @@ export const SettingsDialog = ({ open, onOpenChange }: Props) => {
               - message_preview: boolean
           */}
           <div className="flex items-center justify-between">
-            <Label htmlFor="notifications">Notifications</Label>
+            <Label htmlFor="notifications">{t("settings.notifications")}</Label>
             <Switch
               id="notifications"
               checked={notifications}

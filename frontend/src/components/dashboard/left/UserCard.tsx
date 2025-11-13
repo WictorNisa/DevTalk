@@ -91,7 +91,7 @@ export const UserCard = ({ collapsed = false }: Props) => {
               <div>
                 <div className="flex min-w-0 items-center gap-2">
                   <span className="block truncate text-sm font-medium">
-                    {user?.displayName || user?.externalId || "User"}
+                    {user?.externalId || user?.displayName || "User"}
                   </span>
                 </div>
                 <div className="text-muted-foreground truncate text-xs">
