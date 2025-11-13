@@ -1,9 +1,7 @@
 package com.devtalk.services;
 
 import com.devtalk.dtos.user.UpdateUserRequest;
-import com.devtalk.dtos.user.UpdateUserStatusRequest;
 import com.devtalk.dtos.user.UserResponseDTO;
-import com.devtalk.dtos.user.UserStatusDTO;
 import com.devtalk.enums.PresenceStatus;
 import com.devtalk.exceptions.NotFoundException;
 import com.devtalk.mappers.UserMapper;
@@ -14,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -63,44 +60,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public Optional<User> getUserByExternalId(String externalId) {
         return userRepository.findByExternalId(externalId);
-    }
-
-    @Transactional
-    public void updatePresenceStatus(Long userId, PresenceStatus status) {
-        User user = getUserById(userId);
-        user.setPresenceStatus(status);
-        userRepository.save(user);
-        log.info("Updated user {} presence to {}", userId, status);
-    }
-
-    @Transactional
-    public UserStatusDTO updateUserStatus(Long userId, UpdateUserStatusRequest request) {
-        User user = getUserById(userId);
-        updateUserStatusFields(user, request);
-        User updated = userRepository.save(user);
-        log.info("Updated user {} status to {} with custom message: {}", userId, request.getStatus(), request.getCustomStatusMessage());
-        return userMapper.toStatusDTO(updated);
-    }
-
-    private void updateUserStatusFields(User user, UpdateUserStatusRequest request) {
-        user.setPresenceStatus(request.getStatus());
-        user.setCustomStatusMessage(request.getCustomStatusMessage());
-        user.setLastActivityAt(Instant.now());
-    }
-
-    @Transactional
-    public void updateLastActivityAt(Long userId) {
-        User user = getUserById(userId);
-        user.setLastActivityAt(Instant.now());
-        userRepository.save(user);
-    }
-
-
-    @Transactional(readOnly = true)
-    public List<UserResponseDTO> getUsersByPresenceStatus(PresenceStatus status) {
-        return userRepository.findByPresenceStatus(status).stream()
-                .map(userMapper::toResponseDTO)
-                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

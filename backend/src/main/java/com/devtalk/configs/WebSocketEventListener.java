@@ -4,6 +4,8 @@ import com.devtalk.dtos.user.UserStatusMessageDTO;
 import com.devtalk.enums.ConnectionType;
 import com.devtalk.enums.PresenceStatus;
 import com.devtalk.services.PresenceService;
+import com.devtalk.services.UserService;
+import com.devtalk.services.UserStatusService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -23,6 +25,8 @@ public class WebSocketEventListener {
 
     private final PresenceService presenceService;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final UserService userService;
+    private final UserStatusService userStatusService;
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
@@ -35,6 +39,9 @@ public class WebSocketEventListener {
         }
         presenceService.registerSession(sessionId, username);
         log.info("WebSocket connected. Session ID: {}, user: {}", sessionId, username);
+
+        // Update user status to ONLINE in database
+        updateUserStatusToOnline(username);
 
         UserStatusMessageDTO message = UserStatusMessageDTO.of(
                 ConnectionType.JOIN,
@@ -80,6 +87,11 @@ public class WebSocketEventListener {
 
         log.info("WebSocket disconnected. Session ID: {}, user: {}", sessionId, username);
 
+        // Update user status to OFFLINE in database if no other sessions exist
+        if (!presenceService.isUserOnline(username)) {
+            updateUserStatusToOffline(username);
+        }
+
         UserStatusMessageDTO leaveMsg = UserStatusMessageDTO.of(
                 ConnectionType.LEAVE,
                 sessionId,
@@ -103,6 +115,30 @@ public class WebSocketEventListener {
             } catch (Exception ex) {
                 log.warn("Failed to notify destination {} for session {}: {}", dest, sessionId, ex.getMessage());
             }
+        }
+    }
+
+    private void updateUserStatusToOnline(String username) {
+        if (username == null || "Unknown".equals(username)) {
+            return;
+        }
+        try {
+            userService.getUserByExternalId(username)
+                    .ifPresent(user -> userStatusService.updatePresenceStatus(user.getId(), PresenceStatus.ONLINE));
+        } catch (Exception e) {
+            log.warn("Failed to update user status to ONLINE for {}: {}", username, e.getMessage());
+        }
+    }
+
+    private void updateUserStatusToOffline(String username) {
+        if (username == null || "Unknown".equals(username)) {
+            return;
+        }
+        try {
+            userService.getUserByExternalId(username)
+                    .ifPresent(user -> userStatusService.updatePresenceStatus(user.getId(), PresenceStatus.OFFLINE));
+        } catch (Exception e) {
+            log.warn("Failed to update user status to OFFLINE for {}: {}", username, e.getMessage());
         }
     }
 }

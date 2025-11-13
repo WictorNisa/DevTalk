@@ -5,6 +5,7 @@ import com.devtalk.dtos.user.UpdateUserStatusRequest;
 import com.devtalk.dtos.user.UserResponseDTO;
 import com.devtalk.dtos.user.UserStatusDTO;
 import com.devtalk.services.UserService;
+import com.devtalk.services.UserStatusService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,6 +27,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UserStatusService userStatusService;
 
     @GetMapping
     @Operation(summary = "Get all users", description = "Retrieves a list of all registered users")
@@ -80,7 +82,7 @@ public class UserController {
             @Parameter(description = "User ID", required = true)
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserStatusRequest request) {
-        UserStatusDTO updated = userService.updateUserStatus(id, request);
+        UserStatusDTO updated = userStatusService.updateUserStatus(id, request);
         return ResponseEntity.ok(updated);
     }
 }

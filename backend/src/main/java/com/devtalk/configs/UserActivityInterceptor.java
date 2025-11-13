@@ -1,6 +1,7 @@
 package com.devtalk.configs;
 
 import com.devtalk.exceptions.NotFoundException;
+import com.devtalk.services.UserActivityService;
 import com.devtalk.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class UserActivityInterceptor implements HandlerInterceptor {
 
     private final UserService userService;
+    private final UserActivityService userActivityService;
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
@@ -65,7 +67,7 @@ public class UserActivityInterceptor implements HandlerInterceptor {
 
     private void updateActivityForUser(Long userId, String externalId) {
         try {
-            userService.updateLastActivityAt(userId);
+            userActivityService.updateLastActivityAt(userId);
         } catch (NotFoundException e) {
             log.debug("User {} not found when updating activity (may have been deleted): {}", externalId, e.getMessage());
         } catch (DataAccessException | TransactionException e) {
