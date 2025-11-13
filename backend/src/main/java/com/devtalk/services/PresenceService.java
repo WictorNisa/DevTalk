@@ -38,9 +38,8 @@ public class PresenceService {
 
     public Set<String> removeSession(String sessionId){
         if(sessionId == null) return Collections.emptySet();
-        String username = sessions.get(sessionId);
         Set<String> removed = subscriptions.remove(sessionId);
-        sessions.remove(sessionId);
+        String username = sessions.remove(sessionId);
         
         if(username != null) {
             Set<String> userSessionSet = userSessions.get(username);

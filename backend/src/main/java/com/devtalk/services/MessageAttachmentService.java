@@ -26,6 +26,8 @@ public class MessageAttachmentService {
 
     @Transactional
     public MessageResponseDTO addAttachment(AttachmentDTO dto) {
+        if(dto == null) return new MessageResponseDTO();
+        if(dto.getMessageId() != null){
         Message message = messageRepository.findById(dto.getMessageId())
                 .orElseThrow(() -> new NotFoundException("Message not found with id: " + dto.getMessageId()));
 
@@ -36,11 +38,12 @@ public class MessageAttachmentService {
                 .filename(dto.getFilename())
                 .sizeBytes(dto.getSizeBytes())
                 .build();
-
+        if(attachment != null)
         attachmentRepository.save(attachment);
-
         return messageMapper.toResponseDTO(messageRepository.findByIdWithAllDetails(message.getId())
                 .orElseThrow());
+        }
+        return new MessageResponseDTO();
     }
 }
 

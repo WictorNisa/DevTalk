@@ -82,6 +82,9 @@ public class MessageQueryService {
 
     @Transactional(readOnly = true)
     public List<MessageResponseDTO> getChannelMessagesOnly(Long channelId) {
+        if(channelId == null){
+            throw new NotFoundException("Id does not exist");
+        }
         if (!channelRepository.existsById(channelId)) {
             throw new NotFoundException("Channel not found with id: " + channelId);
         }

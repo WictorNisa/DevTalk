@@ -3,7 +3,7 @@ import { Languages } from "lucide-react";
 
 import Logo from "@/assets/img/devtalk-logo.svg";
 import { GitHubLogoIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
