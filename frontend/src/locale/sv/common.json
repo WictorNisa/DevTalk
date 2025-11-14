@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "menu": "Meny",
+    "features": "Funktioner",
+    "howItWorks": "Hur det fungerar",
+    "team": "Teamet",
+    "signIn": "Logga in",
+    "githubLabel": "GitHub Repository",
+    "githubLabelMobile": "GitHub"
+  },
+
+  "userMenu": {
+    "profile": "Profil",
+    "settings": "Inställningar",
+    "signOut": "Logga ut"
+  },
+
+  "common": {
+    "loading": "Laddar...",
+    "error": "Något gick fel",
+    "cancel": "Avbryt",
+    "save": "Spara",
+    "delete": "Ta bort"
+  },
+
+  "language": {
+    "label": "Språk",
+    "switchTo": "Byt till {{language}}",
+    "names": {
+      "en": "Engelska",
+      "sv": "Svenska"
+    }
+  }
+}

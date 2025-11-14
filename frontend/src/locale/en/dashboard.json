@@ -1,0 +1,16 @@
+{
+  "sidebarLeft": {
+    "title": "Channels",
+    "channel": "Channels",
+    "general": "General",
+    "frontend": "Frontend",
+    "backend": "Backend"
+  },
+  "sidebarRight": {
+    "members": "Members"
+  },
+  "chat": {
+    "messagePlaceholder": "Type a message...",
+    "sendButton": "Send"
+  }
+}

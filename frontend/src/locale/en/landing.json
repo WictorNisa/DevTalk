@@ -1,22 +1,4 @@
 {
-  "nav": {
-    "menu": "Menu",
-    "features": "Features",
-    "howItWorks": "How It Works",
-    "meetTheTeam": "Meet The Team",
-    "githubLabel": "View Project",
-    "githubLabelMobile": "GitHub Repo"
-  },
-
-  "language": {
-    "label": "Language",
-    "switchTo": "Switch to {{language}}",
-    "names": {
-      "en": "English",
-      "sv": "Swedish"
-    }
-  },
-
   "hero": {
     "title": "DevTalk",
     "subtitle": "Talk code. Share knowledge. Grow together.",
@@ -88,17 +70,5 @@
       "backend": "Backend, Database Design",
       "scrum": "Scrum Master, UI/UX"
     }
-  },
-
-  "userMenu": {
-    "profile": "Profile",
-    "settings": "Settings",
-    "signOut": "Sign out"
-  },
-
-  "profileSettings": {
-    "profile": "Profil",
-    "settings": "Inställningar",
-    "signOut": "Logga ut"
   }
 }

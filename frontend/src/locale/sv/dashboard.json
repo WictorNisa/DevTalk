@@ -1,0 +1,16 @@
+{
+  "sidebarLeft": {
+    "title": "Kanaler",
+    "channel": "Kanaler",
+    "general": "Allmänt",
+    "frontend": "Frontend",
+    "backend": "Backend"
+  },
+  "sidebarRight": {
+    "members": "Medlemmar"
+  },
+  "chat": {
+    "messagePlaceholder": "Skriv ett meddelande...",
+    "sendButton": "Skicka"
+  }
+}
