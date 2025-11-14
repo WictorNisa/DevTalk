@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChannelList, type Channel } from "./ChannelList";
-import { useChatStore } from "@/stores/useChatStore";
+import { useChatStore } from "@/stores/chat/useChatStore";
 
 /*
  TODO (LeftCenterWidget)
