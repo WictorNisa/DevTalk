@@ -3,6 +3,7 @@ import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import type { MessageDtoProps } from "@/types/chat/MessageDtoProps";
 import type { ChatStateProps } from "@/types/chat/ChatStateProps";
+import { useAuthStore } from "../useAuthStore";
 
 import {
   transformBackendMessage,
@@ -148,9 +149,22 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
 
     if (!ensureConnected(stompClient, connected)) return;
 
+    const user = useAuthStore.getState().user;
+
+    if (!user) {
+      console.error("Cannot send message: User not authenticated");
+      return;
+    }
+
+    const userId = parseInt(user.id);
+    if (isNaN(userId)) {
+      console.error("Cannot send message: Invalid user ID");
+      return;
+    }
+
     const messagePayload = {
       content: content,
-      userId: 1, // TODO: Get from useAuthStore
+      userId: userId,
       channelId: parseInt(channelId),
       threadId: null,
       parentMessageId: null,
@@ -162,8 +176,6 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
       body: JSON.stringify(messagePayload),
       headers: { "content-type": "application/json" },
     });
-
-    console.log("📤 Message sent!");
   },
 
   loadMessages: async (channelId: string) => {
