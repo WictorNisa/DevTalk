@@ -1,12 +1,13 @@
 {
   "sidebarLeft": {
-    "channels": "Kanaler",
+    "title": "Kanaler",
+    "channel": "Kanaler",
     "general": "Allmänt",
     "frontend": "Frontend",
     "backend": "Backend"
   },
   "sidebarRight": {
-    "activeUsers": "Online"
+    "members": "Medlemmar"
   },
   "chat": {
     "messagePlaceholder": "Skriv ett meddelande...",

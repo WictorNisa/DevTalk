@@ -38,7 +38,7 @@
 
   "howItWorks": {
     "title": "Hur det fungerar",
-    "subtitle": "Kom igång är enkelt.",
+    "subtitle": "Att komma igång är enkelt.",
     "stepLabel": "Steg {{number}}",
     "steps": {
       "signin": {

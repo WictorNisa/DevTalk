@@ -16,6 +16,7 @@ export type Channel = {
   name: string;
   topic?: string;
   unread?: number;
+  translationKey?: string;
 };
 
 type ChannelItemProps = {
@@ -33,6 +34,10 @@ export const ChannelItem = ({
 }: ChannelItemProps) => {
   const { t } = useTranslation("dashboard");
 
+  const channelName = channel.translationKey
+    ? t(channel.translationKey)
+    : channel.name;
+
   return (
     <Button
       variant={active ? "secondary" : "ghost"}
@@ -44,15 +49,7 @@ export const ChannelItem = ({
       className={`w-full justify-between py-2 text-sm ${active ? "font-semibold" : "font-light"} ${collapsed ? "justify-center px-2.5" : "px-2.5"}`}
     >
       <span className="flex min-w-0 items-center gap-2">
-        <span className="truncate">
-          {channel.name === "general"
-            ? t("sidebarLeft.general")
-            : channel.name === "frontend"
-              ? t("sidebarLeft.frontend")
-              : channel.name === "backend"
-                ? t("sidebarLeft.backend")
-                : channel.name}
-        </span>
+        <span className="truncate">{channelName}</span>
       </span>
 
       {!collapsed && channel.unread ? (

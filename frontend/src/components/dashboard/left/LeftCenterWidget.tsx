@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChannelList, type Channel } from "./ChannelList";
 import { useChatStore } from "@/stores/chat/useChatStore";
@@ -9,22 +10,11 @@ import { useChatStore } from "@/stores/chat/useChatStore";
  - Wire channel selection to router / chat context and load messages.
 */
 
-const defaultChannels: Channel[] = [
-  { id: "general", name: "General", topic: "", unread: 3 },
-  {
-    id: "frontend",
-    name: "Frontend",
-    topic: "",
-    unread: 8,
-  },
-  { id: "backend", name: "Backend", topic: "", unread: 1 },
-];
-
 const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
+  const { t } = useTranslation("dashboard");
   const [channels, setChannels] = useState<Channel[]>([]);
   const [loading, setLoading] = useState(true);
   const activeChannelId = useChatStore((state) => state.activeChannel);
-  const setActiveChannel = useChatStore((state) => state.setActiveChannel);
   const switchChannel = useChatStore((state) => state.switchChannel);
   const connected = useChatStore((state) => state.connected);
 
@@ -37,11 +27,22 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
         }
         const data = await response.json();
 
+        //* ⬇ Vad ska jag lägga för type istället för "any"? Försökte med andra conditions. Any får det att kännas unsafe när TS ska hållas typat så bra man kan? /Nico
+
         const transformedChannels: Channel[] = data.map((ch: any) => ({
           id: ch.id.toString(),
           name: ch.name,
           topic: ch.topic || "",
           unread: 0,
+
+          translationKey:
+            ch.name.toLowerCase() === "general"
+              ? "sidebarLeft.general"
+              : ch.name.toLowerCase() === "frontend"
+                ? "sidebarLeft.frontend"
+                : ch.name.toLowerCase() === "backend"
+                  ? "sidebarLeft.backend"
+                  : undefined,
         }));
 
         setChannels(transformedChannels);
@@ -50,9 +51,27 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
         console.error("❌ Failed to fetch channels:", error);
 
         setChannels([
-          { id: "1", name: "General", topic: "", unread: 0 },
-          { id: "2", name: "Frontend", topic: "", unread: 0 },
-          { id: "3", name: "Backend", topic: "", unread: 0 },
+          {
+            id: "1",
+            name: "General",
+            topic: "",
+            unread: 0,
+            translationKey: "sidebarLeft.general",
+          },
+          {
+            id: "2",
+            name: "Frontend",
+            topic: "",
+            unread: 0,
+            translationKey: "sidebarLeft.frontend",
+          },
+          {
+            id: "3",
+            name: "Backend",
+            topic: "",
+            unread: 0,
+            translationKey: "sidebarLeft.backend",
+          },
         ]);
       } finally {
         setLoading(false);
@@ -65,9 +84,10 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
   const handleSelect = (channel: Channel) => {
     if (!connected) {
       console.error("Cannot switch channel: Websocket not connected");
+      return;
     }
 
-    console.log(`Switching to channel: ${channel} `);
+    console.log(`Switching to channel: ${channel.name}`);
     switchChannel(channel.id);
   };
 
@@ -76,7 +96,9 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
       <Card className="h-full w-full rounded-lg">
         <CardContent className="p-2">
           <div className="mb-4 flex w-full items-center justify-center">
-            <span className="font-regular text-sm">Loading channels...</span>
+            <span className="font-regular text-sm">
+              {t("sidebarLeft.loading")}
+            </span>
           </div>
         </CardContent>
       </Card>
@@ -87,13 +109,13 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
     <Card className="h-full w-full rounded-lg">
       <CardContent className="p-2">
         <div className="mb-4 flex w-full items-center justify-center">
-          <span className="font-regular text-sm">Channel List</span>
+          <span className="font-regular text-sm">{t("sidebarLeft.title")}</span>
         </div>
 
         <ChannelList
           channels={channels}
           collapsed={collapsed}
-          activeId={activeChannelId || channels[0].id}
+          activeId={activeChannelId || channels[0]?.id}
           onSelect={handleSelect}
         />
       </CardContent>

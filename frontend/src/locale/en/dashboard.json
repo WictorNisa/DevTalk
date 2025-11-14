@@ -1,6 +1,7 @@
 {
   "sidebarLeft": {
-    "channels": "Channels",
+    "title": "Channels",
+    "channel": "Channels",
     "general": "General",
     "frontend": "Frontend",
     "backend": "Backend"
