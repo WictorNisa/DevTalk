@@ -149,7 +149,6 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
 
     if (!ensureConnected(stompClient, connected)) return;
 
-    // Get the authenticated user ID
     const user = useAuthStore.getState().user;
 
     if (!user) {
@@ -157,9 +156,15 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
       return;
     }
 
+    const userId = parseInt(user.id);
+    if (isNaN(userId)) {
+      console.error("Cannot send message: Invalid user ID");
+      return;
+    }
+
     const messagePayload = {
       content: content,
-      userId: parseInt(user.id), // Use authenticated user's ID
+      userId: userId,
       channelId: parseInt(channelId),
       threadId: null,
       parentMessageId: null,
