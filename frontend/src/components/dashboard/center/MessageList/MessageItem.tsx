@@ -24,15 +24,6 @@ const MessageItem: React.FC<MessageItemProps> = ({
     minute: "2-digit",
   });
 
-  // TODO: Debug log
-  console.log(
-    messageId,
-    messageAvatar,
-    messageUser,
-    messageText,
-    messageTimeStamp,
-    isGrouped,
-  );
 
   return (
     <div className="group hover:bg-accent/50 -mx-4 px-4 py-1 transition-colors">
