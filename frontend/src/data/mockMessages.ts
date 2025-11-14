@@ -1,4 +1,4 @@
-import type { Message } from "@/stores/chat/useChatStore";
+import type { Message } from "@/types/chat/MessageDtoProps";
 import avatarOne from "../assets/img/avatar-1.jpg";
 import avatarTwo from "../assets/img/avatar-2.jpg";
 import avatarThree from "../assets/img/avatar-3.jpg";
