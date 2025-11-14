@@ -1,0 +1,15 @@
+{
+  "sidebarLeft": {
+    "channels": "Kanaler",
+    "general": "Allmänt",
+    "frontend": "Frontend",
+    "backend": "Backend"
+  },
+  "sidebarRight": {
+    "activeUsers": "Online"
+  },
+  "chat": {
+    "messagePlaceholder": "Skriv ett meddelande...",
+    "sendButton": "Skicka"
+  }
+}

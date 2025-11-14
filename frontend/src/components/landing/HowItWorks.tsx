@@ -20,7 +20,7 @@ const steps = [
 ] as const;
 
 export default function HowItWorks() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("landing");
 
   return (
     <section id="how-it-works" className="border-b py-32">

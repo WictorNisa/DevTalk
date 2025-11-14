@@ -10,7 +10,7 @@ import { ChevronDown } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function Hero() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("landing");
   const { login } = useAuthStore();
 
   return (
