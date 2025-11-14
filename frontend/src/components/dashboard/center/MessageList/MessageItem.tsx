@@ -23,6 +23,8 @@ const MessageItem: React.FC<MessageItemProps> = ({
     hour: "2-digit",
     minute: "2-digit",
   });
+
+
   return (
     <div className="group hover:bg-accent/50 -mx-4 px-4 py-1 transition-colors">
       <div className="flex gap-3">

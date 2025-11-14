@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Virtuoso } from "react-virtuoso";
 import type { VirtuosoHandle } from "react-virtuoso";
-import { useChatStore } from "../../../../stores/useChatStore";
-import { Button } from "../../../ui/button";
+import { useChatStore } from "@stores/chat/useChatStore";
+import { Button } from "@components/ui/button";
 import { ArrowDown } from "lucide-react";
 import MessageItem from "./MessageItem";
-
 
 const MessageList = () => {
   const messages = useChatStore((state) => state.messages);
@@ -55,7 +54,6 @@ const MessageList = () => {
       timeDiff < 2 * 60 * 1000
     );
   };
-
 
   if (!connected) {
     return (

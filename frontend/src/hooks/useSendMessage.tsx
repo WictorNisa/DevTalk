@@ -1,4 +1,4 @@
-import { useChatStore } from "@/stores/useChatStore";
+import { useChatStore } from "@/stores/chat/useChatStore";
 
 export const useSendMessage = () => {
   const sendMessage = useChatStore((state) => state.sendMessage);
