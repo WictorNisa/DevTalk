@@ -1,7 +1,7 @@
 // import { mockMessages } from "@/data/mockMessages";
 import CenterBottomWidget from "./CenterBottomWidget";
 import CenterTopWidget from "./CenterTopWidget";
-import { useChatStore } from "@/stores/useChatStore";
+import { useChatStore } from "@/stores/chat/useChatStore";
 import { useEffect } from "react";
 
 const CenterDashPanel = () => {

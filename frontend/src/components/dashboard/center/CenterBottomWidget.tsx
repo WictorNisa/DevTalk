@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SmilePlus, PlusIcon, SendHorizontal, FileUp } from "lucide-react";
 import { useState } from "react";
-import { useChatStore } from "@/stores/useChatStore";
+import { useChatStore } from "@/stores/chat/useChatStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useSendMessage } from "@/hooks/useSendMessage";
 
