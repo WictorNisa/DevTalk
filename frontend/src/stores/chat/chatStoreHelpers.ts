@@ -69,7 +69,7 @@ export const requestHistory = (
     body: JSON.stringify({
       channelId: parseInt(channelId),
       userId,
-      beforeTimeStamp: null,
+      beforeTimestamp: null,
       threadId: null,
     }),
   });
