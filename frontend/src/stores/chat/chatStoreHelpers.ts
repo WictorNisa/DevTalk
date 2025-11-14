@@ -1,9 +1,10 @@
 import type { ChatStateProps } from "@/types/chat/ChatStateProps";
+import type { Message } from "@/types/chat/Message";
 import type { MessageDtoProps } from "@/types/chat/MessageDtoProps";
 import { Client } from "@stomp/stompjs";
 
 // Helper function to transform backend messages to frontend format
-export const transformBackendMessage = (payload: MessageDtoProps) => {
+export const transformBackendMessage = (payload: MessageDtoProps): Message => {
   return {
     id: payload.id?.toString() || crypto.randomUUID(),
     content: payload.content || "",
@@ -69,7 +70,7 @@ export const requestHistory = (
     body: JSON.stringify({
       channelId: parseInt(channelId),
       userId,
-      beforeTimeStamp: null,
+      beforeTimestamp: null,
       threadId: null,
     }),
   });

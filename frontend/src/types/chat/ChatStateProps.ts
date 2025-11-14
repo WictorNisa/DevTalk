@@ -1,5 +1,5 @@
 import type { MessageDtoProps } from "./MessageDtoProps";
-import type { Client } from "@stomp/stompjs";
+import type { Client, StompSubscription } from "@stomp/stompjs";
 
 export interface ChatStateProps {
   messages: MessageDtoProps[];
@@ -8,7 +8,7 @@ export interface ChatStateProps {
   activeChannel: string | null;
   isAtBottom: boolean;
   unreadCount: number;
-  currentSubscription: any | null;
+  currentSubscription: StompSubscription | null;
   setIsAtBottom: (atBottom: boolean) => void;
   incrementUnreadCount: () => void;
   resetUnreadCount: () => void;
