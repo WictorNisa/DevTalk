@@ -16,11 +16,11 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public UserResponseDTO getAuthenticatedUser(OAuth2User oauth2User) {
-        Object idAttribute = oauth2User.getAttribute("id");
-
-        if (idAttribute == null) {
-            throw new UnauthorizedException("OAuth2User does not contain 'id' attribute");
+        if (oauth2User == null) {
+            throw new UnauthorizedException("User not authenticated");
         }
+        String externalId = oauth2User.getAttribute("login"); // GitHub login
+        String displayName = oauth2User.getAttribute("name");
 
         return userService.getUserByExternalId(idAttribute.toString());
     }
