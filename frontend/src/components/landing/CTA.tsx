@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { Link } from "react-router";
 import { Button } from "../ui/button";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function CTA() {
   const { t } = useTranslation();
+  const { login } = useAuthStore();
 
   return (
     <section className="bg-background relative py-32 text-center">
@@ -25,14 +26,12 @@ export default function CTA() {
         >
           <Button
             variant="outline"
-            asChild
             size="lg"
-            className="w-auto rounded-lg sm:w-auto"
+            className="border-input/20 text-secondary hover:text-secondary hover:bg-secondary/10 dark:text-primary bg-accent/5 w-auto cursor-pointer rounded-lg sm:w-auto"
+            onClick={login}
           >
-            <Link to="/login">
-              <GitHubLogoIcon className="h-5 w-5" />
-              {t("cta.ctaGithub")}
-            </Link>
+            <GitHubLogoIcon className="mr-2 h-5 w-5" />
+            {t("hero.ctaGithub")}
           </Button>
         </motion.div>
       </div>

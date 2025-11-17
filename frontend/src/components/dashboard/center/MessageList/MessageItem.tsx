@@ -1,52 +1,60 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface MessageItemProps {
-  mockMessageId: string;
-  mockMessageAvatar: string;
-  mockMessageUser: string;
-  mockMessageText: string;
-  mockMessageTimeStamp: string;
+  messageId: string;
+  messageAvatar: string;
+  messageUser: string;
+  messageText: string;
+  messageTimeStamp: number;
+  isGrouped: boolean;
 }
 
 const MessageItem: React.FC<MessageItemProps> = ({
-  mockMessageAvatar,
-  mockMessageUser,
-  mockMessageText,
-  mockMessageTimeStamp,
+  messageId,
+  messageAvatar,
+  messageUser,
+  messageText,
+  messageTimeStamp,
+  isGrouped,
 }) => {
   // const formattedDate = new Date(mockMessageTimeStamp).toLocaleDateString();
-  const formattedTime = new Date(mockMessageTimeStamp).toLocaleTimeString(
-    "en-US",
-    {
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-    },
-  );
-  return (
-    <div className="bg-background mt-3 flex w-full gap-2 rounded-lg border text-primary">
-      <div className="m-auto ml-2 h-max w-max shrink-0">
-        <Avatar>
-          <AvatarImage
-            src={mockMessageAvatar}
-            alt={mockMessageUser}
-            className="object-cover"
-          />
-          <AvatarFallback>LB</AvatarFallback>
-        </Avatar>
-      </div>
+  const formattedTime = new Date(messageTimeStamp).toLocaleTimeString("en-US", {
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-      <div className="flex h-max w-full flex-1 flex-col">
-        <div className="flex items-baseline gap-2">
-          <h1 className="font-semibold">
-            {mockMessageUser}{" "}
-            <span className="text-muted-foreground text-xs">
-              {formattedTime}
-            </span>
-          </h1>
+
+  return (
+    <div className="group hover:bg-accent/50 -mx-4 px-4 py-1 transition-colors">
+      <div className="flex gap-3">
+        <div className="w-10 shrink-0">
+          {!isGrouped && (
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={messageAvatar} alt={messageAvatar} />
+              <AvatarFallback>
+                {/* {messageUser.slice(0, 2).toUpperCase()} */}
+              </AvatarFallback>
+            </Avatar>
+          )}
         </div>
 
-        <p className="w-full">{mockMessageText}</p>
+        <div className="min-w-0 flex-1">
+          {!isGrouped && (
+            <div className="mb-1 flex items-baseline gap-2">
+              <span className="text-sm font-semibold">{messageUser}</span>
+              <span className="text-muted-foreground text-xs">
+                {formattedTime}
+              </span>
+            </div>
+          )}
+
+          <p className="text-sm break-words whitespace-pre-wrap">
+            {messageText}
+          </p>
+
+          <div className="invisible absolute top-1 right-4 flex gap-1 group-hover:visible"></div>
+        </div>
       </div>
     </div>
   );

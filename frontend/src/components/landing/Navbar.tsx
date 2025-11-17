@@ -3,7 +3,7 @@ import { Languages } from "lucide-react";
 
 import Logo from "@/assets/img/devtalk-logo.svg";
 import { GitHubLogoIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -14,7 +14,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
-import ThemeSwitcher from "../ui/custom/ThemeSwitcher";
+import ThemeSwitcher from "@/components/ui/custom/ThemeSwitcher";
 
 const GITHUB_REPO = "https://github.com/WictorNisa/DevTalk";
 

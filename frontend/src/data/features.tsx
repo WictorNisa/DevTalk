@@ -5,7 +5,13 @@ import type {
   ForwardRefExoticComponent,
 } from "react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { MessagesSquare, Hash, SquareCode, ShieldCheck, Bell } from "lucide-react";
+import {
+  MessagesSquare,
+  Hash,
+  SquareCode,
+  ShieldCheck,
+  Bell,
+} from "lucide-react";
 
 export const FEATURE_KEYS = [
   "realtime",

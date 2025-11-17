@@ -1,6 +1,6 @@
 export type UserCardProps = {
-  avatar?: string; // optional URL
-  username: string; // required username
-  status?: "online" | "idle" | "busy" | string; // optional status
-  badge?: boolean | string; // presence flag or optional label
+  avatar?: string;
+  username: string;
+  status?: "online" | "idle" | "busy" | string;
+  badge?: boolean | string;
 };

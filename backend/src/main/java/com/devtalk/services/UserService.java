@@ -25,7 +25,7 @@ public class UserService {
     private final UserMapper userMapper;
 
     @Transactional
-    public UserResponseDTO createOrGetUser(String externalId, String displayName) {
+    public UserResponseDTO createOrGetUser(String externalId, String displayName, String avatarUrl) {
         Optional<User> existingUser = userRepository.findByExternalId(externalId);
         if (existingUser.isPresent()) {
             log.info("User found: {} ({})", displayName, externalId);
@@ -35,6 +35,7 @@ public class UserService {
         User newUser = User.builder()
                 .externalId(externalId)
                 .displayName(displayName)
+                .avatarUrl(avatarUrl)
                 .presenceStatus(PresenceStatus.ONLINE)
                 .build();
 
@@ -52,25 +53,16 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponseDTO getUserDTOById(Long userId) {
-        User user = getUserById(userId);
+    public UserResponseDTO getUserByExternalId(String externalId) {
+        User user = userRepository.findByExternalId(externalId)
+                .orElseThrow(() -> new NotFoundException("User not found with externalId: " + externalId));
         return userMapper.toResponseDTO(user);
     }
 
-    @Transactional
-    public void updatePresenceStatus(Long userId, PresenceStatus status) {
-        User user = getUserById(userId);
-        user.setPresenceStatus(status);
-        userRepository.save(user);
-        log.info("Updated user {} presence to {}", userId, status);
-    }
-
-
     @Transactional(readOnly = true)
-    public List<UserResponseDTO> getUsersByPresenceStatus(PresenceStatus status) {
-        return userRepository.findByPresenceStatus(status).stream()
-                .map(userMapper::toResponseDTO)
-                .collect(Collectors.toList());
+    public UserResponseDTO getUserDTOById(Long userId) {
+        User user = getUserById(userId);
+        return userMapper.toResponseDTO(user);
     }
 
     @Transactional(readOnly = true)

@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,6 +46,12 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     @Builder.Default
     private boolean isOnline = false;
+    @Column(name = "last_activity_at")
+    private Instant lastActivityAt;
+
+    @Size(max = 100)
+    @Column(name = "custom_status_message", length = 100)
+    private String customStatusMessage;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 16)
