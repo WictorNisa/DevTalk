@@ -15,6 +15,17 @@
     "signOut": "Logga ut"
   },
 
+  "profileSettings": {
+    "settings": "Inställningar",
+    "description": "Hantera dina kontoinställningar och preferenser"
+  },
+
+  "settings": {
+    "theme": "Tema",
+    "language": "Språk",
+    "notifications": "Notifieringar"
+  },
+
   "common": {
     "loading": "Laddar...",
     "error": "Något gick fel",

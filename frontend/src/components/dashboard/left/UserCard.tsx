@@ -95,7 +95,7 @@ export const UserCard = ({ collapsed = false }: Props) => {
                   </span>
                 </div>
                 <div className="text-muted-foreground truncate text-xs">
-                  {/* status text goes here when available */}
+                  {/* status text ska jag hämta från backend, kolla endpoint och hur jag ska göra */}
                 </div>
               </div>
             )}

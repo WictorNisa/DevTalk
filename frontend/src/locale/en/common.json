@@ -15,6 +15,17 @@
     "signOut": "Sign out"
   },
 
+  "profileSettings": {
+    "settings": "Settings",
+    "description": "Manage your account settings and preferences"
+  },
+
+  "settings": {
+    "theme": "Theme",
+    "language": "Language",
+    "notifications": "Notifications"
+  },
+
   "common": {
     "loading": "Loading...",
     "error": "Something went wrong",

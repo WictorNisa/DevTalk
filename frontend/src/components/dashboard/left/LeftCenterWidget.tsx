@@ -34,6 +34,7 @@ const createChannelWithTranslation = (
 
 const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common"); // a second hook for loading common translations
   const [channels, setChannels] = useState<Channel[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -104,7 +105,7 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
         <CardContent className="p-2">
           <div className="mb-4 flex w-full items-center justify-center">
             <span className="font-regular text-sm">
-              {t("common:common.loading")}
+              {tCommon("common.loading")}
             </span>
           </div>
         </CardContent>
