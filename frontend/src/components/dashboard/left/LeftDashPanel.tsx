@@ -4,9 +4,11 @@ import LogoPanel from "./LogoPanel";
 
 const LeftDashPanel = ({ collapsed = false }: { collapsed?: boolean }) => {
   return (
-    <div className="flex h-full w-full flex-col gap-2 rounded">
+    <div className="flex h-full w-full min-w-0 flex-col gap-2 rounded">
       <LogoPanel />
-      <LeftCenterWidget />
+      <div className="min-w-0 flex-1 overflow-auto">
+        <LeftCenterWidget collapsed={collapsed} />
+      </div>
       <LeftBottomWidget collapsed={collapsed} />
     </div>
   );

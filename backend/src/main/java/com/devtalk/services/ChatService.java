@@ -35,6 +35,7 @@ public class ChatService {
     private final ChannelService channelService;
     private final SimpMessagingTemplate messagingTemplate;
     private final MessageMapper messageMapper;
+    private final MessageDeliveryService messageDeliveryService;
 
     @Transactional
     public void sendMessage(ChatMessageDTO message, Principal principal) {
@@ -44,8 +45,8 @@ public class ChatService {
         ChannelResponseDTO channel = channelService.getChannelDTOById(message.getChannelId());
         MessageResponseDTO savedMessage = messageService.saveMessage(message, user, channel);
         
-        messagingTemplate.convertAndSend(message.getDestination(), savedMessage);
-        log.info("Broadcasted message {} from user {} to {}", savedMessage.getId(), user.getDisplayName(), message.getDestination());
+        messageDeliveryService.sendToChannel(message.getDestination(), savedMessage);
+        log.info("Broadcasted message {} from user {} to channel {}", savedMessage.getId(), user.getDisplayName(), message.getDestination());
         
         sendMentionNotifications(savedMessage, user, channel);
         sendDeliveryAck(savedMessage, principal);
@@ -104,7 +105,10 @@ public class ChatService {
         if (dto.getReadAt() == null) {
             dto.setReadAt(System.currentTimeMillis());
         }
-        messagingTemplate.convertAndSend("/topic/room/" + dto.getChannelId(), dto);
+        
+        String destination = "/topic/room/" + dto.getChannelId();
+        messagingTemplate.convertAndSend(destination, dto);
+        log.info("Broadcast read receipt for channel {} by user {}", dto.getChannelId(), dto.getUserId());
     }
 
     public void sendMessageHistory(MessageBaseDTO request, Principal principal) {
@@ -286,8 +290,10 @@ public class ChatService {
 
         String username = principal.getName();
         DeliveryAckDTO ack = messageMapper.toDeliveryAckDTO(message);
-        messagingTemplate.convertAndSendToUser(username, "/queue/acks", ack);
+        messageDeliveryService.sendToUserSessions(username, "/queue/acks", ack);
+        log.debug("Sent delivery ack to sender {} for message {}", username, message.getId());
     }
+
 
     private String createMessagePreview(String content) {
         if (content == null) {
@@ -302,6 +308,14 @@ public class ChatService {
 
     public PingPongMessageDTO handlePing(MessageBaseDTO pingMessage) {
         return messageMapper.toPingPongMessageDTO(pingMessage);
+    }
+
+    public PingPongMessageDTO handleLatencyTest(MessageBaseDTO pingMessage) {
+        PingPongMessageDTO pong = handlePing(pingMessage);
+        long serverTimestamp = System.currentTimeMillis();
+        pong.setTimestamp(serverTimestamp);
+        log.debug("Latency test: server timestamp {}", serverTimestamp);
+        return pong;
     }
 }
 

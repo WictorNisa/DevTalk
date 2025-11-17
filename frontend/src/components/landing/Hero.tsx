@@ -2,15 +2,17 @@ import { useTranslation } from "react-i18next";
 
 import { motion } from "framer-motion";
 import { Particles } from "@/components/ui/animations/particles";
-import { Link } from "react-router";
 import { Button } from "../ui/button";
 
 import Logo from "@/assets/img/devtalk-logo.svg";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { ChevronDown } from "lucide-react";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function Hero() {
   const { t } = useTranslation();
+  const { login } = useAuthStore();
+
   return (
     <section
       id="home"
@@ -77,14 +79,12 @@ export default function Hero() {
         >
           <Button
             variant="outline"
-            asChild
             size="lg"
-            className="border-input/20 text-secondary hover:text-secondary hover:bg-secondary/10 dark:text-primary bg-accent/5 w-auto rounded-lg sm:w-auto"
+            className="border-input/20 text-secondary hover:text-secondary hover:bg-secondary/10 dark:text-primary bg-accent/5 w-auto cursor-pointer rounded-lg sm:w-auto"
+            onClick={login}
           >
-            <Link to="/login">
-              <GitHubLogoIcon className="h-5 w-5" />
-              {t("hero.ctaGithub")}
-            </Link>
+            <GitHubLogoIcon className="mr-2 h-5 w-5" />
+            {t("hero.ctaGithub")}
           </Button>
         </motion.div>
       </div>

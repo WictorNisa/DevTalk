@@ -86,7 +86,19 @@
     "roles": {
       "frontend": "Frontend, UI/UX",
       "backend": "Backend, Database Design",
-      "scrum": "Scrum Master"
+      "scrum": "Scrum Master, UI/UX"
     }
+  },
+
+  "userMenu": {
+    "profile": "Profil",
+    "settings": "Inställningar",
+    "signOut": "Logga ut"
+  },
+
+  "profileSettings": {
+    "settings": "Din Profil",
+    "description": "Här kan du ändra dina profilinställningar. Github-användarnamn och e-post kan inte ändras här eftersom de hämtas från ditt GitHub-konto.",
+    "notifications": "Notiser"
   }
 }

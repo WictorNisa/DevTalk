@@ -5,7 +5,7 @@ import LandingPage from "@/pages/LandingPage";
 import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/NotFound";
 import { ROUTES } from "@/constants/routes";
-import ProtectedRoute from "@/components/routing/ProtectedRoute";
+import { ProtectedRoute } from "@/components/routing/ProtectedRoute";
 import PublicRoute from "@/components/routing/PublicRoute";
 import { useThemeStore } from "./stores/useThemeStore";
 
@@ -34,22 +34,14 @@ const App = () => {
             </PublicRoute>
           }
         />
-        {/* <Route
-          path={ROUTES.LOGIN}
-          element={
-            <PublicRoute>
-              <LoginPage />
-            </PublicRoute>
-          }
-        /> */}
 
         {/* Protected Routes that require AUTH  */}
         <Route
           path={ROUTES.DASHBOARD}
           element={
-            //<ProtectedRoute>
-            <Dashboard />
-            //</ProtectedRoute>
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
           }
         />
 

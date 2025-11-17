@@ -5,12 +5,14 @@ import { CollapsiblePanel } from "@/components/ui/custom/CollapsiblePanel";
 
 const Dashboard = () => {
   return (
-    <div className="flex h-full w-full items-center justify-center p-2">
-      <div className="flex h-full w-full gap-2 rounded">
+    <div className="flex h-screen w-full overflow-hidden p-2">
+      <div className="flex h-full w-full min-w-0 gap-2 rounded">
         <CollapsiblePanel side="left">
           <LeftDashPanel />
         </CollapsiblePanel>
-        <CenterDashPanel />
+        <div className="flex min-w-0 flex-1">
+          <CenterDashPanel />
+        </div>
         <CollapsiblePanel side="right">
           <RightDashPanel />
         </CollapsiblePanel>

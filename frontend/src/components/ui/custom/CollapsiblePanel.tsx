@@ -29,8 +29,8 @@ export const CollapsiblePanel = ({ children, side }: CollapsiblePanelProps) => {
     }
   };
 
-  const expandedWidth = "14%";
-  const collapsedWidth = side === "left" ? "3%" : "3%";
+  const expandedWidth = "220px";
+  const collapsedWidth = side === "left" ? "54px" : "54px";
 
   const toggleButton = (
     <Button
@@ -52,12 +52,12 @@ export const CollapsiblePanel = ({ children, side }: CollapsiblePanelProps) => {
 
   return (
     <motion.div
-      className={`flex h-full ${side === "right" ? "ml-auto" : ""} relative z-10`}
+      className={`flex h-full ${side === "right" ? "ml-auto" : ""} relative z-10 min-w-0`}
       animate={{
         width: isCollapsed ? collapsedWidth : expandedWidth,
         transformOrigin: side === "left" ? "left" : "right",
       }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
     >
       {side === "left" ? (
         <>

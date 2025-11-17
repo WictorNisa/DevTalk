@@ -12,10 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
-
     private final UserService userService;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public UserResponseDTO getAuthenticatedUser(OAuth2User oauth2User) {
         if (oauth2User == null) {
             throw new UnauthorizedException("User not authenticated");
@@ -23,7 +22,6 @@ public class AuthService {
         String externalId = oauth2User.getAttribute("login"); // GitHub login
         String displayName = oauth2User.getAttribute("name");
 
-        return userService.createOrGetUser(externalId, displayName);
+        return userService.getUserByExternalId(idAttribute.toString());
     }
 }
-

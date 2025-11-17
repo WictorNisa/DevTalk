@@ -1,21 +1,76 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { fetchCurrentUser } from "@/services/fetchCurrentUser";
 
-// Enkel auth store exempel
-// TODO: Connecta med WebSocket när backend är redo.
 type User = {
   id: string;
-  username: string;
-  token: string;
+  externalId: string;
+  displayName: string;
+  avatarUrl: string;
 };
 
 type AuthState = {
   user: User | null;
-  login: (user: User) => void;
-  logout: () => void;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: () => void;
+  logout: () => Promise<void>;
+  checkAuth: () => Promise<void>;
 };
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  login: (user) => set({ user }),
-  logout: () => set({ user: null }), 
-}));
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      isAuthenticated: false,
+      isLoading: true,
+
+      login: () => {
+        window.location.href =
+          "http://localhost:8080/oauth2/authorization/github";
+      },
+      logout: async () => {
+        try {
+          await fetch("http://localhost:8080/api/logout", {
+            method: "POST",
+            credentials: "include",
+          });
+        } finally {
+          set({ user: null, isAuthenticated: false });
+          window.location.href = "/";
+        }
+      },
+
+      checkAuth: async () => {
+        set({ isLoading: true });
+        try {
+          const me = await fetchCurrentUser();
+          if (me) {
+            set({
+              user: {
+                id: me.id,
+                externalId: me.externalId,
+                displayName: me.displayName,
+                avatarUrl: me.avatarUrl, // includes fallback if backend null
+              },
+              isAuthenticated: true,
+              isLoading: false,
+            });
+          } else {
+            set({ user: null, isAuthenticated: false, isLoading: false });
+          }
+        } catch (e) {
+          console.error("Auth check failed:", e);
+          set({ user: null, isAuthenticated: false, isLoading: false });
+        }
+      },
+    }),
+    {
+      name: "auth-storage",
+      partialize: (state) => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    },
+  ),
+);
