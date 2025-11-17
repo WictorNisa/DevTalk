@@ -91,11 +91,11 @@ export const UserCard = ({ collapsed = false }: Props) => {
               <div>
                 <div className="flex min-w-0 items-center gap-2">
                   <span className="block truncate text-sm font-medium">
-                    {user?.externalId || user?.displayName || "User"}
+                    {user?.displayName || user?.externalId || "User"}
                   </span>
                 </div>
                 <div className="text-muted-foreground truncate text-xs">
-                  {/* status text goes here when available */}
+                  {/* status text ska jag hämta från backend, kolla endpoint och hur jag ska göra */}
                 </div>
               </div>
             )}

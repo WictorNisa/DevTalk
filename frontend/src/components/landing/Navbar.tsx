@@ -28,11 +28,11 @@ const LANGUAGE_CODES = ["en", "sv"] as const;
 type LanguageCode = (typeof LANGUAGE_CODES)[number];
 
 export default function Navbar() {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
 
   const navLinks = NAV_LINKS.map(({ key, href }) => ({
     href,
-    label: t(`nav.${key}`),
+    label: t(`nav.${key}`), // Now reads from common.json
   }));
 
   const normalizeLanguage = (code?: string | null): LanguageCode => {

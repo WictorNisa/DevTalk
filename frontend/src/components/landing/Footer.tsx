@@ -1,16 +1,12 @@
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { Heart } from "lucide-react";
 
 export default function Footer() {
   return (
     <footer className="border-t py-8">
       <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-6 text-center sm:flex-row sm:text-left">
         <p className="text-primary/70 flex items-center gap-1 text-sm">
-          © {new Date().getFullYear()} DevTalk. Built with
-          <Heart className="h-4 w-4 text-pink-500" aria-label="love" />
-          by students.
+          © {new Date().getFullYear()} DevTalk
         </p>
-
         <a
           href="https://github.com/WictorNisa/DevTalk"
           target="_blank"
