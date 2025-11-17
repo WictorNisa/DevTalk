@@ -10,10 +10,20 @@ import { useChatStore } from "@/stores/chat/useChatStore";
  - Wire channel selection to router / chat context and load messages.
 */
 
+const CHANNEL_TRANSLATION_MAP: Record<string, string> = {
+  general: "sidebarLeft.general",
+  frontend: "sidebarLeft.frontend",
+  backend: "sidebarLeft.backend",
+};
+
 const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
   const { t } = useTranslation("dashboard");
+
   const [channels, setChannels] = useState<Channel[]>([]);
+
   const [loading, setLoading] = useState(true);
+
+  // Get chat state from Zustand store
   const activeChannelId = useChatStore((state) => state.activeChannel);
   const switchChannel = useChatStore((state) => state.switchChannel);
   const connected = useChatStore((state) => state.connected);
@@ -27,29 +37,29 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
         }
         const data = await response.json();
 
-        //* ⬇ Vad ska jag lägga för type istället för "any"? Försökte med andra conditions. Any får det att kännas unsafe när TS ska hållas typat så bra man kan? /Nico
+        //* ⬇ la till interface ChannelResponse för att undvika "any" /Nico *//
+        interface ChannelResponse {
+          id: number;
+          name: string;
+          topic?: string;
+        }
 
-        const transformedChannels: Channel[] = data.map((ch: any) => ({
-          id: ch.id.toString(),
-          name: ch.name,
-          topic: ch.topic || "",
-          unread: 0,
-
-          translationKey:
-            ch.name.toLowerCase() === "general"
-              ? "sidebarLeft.general"
-              : ch.name.toLowerCase() === "frontend"
-                ? "sidebarLeft.frontend"
-                : ch.name.toLowerCase() === "backend"
-                  ? "sidebarLeft.backend"
-                  : undefined,
-        }));
+        const transformedChannels: Channel[] = data.map(
+          (ch: ChannelResponse) => ({
+            id: ch.id.toString(),
+            name: ch.name,
+            topic: ch.topic || "",
+            unread: 0,
+            translationKey: CHANNEL_TRANSLATION_MAP[ch.name.toLowerCase()],
+          }),
+        );
 
         setChannels(transformedChannels);
         console.log("📡 Loaded channels:", transformedChannels);
       } catch (error) {
         console.error("❌ Failed to fetch channels:", error);
 
+        // Fallbacks
         setChannels([
           {
             id: "1",
@@ -81,23 +91,25 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
     fetchChannels();
   }, []);
 
+  // when user clicks a channel
   const handleSelect = (channel: Channel) => {
+    // if WebSocket isn't connected = don't allow switching
     if (!connected) {
       console.error("Cannot switch channel: Websocket not connected");
       return;
     }
-
     console.log(`Switching to channel: ${channel.name}`);
     switchChannel(channel.id);
   };
 
+  // Show loading state while fetching channels
   if (loading) {
     return (
       <Card className="h-full w-full rounded-lg">
         <CardContent className="p-2">
           <div className="mb-4 flex w-full items-center justify-center">
             <span className="font-regular text-sm">
-              {t("sidebarLeft.loading")}
+              {t("common:common.loading")}
             </span>
           </div>
         </CardContent>
@@ -105,6 +117,22 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
     );
   }
 
+  // Show message if no channels are available (copilot suggestion)
+  if (channels.length === 0) {
+    return (
+      <Card className="h-full w-full rounded-lg">
+        <CardContent className="p-2">
+          <div className="mb-4 flex w-full items-center justify-center">
+            <span className="font-regular text-sm">
+              {t("sidebarLeft.noChannels")}
+            </span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // render the channel list once loaded
   return (
     <Card className="h-full w-full rounded-lg">
       <CardContent className="p-2">
@@ -115,7 +143,7 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
         <ChannelList
           channels={channels}
           collapsed={collapsed}
-          activeId={activeChannelId || channels[0]?.id}
+          activeId={activeChannelId || channels[0].id}
           onSelect={handleSelect}
         />
       </CardContent>

@@ -1,5 +1,6 @@
 {
   "sidebarLeft": {
+    "loading": "Loading channels...",
     "title": "Channels",
     "channel": "Channels",
     "general": "General",

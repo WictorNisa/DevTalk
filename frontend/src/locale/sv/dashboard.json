@@ -1,5 +1,6 @@
 {
   "sidebarLeft": {
+    "loading": "Laddar kanaler...",
     "title": "Kanaler",
     "channel": "Kanaler",
     "general": "Allmänt",
