@@ -1,6 +1,7 @@
 {
   "sidebarLeft": {
     "loading": "Laddar kanaler...",
+    "noChannels": "Inga kanaler tillgängliga.",
     "title": "Kanaler",
     "channel": "Kanaler",
     "general": "Allmänt",
