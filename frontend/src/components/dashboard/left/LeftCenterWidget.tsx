@@ -10,20 +10,34 @@ import { useChatStore } from "@/stores/chat/useChatStore";
  - Wire channel selection to router / chat context and load messages.
 */
 
+// Maps channel names to their translation keys in dashboard.json
 const CHANNEL_TRANSLATION_MAP: Record<string, string> = {
   general: "sidebarLeft.general",
   frontend: "sidebarLeft.frontend",
   backend: "sidebarLeft.backend",
 };
 
+const createChannelWithTranslation = (
+  id: string,
+  name: string,
+  topic = "",
+  unread = 0,
+): Channel => {
+  return {
+    id,
+    name,
+    topic,
+    unread,
+    translationKey: CHANNEL_TRANSLATION_MAP[name.toLowerCase()],
+  };
+};
+
 const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
   const { t } = useTranslation("dashboard");
-
   const [channels, setChannels] = useState<Channel[]>([]);
-
   const [loading, setLoading] = useState(true);
 
-  // Get chat state from Zustand store
+  // get chat state from Zustand store
   const activeChannelId = useChatStore((state) => state.activeChannel);
   const switchChannel = useChatStore((state) => state.switchChannel);
   const connected = useChatStore((state) => state.connected);
@@ -44,14 +58,14 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
           topic?: string;
         }
 
-        const transformedChannels: Channel[] = data.map(
-          (ch: ChannelResponse) => ({
-            id: ch.id.toString(),
-            name: ch.name,
-            topic: ch.topic || "",
-            unread: 0,
-            translationKey: CHANNEL_TRANSLATION_MAP[ch.name.toLowerCase()],
-          }),
+        // transform backend data using helper function
+        const transformedChannels: Channel[] = data.map((ch: ChannelResponse) =>
+          createChannelWithTranslation(
+            ch.id.toString(),
+            ch.name,
+            ch.topic || "",
+            0,
+          ),
         );
 
         setChannels(transformedChannels);
@@ -59,29 +73,11 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
       } catch (error) {
         console.error("❌ Failed to fetch channels:", error);
 
-        // Fallbacks
+        // fallback
         setChannels([
-          {
-            id: "1",
-            name: "General",
-            topic: "",
-            unread: 0,
-            translationKey: "sidebarLeft.general",
-          },
-          {
-            id: "2",
-            name: "Frontend",
-            topic: "",
-            unread: 0,
-            translationKey: "sidebarLeft.frontend",
-          },
-          {
-            id: "3",
-            name: "Backend",
-            topic: "",
-            unread: 0,
-            translationKey: "sidebarLeft.backend",
-          },
+          createChannelWithTranslation("1", "General"),
+          createChannelWithTranslation("2", "Frontend"),
+          createChannelWithTranslation("3", "Backend"),
         ]);
       } finally {
         setLoading(false);
@@ -91,9 +87,9 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
     fetchChannels();
   }, []);
 
-  // when user clicks a channel
+  // handle when user clicks a channel
   const handleSelect = (channel: Channel) => {
-    // if WebSocket isn't connected = don't allow switching
+    // don't allow channel switching if WebSocket isn't connected
     if (!connected) {
       console.error("Cannot switch channel: Websocket not connected");
       return;
@@ -102,7 +98,6 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
     switchChannel(channel.id);
   };
 
-  // Show loading state while fetching channels
   if (loading) {
     return (
       <Card className="h-full w-full rounded-lg">
@@ -117,7 +112,7 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
     );
   }
 
-  // Show message if no channels are available (copilot suggestion)
+  // show message if no channels are available
   if (channels.length === 0) {
     return (
       <Card className="h-full w-full rounded-lg">
@@ -132,7 +127,7 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
     );
   }
 
-  // render the channel list once loaded
+  // Render the channel list once loaded
   return (
     <Card className="h-full w-full rounded-lg">
       <CardContent className="p-2">

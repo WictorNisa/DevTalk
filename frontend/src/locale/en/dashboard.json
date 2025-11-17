@@ -1,8 +1,8 @@
 {
   "sidebarLeft": {
     "loading": "Loading channels...",
+    "noChannels": "No channels available.",
     "title": "Channels",
-    "channel": "Channels",
     "general": "General",
     "frontend": "Frontend",
     "backend": "Backend"
