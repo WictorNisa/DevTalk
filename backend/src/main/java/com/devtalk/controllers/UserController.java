@@ -2,6 +2,7 @@ package com.devtalk.controllers;
 
 import com.devtalk.dtos.user.UpdateUserRequest;
 import com.devtalk.dtos.user.UserResponseDTO;
+import com.devtalk.enums.PresenceStatus;
 import com.devtalk.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,6 +37,20 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("")
+    @Operation(summary = "Get users by presence status", description = "Retrieves users filtered by their presence status")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved users by presence status"),
+        @ApiResponse(responseCode = "400", description = "Bad request - invalid presence status"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<List<UserResponseDTO>> getUsersByPresenceStatus(
+        @Parameter(description = "Presence name", required = true, example = "ONLINE")
+        @RequestParam PresenceStatus status
+    ){
+        return ResponseEntity.ok(userService.getUsersByPresenceStatus(status));
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get user by ID", description = "Retrieves a specific user by their unique identifier")
     @ApiResponses(value = {
@@ -65,4 +80,6 @@ public class UserController {
         UserResponseDTO updated = userService.updateUser(id, request);
         return ResponseEntity.ok(updated);
     }
+
+    
 }
