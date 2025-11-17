@@ -17,6 +17,7 @@ public abstract class UserBaseDTO extends BaseDTO {
     private String externalId;
     private String displayName;
     private PresenceStatus presenceStatus;
+    private boolean isOnline;
     private Role role;
     private Language language;
     private Theme theme;

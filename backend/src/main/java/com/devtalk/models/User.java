@@ -2,6 +2,7 @@ package com.devtalk.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.Builder.Default;
 import lombok.experimental.SuperBuilder;
 
 import jakarta.validation.constraints.NotBlank;
@@ -40,6 +41,10 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 32)
     @Builder.Default
     private PresenceStatus presenceStatus = PresenceStatus.OFFLINE;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean isOnline = false;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 16)

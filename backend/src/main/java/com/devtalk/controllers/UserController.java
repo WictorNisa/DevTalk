@@ -26,18 +26,18 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping("")
     @Operation(summary = "Get all users", description = "Retrieves a list of all registered users")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully retrieved all users"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved all users"),
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         List<UserResponseDTO> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("")
+    @GetMapping("/status")
     @Operation(summary = "Get users by presence status", description = "Retrieves users filtered by their presence status")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved users by presence status"),
