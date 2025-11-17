@@ -22,6 +22,6 @@ public class AuthService {
         String externalId = oauth2User.getAttribute("login"); // GitHub login
         String displayName = oauth2User.getAttribute("name");
 
-        return userService.getUserByExternalId(idAttribute.toString());
+        return userService.getUserByExternalId(externalId); 
     }
 }
