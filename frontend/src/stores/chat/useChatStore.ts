@@ -45,7 +45,7 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
     console.log(`Switching to channel ${channelId}`);
 
     // Subscribe to new channel
-    const newSubscription = subscribeToChannel(stompClient!, channelId, get);
+    const newSubscription = subscribeToChannel(stompClient!, channelId, get, set);
     set({ currentSubscription: newSubscription });
 
     // Request message history
@@ -105,7 +105,7 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
       });
 
       // Subscribe to channel messages
-      const initialSubscription = subscribeToChannel(client, channelId, get);
+      const initialSubscription = subscribeToChannel(client, channelId, get, set);
       set({
         activeChannel: channelId,
         currentSubscription: initialSubscription,
