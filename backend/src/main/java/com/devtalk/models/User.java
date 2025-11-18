@@ -46,6 +46,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     @Builder.Default
     private boolean isOnline = false;
+    
     @Column(name = "last_activity_at")
     private Instant lastActivityAt;
 
