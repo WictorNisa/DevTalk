@@ -16,8 +16,27 @@ const MessageList = () => {
   const incrementUnreadCount = useChatStore(
     (state) => state.incrementUnreadCount,
   );
+  const connect = useChatStore((state) => state.connect);
+  const disconnect = useChatStore((state) => state.disconnect);
 
-  // const { user, checkAuth, isLoading } = useAuthStore();
+  // const { user, checkAuth, isLoading } = useAuthStore(); 
+
+  useEffect(() => {
+    const isAtBottom = useChatStore.getState().isAtBottom;
+
+    if (messages.length > 0) {
+      console.log("New message received. IsAtBottom:", isAtBottom);
+
+      if (isAtBottom) {
+        virtuosoRef.current?.scrollToIndex({
+          index: messages.length - 1,
+          behavior: "smooth",
+        });
+      } else {
+        incrementUnreadCount();
+      }
+    }
+  }, [messages, incrementUnreadCount]);
 
   const [showScrollButton, setShowScrollButton] = useState(false);
   const virtuosoRef = useRef<VirtuosoHandle>(null);
