@@ -13,3 +13,8 @@ build/
 # OS
 .DS_Store
 
+# Environment variables
+.env
+backend/.env
+frontend/.env
+
