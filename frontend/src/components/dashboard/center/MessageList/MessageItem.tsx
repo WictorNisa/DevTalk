@@ -1,4 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { parseMessageContent, isCurrentUserMentioned } from "./messageHelpers";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 interface MessageItemProps {
   messageId: string;
@@ -17,13 +19,14 @@ const MessageItem: React.FC<MessageItemProps> = ({
   messageTimeStamp,
   isGrouped,
 }) => {
-  // const formattedDate = new Date(mockMessageTimeStamp).toLocaleDateString();
+  const { user } = useAuthStore();
   const formattedTime = new Date(messageTimeStamp).toLocaleTimeString("en-US", {
     hour12: false,
     hour: "2-digit",
     minute: "2-digit",
   });
 
+  const parsedContent = parseMessageContent(messageText);
 
   return (
     <div className="group hover:bg-accent/50 -mx-4 px-4 py-1 transition-colors">
@@ -49,9 +52,36 @@ const MessageItem: React.FC<MessageItemProps> = ({
             </div>
           )}
 
-          <p className="text-sm break-words whitespace-pre-wrap">
-            {messageText}
-          </p>
+          <div className="text-sm break-words whitespace-pre-wrap">
+            {parsedContent.map((part, index) => {
+              if (part.type === "mention") {
+                const isMentioned = isCurrentUserMentioned(part.content, user);
+                return (
+                  <span
+                    key={index}
+                    // Styling for mentions
+                    className={`cursor-pointer font-semibold hover:underline ${
+                      isMentioned
+                        ? "rounded-sm bg-indigo-800/80 p-0.5 px-1.5" // If current user is being mentioned.
+                        : "text-indigo-500/95" // Else.
+                    }`}
+                  >
+                    @{part.content}
+                  </span>
+                );
+              } else if (part.type === "codeblock") {
+                return (
+                  <pre
+                    key={index}
+                    className="bg-muted my-1 overflow-x-auto rounded p-2"
+                  >
+                    <code className="text-xs">{part.content}</code>
+                  </pre>
+                );
+              }
+              return <span key={index}>{part.content}</span>;
+            })}
+          </div>
 
           <div className="invisible absolute top-1 right-4 flex gap-1 group-hover:visible"></div>
         </div>
