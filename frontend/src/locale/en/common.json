@@ -26,6 +26,12 @@
     "notifications": "Notifications"
   },
 
+  "userInfo": {
+    "profile": "Profile.",
+    "status": "Status: add from backend",
+    "lastSeen": "Last seen {{date}}"
+  },
+
   "common": {
     "loading": "Loading...",
     "error": "Something went wrong",

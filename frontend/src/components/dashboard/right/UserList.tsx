@@ -2,15 +2,7 @@ import { useEffect, useState } from "react";
 import { UserListCard } from "./UserListCard";
 import { fetchAllUsers } from "@/services/fetchAllUsers";
 import { useAuthStore } from "@/stores/useAuthStore";
-
-/*
- TODO (UserList)
- - Replace dummyUsers with authenticated / backend users (via auth/context or API).
- - Move avatar normalisation into a shared helper (handle CDN / signed URLs).
- - Add loading / skeleton state while users list is fetched.
- - Deduplicate users by id and ensure stable keys (avoid using undefined ids).
- - Consider virtualisation if the list grows large.
-*/
+import { ProfileDialog } from "../ProfileDialog";
 
 type User = {
   id: string | null | undefined;
@@ -18,6 +10,17 @@ type User = {
   avatar?: string;
   status?: string;
   badge?: string | boolean;
+};
+
+// added a User type from ProfileDialog to show user details on click
+type ProfileUser = {
+  id: string;
+  displayName?: string | null;
+  externalId?: string | null;
+  avatarUrl?: string | null;
+  lastActivityAt?: string | null;
+  customStatusMessage?: string | null;
+  presenceStatus?: "Online" | "Offline" | "Away" | "Busy" | undefined;
 };
 
 export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
@@ -31,6 +34,10 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // using ProfileUser type for selectedUser (to show with ProfileDialog)
+  const [selectedUser, setSelectedUser] = useState<ProfileUser | null>(null);
+  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+
   const offlineUsers = users.filter(
     (userStatus) => userStatus.status === "offline",
   );
@@ -38,6 +45,24 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
   const activeUsers = users.filter(
     (userStatus) => userStatus.status !== "offline",
   );
+
+  // map UserList User to ProfileDialog's User type
+  const handleUserClick = (user: User) => {
+    const profileUser: ProfileUser = {
+      id: user.id || "",
+      displayName: user.username,
+      externalId: user.id || "",
+      avatarUrl: user.avatar,
+      presenceStatus: user.status as
+        | "Online"
+        | "Offline"
+        | "Away"
+        | "Busy"
+        | undefined,
+    };
+    setSelectedUser(profileUser);
+    setProfileDialogOpen(true);
+  };
 
   useEffect(() => {
     const loadUsers = async () => {
@@ -85,20 +110,38 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
   }
 
   return (
-    <div className={`flex flex-col gap-2 ${collapsed ? "items-center" : ""}`}>
-      <div className="mb-2 flex flex-col gap-3 text-gray-500">
-        <span>{`Active - ${activeUsers.length}`} </span>
-        {activeUsers.map((user) => (
-          <UserListCard key={user.id} {...user} collapsed={collapsed} />
-        ))}
+    <>
+      <div className={`flex flex-col gap-2 ${collapsed ? "items-center" : ""}`}>
+        <div className="mb-2 flex flex-col gap-3 text-gray-500">
+          <span>{`Active - ${activeUsers.length}`} </span>
+          {activeUsers.map((user) => (
+            <UserListCard
+              key={user.id}
+              {...user}
+              collapsed={collapsed}
+              onClick={() => handleUserClick(user)}
+            />
+          ))}
+        </div>
+
+        <div className="mb-2 flex flex-col gap-3 text-gray-500">
+          <span>{`Inactive - ${offlineUsers.length}`} </span>
+          {offlineUsers.map((user) => (
+            <UserListCard
+              key={user.id}
+              {...user}
+              collapsed={collapsed}
+              onClick={() => handleUserClick(user)}
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="mb-2 flex flex-col gap-3 text-gray-500">
-        <span>{`Inactive - ${offlineUsers.length}`} </span>
-        {offlineUsers.map((user) => (
-          <UserListCard key={user.id} {...user} collapsed={collapsed} />
-        ))}
-      </div>
-    </div>
+      <ProfileDialog
+        open={profileDialogOpen}
+        onOpenChange={setProfileDialogOpen}
+        user={selectedUser}
+      />
+    </>
   );
 };

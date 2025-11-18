@@ -23,7 +23,13 @@
   "settings": {
     "theme": "Tema",
     "language": "Språk",
-    "notifications": "Notifieringar"
+    "notifications": "Notiser"
+  },
+
+  "userInfo": {
+    "profile": "Profil",
+    "status": "Status: lägg till från backend",
+    "lastSeen": "Senast sedd {{date}}"
   },
 
   "common": {

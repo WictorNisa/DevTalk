@@ -3,6 +3,7 @@ export type CurrentUser = {
   externalId: string;
   displayName: string;
   avatarUrl: string;
+  presenceStatus?: "Online" | "Offline" | "Away" | "Busy";
 };
 
 const deriveGitHubAvatar = (externalId?: string) => {
@@ -29,7 +30,8 @@ export async function fetchCurrentUser(): Promise<CurrentUser | null> {
   return {
     id: String(data.id ?? ""),
     externalId: data.externalId ?? "",
-    displayName: data.displayName || data.externalId || "",
+    displayName: data.displayName || data.externalId || "User",
     avatarUrl: avatar,
+    presenceStatus: data.presenceStatus || "Online",
   };
 }

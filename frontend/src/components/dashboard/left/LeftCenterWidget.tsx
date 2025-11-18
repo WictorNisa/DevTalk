@@ -4,13 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ChannelList, type Channel } from "./ChannelList";
 import { useChatStore } from "@/stores/chat/useChatStore";
 
-/*
- TODO (LeftCenterWidget)
- - Replace local channels with backend API / realtime channels list.
- - Wire channel selection to router / chat context and load messages.
-*/
-
-// Maps channel names to their translation keys in dashboard.json
+// mapping channel names to their translation keys in dashboard.json
 const CHANNEL_TRANSLATION_MAP: Record<string, string> = {
   general: "sidebarLeft.general",
   frontend: "sidebarLeft.frontend",
@@ -38,7 +32,7 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // get chat state from Zustand store
+  // get the chat state from zustand store
   const activeChannelId = useChatStore((state) => state.activeChannel);
   const switchChannel = useChatStore((state) => state.switchChannel);
   const connected = useChatStore((state) => state.connected);
@@ -52,14 +46,14 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
         }
         const data = await response.json();
 
-        //* ⬇ la till interface ChannelResponse för att undvika "any" /Nico *//
+        //* ⬇ added the interface ChannelResponse to avoid "any" /Nico *//
         interface ChannelResponse {
           id: number;
           name: string;
           topic?: string;
         }
 
-        // transform backend data using helper function
+        // transforming backend data using this helper function
         const transformedChannels: Channel[] = data.map((ch: ChannelResponse) =>
           createChannelWithTranslation(
             ch.id.toString(),
@@ -74,7 +68,7 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
       } catch (error) {
         console.error("❌ Failed to fetch channels:", error);
 
-        // fallback
+        // fallback channels
         setChannels([
           createChannelWithTranslation("1", "General"),
           createChannelWithTranslation("2", "Frontend"),

@@ -17,12 +17,16 @@ export const UserListCard = ({
   username,
   status,
   collapsed = false,
-}: UserCardProps & { collapsed?: boolean }) => {
+  onClick,
+}: UserCardProps & { collapsed?: boolean; onClick?: () => void }) => {
   const statusBg = userStatus(status);
 
   if (collapsed) {
     return (
-      <div className="flex items-center justify-center p-1">
+      <div
+        className="flex cursor-pointer items-center justify-center p-1 transition-opacity hover:opacity-80"
+        onClick={onClick}
+      >
         <div className="relative">
           <Avatar className="h-6 w-6 rounded-full">
             <AvatarImage
@@ -44,7 +48,10 @@ export const UserListCard = ({
   }
 
   return (
-    <Card className="w-full min-w-0 rounded-lg p-2">
+    <Card
+      className="hover:bg-accent w-full min-w-0 cursor-pointer rounded-lg p-2 transition-colors"
+      onClick={onClick}
+    >
       <CardContent className="flex min-w-0 items-center gap-3 p-0">
         <div className="relative flex-shrink-0">
           <Avatar className="h-9 w-9 rounded-full">

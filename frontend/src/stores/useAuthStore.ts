@@ -7,6 +7,7 @@ type User = {
   externalId: string;
   displayName: string;
   avatarUrl: string;
+  presenceStatus?: "Online" | "Offline" | "Away" | "Busy";
 };
 
 type AuthState = {
@@ -51,7 +52,8 @@ export const useAuthStore = create<AuthState>()(
                 id: me.id,
                 externalId: me.externalId,
                 displayName: me.displayName,
-                avatarUrl: me.avatarUrl, // includes fallback if backend null
+                avatarUrl: me.avatarUrl,
+                presenceStatus: me.presenceStatus || "Online",
               },
               isAuthenticated: true,
               isLoading: false,
