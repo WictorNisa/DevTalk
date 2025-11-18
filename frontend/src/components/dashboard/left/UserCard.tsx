@@ -11,7 +11,7 @@ type Props = { collapsed?: boolean };
 export const UserCard = ({ collapsed = false }: Props) => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const { user, isLoading } = useAuthStore();
+  const { user, isLoading, logout } = useAuthStore();
 
   const initials = (
     user?.displayName?.slice(0, 2) ||
@@ -53,7 +53,7 @@ export const UserCard = ({ collapsed = false }: Props) => {
         <CardContent className="flex min-w-0 items-center gap-2.5 p-1">
           <UserMenu
             onSignOut={() => {
-              // TODO: handle sign out
+              logout();
             }}
             onOpenProfile={() => setProfileOpen(true)}
             onOpenSettings={() => setSettingsOpen(true)}
