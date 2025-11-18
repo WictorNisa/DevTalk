@@ -1,4 +1,6 @@
-// Helper function to parse message content
+/**
+ * Parses message text into mentions, code blocks, and plain text segments
+ */
 export const parseMessageContent = (text: string) => {
   const parts: Array<{
     type: "text" | "mention" | "codeblock";
@@ -6,7 +8,7 @@ export const parseMessageContent = (text: string) => {
     language?: string;
   }> = [];
 
-  const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g; // Regex patterns
+  const codeBlockRegex = /```(\w+)?\n?([\s\S]*?)```/g;
 
   // Find all code blocks
   const codeBlocks: Array<{
@@ -52,11 +54,14 @@ export const parseMessageContent = (text: string) => {
   return parts;
 };
 
+/**
+ * Extracts @mentions from text and adds them to the parts array
+ */
 export const parseMentions = (
   text: string,
   parts: ReturnType<typeof parseMessageContent>,
 ) => {
-  const mentionRegex = /@(\w+)/g;
+  const mentionRegex = /@([\w.-]+)/g;
   let lastIndex = 0;
   let match;
 
@@ -77,6 +82,9 @@ export const parseMentions = (
   }
 };
 
+/**
+ * Checks if the mentioned user is the current user
+ */
 export const isCurrentUserMentioned = (
   mentionedName: string,
   currentUser: { displayName: string } | null,
