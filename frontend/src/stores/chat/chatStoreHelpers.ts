@@ -50,10 +50,10 @@ export const handleIncomingMessage = (
     const state = get();
 
     if (!state.isAtBottom) {
-      state.incrementUnreadCount();
+      set({ unreadCount: state.unreadCount + 1 });
     }
 
-    set({messages: [...state.messages, transformedMessage]});
+    set({ messages: [...state.messages, transformedMessage] });
     return transformedMessage;
   } catch (error) {
     console.error("Error parsing message", error);
@@ -81,7 +81,7 @@ export const subscribeToChannel = (
   stompClient: Client,
   channelId: string,
   get: () => ChatStateProps,
-  set: (partial: Partial<ChatStateProps>) => void
+  set: (partial: Partial<ChatStateProps>) => void,
 ) => {
   return stompClient.subscribe(`/topic/room/${channelId}`, (message) => {
     console.log(`Received message in channel ${channelId}:`, message.body);
