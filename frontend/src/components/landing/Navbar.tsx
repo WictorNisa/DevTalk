@@ -32,7 +32,7 @@ export default function Navbar() {
 
   const navLinks = NAV_LINKS.map(({ key, href }) => ({
     href,
-    label: t(`nav.${key}`), // Now reads from common.json
+    label: t(`nav.${key}`),
   }));
 
   const normalizeLanguage = (code?: string | null): LanguageCode => {

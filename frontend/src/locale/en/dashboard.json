@@ -8,10 +8,13 @@
     "backend": "Backend"
   },
   "sidebarRight": {
-    "members": "Members"
+    "members": "Members",
+    "active": "Active – {{count}}",
+    "inactive": "Inactive – {{count}}"
   },
   "chat": {
     "messagePlaceholder": "Type a message...",
-    "sendButton": "Send"
+    "sendButton": "Send",
+    "uploadFile": "Upload File"
   }
 }

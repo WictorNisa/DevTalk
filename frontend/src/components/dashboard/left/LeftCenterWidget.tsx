@@ -125,9 +125,13 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
   // Render the channel list once loaded
   return (
     <Card className="h-full w-full rounded-lg">
-      <CardContent className="p-2">
-        <div className="mb-4 flex w-full items-center justify-center">
-          <span className="font-regular text-sm">{t("sidebarLeft.title")}</span>
+      <CardContent className="px-2 pt-0">
+        <div
+          className={`mb-4 flex w-full items-center justify-center ${collapsed ? "hidden" : ""}`}
+        >
+          <span className="font-regular mb-2 text-sm">
+            {t("sidebarLeft.title")}
+          </span>
         </div>
 
         <ChannelList

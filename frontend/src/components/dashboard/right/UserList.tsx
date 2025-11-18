@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { UserListCard } from "./UserListCard";
 import { fetchAllUsers } from "@/services/fetchAllUsers";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { ProfileDialog } from "../ProfileDialog";
+// import { Card } from "@/components/ui/card";
 
 type User = {
   id: string | null | undefined;
@@ -24,11 +26,7 @@ type ProfileUser = {
 };
 
 export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
-  const {
-    user: currentUser,
-    isAuthenticated,
-    isLoading: authLoading,
-  } = useAuthStore();
+  const { isAuthenticated, isLoading: authLoading } = useAuthStore();
 
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -45,6 +43,7 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
   const activeUsers = users.filter(
     (userStatus) => userStatus.status !== "offline",
   );
+  const { t } = useTranslation("dashboard");
 
   // map UserList User to ProfileDialog's User type
   const handleUserClick = (user: User) => {
@@ -111,9 +110,16 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
 
   return (
     <>
+      <div
+        className={`font-regular mb-4 flex items-center justify-center p-2 text-sm ${collapsed ? "hidden items-center" : ""}`}
+      >
+        {t("sidebarRight.members")}
+      </div>
       <div className={`flex flex-col gap-2 ${collapsed ? "items-center" : ""}`}>
-        <div className="mb-2 flex flex-col gap-3 text-gray-500">
-          <span>{`Active - ${activeUsers.length}`} </span>
+        <div className="mb-2 flex flex-col justify-start gap-3 text-gray-500">
+          <span className={`text-sm font-medium ${collapsed ? "hidden" : ""}`}>
+            {t("sidebarRight.active", { count: activeUsers.length })}
+          </span>
           {activeUsers.map((user) => (
             <UserListCard
               key={user.id}
@@ -124,8 +130,10 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
           ))}
         </div>
 
-        <div className="mb-2 flex flex-col gap-3 text-gray-500">
-          <span>{`Inactive - ${offlineUsers.length}`} </span>
+        <div className="mb-2 flex flex-col justify-start gap-3 text-gray-500">
+          <span className={`text-sm font-medium ${collapsed ? "hidden" : ""}`}>
+            {t("sidebarRight.inactive", { count: offlineUsers.length })}
+          </span>
           {offlineUsers.map((user) => (
             <UserListCard
               key={user.id}
@@ -136,7 +144,6 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
           ))}
         </div>
       </div>
-
       <ProfileDialog
         open={profileDialogOpen}
         onOpenChange={setProfileDialogOpen}

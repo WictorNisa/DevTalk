@@ -15,9 +15,7 @@ type User = {
   displayName?: string | null;
   externalId?: string | null;
   avatarUrl?: string | null;
-  lastActivityAt?: string | null;
-  customStatusMessage?: string | null;
-  presenceStatus?: "Online" | "Offline" | "Away" | "Busy";
+  presenceStatus?: string | undefined;
 };
 
 type Props = {
@@ -66,7 +64,10 @@ export const ProfileDialog = ({ open, onOpenChange, user }: Props) => {
                 {user?.displayName || user?.externalId || "User"}
               </span>
               <span className="text-muted-foreground text-xs">
-                {user?.presenceStatus}
+                {user?.presenceStatus
+                  ? user.presenceStatus.charAt(0).toUpperCase() +
+                    user.presenceStatus.slice(1).toLowerCase()
+                  : "Unknown Status"}
               </span>
             </div>
           </div>
@@ -74,7 +75,9 @@ export const ProfileDialog = ({ open, onOpenChange, user }: Props) => {
 
         <div className="flex justify-end">
           <DialogClose asChild>
-            <Button variant="outline">Close</Button>
+            <Button className="cursor-pointer" variant="outline">
+              {t("common.close")}
+            </Button>
           </DialogClose>
         </div>
       </DialogContent>

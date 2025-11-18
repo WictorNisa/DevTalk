@@ -89,7 +89,8 @@ export const UserCard = ({ collapsed = false }: Props) => {
                 </div>
                 {user?.presenceStatus && (
                   <div className="text-muted-foreground truncate text-xs">
-                    {user.presenceStatus}
+                    {user?.presenceStatus.charAt(0).toUpperCase() +
+                      user?.presenceStatus.slice(1).toLowerCase()}
                   </div>
                 )}
               </div>

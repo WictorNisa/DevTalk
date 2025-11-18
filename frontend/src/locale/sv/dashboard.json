@@ -8,10 +8,13 @@
     "backend": "Backend"
   },
   "sidebarRight": {
-    "members": "Medlemmar"
+    "members": "Medlemmar",
+    "active": "Aktiva – {{count}}",
+    "inactive": "Inaktiva – {{count}}"
   },
   "chat": {
     "messagePlaceholder": "Skriv ett meddelande...",
-    "sendButton": "Skicka"
+    "sendButton": "Skicka",
+    "uploadFile": "Ladda upp fil"
   }
 }
