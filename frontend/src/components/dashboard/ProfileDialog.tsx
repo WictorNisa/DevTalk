@@ -55,7 +55,7 @@ export const ProfileDialog = ({ open, onOpenChange, user }: Props) => {
                   alt={user?.displayName || "User avatar"}
                   onError={(e) => {
                     (e.target as HTMLImageElement).src =
-                      "/images/default-avatar.jpg";
+                      "/assets/img/default-avatar.svg";
                   }}
                 />
                 <AvatarFallback>{initials}</AvatarFallback>
