@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChannelList, type Channel } from "./ChannelList";
 import { useChatStore } from "@/stores/chat/useChatStore";
@@ -9,22 +10,36 @@ import { useChatStore } from "@/stores/chat/useChatStore";
  - Wire channel selection to router / chat context and load messages.
 */
 
-const defaultChannels: Channel[] = [
-  { id: "general", name: "General", topic: "", unread: 3 },
-  {
-    id: "frontend",
-    name: "Frontend",
-    topic: "",
-    unread: 8,
-  },
-  { id: "backend", name: "Backend", topic: "", unread: 1 },
-];
+// Maps channel names to their translation keys in dashboard.json
+const CHANNEL_TRANSLATION_MAP: Record<string, string> = {
+  general: "sidebarLeft.general",
+  frontend: "sidebarLeft.frontend",
+  backend: "sidebarLeft.backend",
+};
+
+const createChannelWithTranslation = (
+  id: string,
+  name: string,
+  topic = "",
+  unread = 0,
+): Channel => {
+  return {
+    id,
+    name,
+    topic,
+    unread,
+    translationKey: CHANNEL_TRANSLATION_MAP[name.toLowerCase()],
+  };
+};
 
 const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
+  const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common"); // a second hook for loading common translations
   const [channels, setChannels] = useState<Channel[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // get chat state from Zustand store
   const activeChannelId = useChatStore((state) => state.activeChannel);
-  const setActiveChannel = useChatStore((state) => state.setActiveChannel);
   const switchChannel = useChatStore((state) => state.switchChannel);
   const connected = useChatStore((state) => state.connected);
 
@@ -37,22 +52,33 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
         }
         const data = await response.json();
 
-        const transformedChannels: Channel[] = data.map((ch: any) => ({
-          id: ch.id.toString(),
-          name: ch.name,
-          topic: ch.topic || "",
-          unread: 0,
-        }));
+        //* ⬇ la till interface ChannelResponse för att undvika "any" /Nico *//
+        interface ChannelResponse {
+          id: number;
+          name: string;
+          topic?: string;
+        }
+
+        // transform backend data using helper function
+        const transformedChannels: Channel[] = data.map((ch: ChannelResponse) =>
+          createChannelWithTranslation(
+            ch.id.toString(),
+            ch.name,
+            ch.topic || "",
+            0,
+          ),
+        );
 
         setChannels(transformedChannels);
         console.log("📡 Loaded channels:", transformedChannels);
       } catch (error) {
         console.error("❌ Failed to fetch channels:", error);
 
+        // fallback
         setChannels([
-          { id: "1", name: "General", topic: "", unread: 0 },
-          { id: "2", name: "Frontend", topic: "", unread: 0 },
-          { id: "3", name: "Backend", topic: "", unread: 0 },
+          createChannelWithTranslation("1", "General"),
+          createChannelWithTranslation("2", "Frontend"),
+          createChannelWithTranslation("3", "Backend"),
         ]);
       } finally {
         setLoading(false);
@@ -62,12 +88,14 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
     fetchChannels();
   }, []);
 
+  // handle when user clicks a channel
   const handleSelect = (channel: Channel) => {
+    // don't allow channel switching if WebSocket isn't connected
     if (!connected) {
       console.error("Cannot switch channel: Websocket not connected");
+      return;
     }
-
-    console.log(`Switching to channel: ${channel} `);
+    console.log(`Switching to channel: ${channel.name}`);
     switchChannel(channel.id);
   };
 
@@ -76,18 +104,36 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
       <Card className="h-full w-full rounded-lg">
         <CardContent className="p-2">
           <div className="mb-4 flex w-full items-center justify-center">
-            <span className="font-regular text-sm">Loading channels...</span>
+            <span className="font-regular text-sm">
+              {tCommon("common.loading")}
+            </span>
           </div>
         </CardContent>
       </Card>
     );
   }
 
+  // show message if no channels are available
+  if (channels.length === 0) {
+    return (
+      <Card className="h-full w-full rounded-lg">
+        <CardContent className="p-2">
+          <div className="mb-4 flex w-full items-center justify-center">
+            <span className="font-regular text-sm">
+              {t("sidebarLeft.noChannels")}
+            </span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Render the channel list once loaded
   return (
     <Card className="h-full w-full rounded-lg">
       <CardContent className="p-2">
         <div className="mb-4 flex w-full items-center justify-center">
-          <span className="font-regular text-sm">Channel List</span>
+          <span className="font-regular text-sm">{t("sidebarLeft.title")}</span>
         </div>
 
         <ChannelList

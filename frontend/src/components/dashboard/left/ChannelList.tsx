@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,6 +16,7 @@ export type Channel = {
   name: string;
   topic?: string;
   unread?: number;
+  translationKey?: string;
 };
 
 type ChannelItemProps = {
@@ -30,6 +32,12 @@ export const ChannelItem = ({
   collapsed,
   onSelect,
 }: ChannelItemProps) => {
+  const { t } = useTranslation("dashboard");
+
+  const channelName = channel.translationKey
+    ? t(channel.translationKey)
+    : channel.name;
+
   return (
     <Button
       variant={active ? "secondary" : "ghost"}
@@ -38,16 +46,11 @@ export const ChannelItem = ({
         onSelect?.(channel);
       }}
       aria-pressed={active}
-      title={channel.topic}
       className={`w-full justify-between py-2 text-sm ${active ? "font-semibold" : "font-light"} ${collapsed ? "justify-center px-2.5" : "px-2.5"}`}
+      title={channel.topic || undefined}
     >
       <span className="flex min-w-0 items-center gap-2">
-        <span className="truncate">{channel.name}</span>
-        {!collapsed && channel.topic ? (
-          <span className="text-muted-foreground truncate text-sm">
-            {channel.topic}
-          </span>
-        ) : null}
+        <span className="truncate">{channelName}</span>
       </span>
 
       {!collapsed && channel.unread ? (

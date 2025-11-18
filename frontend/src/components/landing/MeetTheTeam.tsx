@@ -7,7 +7,7 @@ import { team } from "@/data/team";
 import { useTranslation } from "react-i18next";
 
 export default function MeetTheTeam() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("landing");
 
   return (
     <section id="team" className="border-b py-24 sm:py-32">

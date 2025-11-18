@@ -2,6 +2,7 @@ package com.devtalk.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.Builder.Default;
 import lombok.experimental.SuperBuilder;
 
 import jakarta.validation.constraints.NotBlank;
@@ -42,6 +43,10 @@ public class User extends BaseEntity {
     @Builder.Default
     private PresenceStatus presenceStatus = PresenceStatus.OFFLINE;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean isOnline = false;
+    
     @Column(name = "last_activity_at")
     private Instant lastActivityAt;
 

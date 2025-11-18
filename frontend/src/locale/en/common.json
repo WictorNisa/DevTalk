@@ -1,0 +1,45 @@
+{
+  "nav": {
+    "menu": "Menu",
+    "features": "Features",
+    "howItWorks": "How it works",
+    "team": "Team",
+    "signIn": "Sign in",
+    "githubLabel": "GitHub Repository",
+    "githubLabelMobile": "GitHub"
+  },
+
+  "userMenu": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "signOut": "Sign out"
+  },
+
+  "profileSettings": {
+    "settings": "Settings",
+    "description": "Manage your account settings and preferences"
+  },
+
+  "settings": {
+    "theme": "Theme",
+    "language": "Language",
+    "notifications": "Notifications"
+  },
+
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete"
+  },
+
+  "language": {
+    "label": "Language",
+    "switchTo": "Switch to {{language}}",
+    "names": {
+      "en": "English",
+      "sv": "Swedish"
+    }
+  }
+}
