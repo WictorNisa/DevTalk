@@ -16,8 +16,6 @@ const MessageList = () => {
   const incrementUnreadCount = useChatStore(
     (state) => state.incrementUnreadCount,
   );
-  const connect = useChatStore((state) => state.connect);
-  const disconnect = useChatStore((state) => state.disconnect);
 
   // const { user, checkAuth, isLoading } = useAuthStore(); 
 
