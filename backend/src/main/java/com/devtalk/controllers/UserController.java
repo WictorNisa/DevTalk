@@ -3,7 +3,10 @@ package com.devtalk.controllers;
 import com.devtalk.dtos.user.UpdateUserRequest;
 import com.devtalk.dtos.user.UserResponseDTO;
 import com.devtalk.enums.PresenceStatus;
+import com.devtalk.models.User;
 import com.devtalk.services.UserService;
+import com.devtalk.services.UserStatusService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,6 +28,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UserStatusService userStatusService;
 
     @GetMapping("")
     @Operation(summary = "Get all users", description = "Retrieves a list of all registered users")
@@ -48,7 +52,7 @@ public class UserController {
         @Parameter(description = "Presence name", required = true, example = "ONLINE")
         @RequestParam PresenceStatus status
     ){
-        return ResponseEntity.ok(userService.getUsersByPresenceStatus(status));
+        return ResponseEntity.ok(userStatusService.getUsersByPresenceStatus(status));
     }
 
     @GetMapping("/{id}")
