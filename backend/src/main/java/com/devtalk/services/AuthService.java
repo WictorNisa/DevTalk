@@ -20,7 +20,11 @@ public class AuthService {
             throw new UnauthorizedException("User not authenticated");
         }
         
-        String externalId = oauth2User.getAttribute("id").toString(); // GitHub login
+        Object idAttribute = oauth2User.getAttribute("id");
+        if (idAttribute == null) {
+            throw new UnauthorizedException("User ID not found in OAuth2 attributes");
+        }
+        String externalId = idAttribute.toString(); // GitHub login
 
         return userService.getUserByExternalId(externalId);
     }
