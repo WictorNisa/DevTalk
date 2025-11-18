@@ -19,7 +19,8 @@ public class AuthService {
         if (oauth2User == null) {
             throw new UnauthorizedException("User not authenticated");
         }
-        String externalId = oauth2User.getAttribute("login"); // GitHub login
+        
+        String externalId = oauth2User.getAttribute("id").toString(); // GitHub login
 
         return userService.getUserByExternalId(externalId);
     }
