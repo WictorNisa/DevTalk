@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function CTA() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("landing");
   const { login } = useAuthStore();
 
   return (

@@ -5,7 +5,7 @@ import { features } from "@/data/features";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Features() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("landing");
   return (
     <section id="features" className="border-b py-32">
       <div className="mx-auto w-full max-w-6xl px-6">
