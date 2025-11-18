@@ -1,0 +1,17 @@
+{
+  "sidebarLeft": {
+    "loading": "Loading channels...",
+    "noChannels": "No channels available.",
+    "title": "Channels",
+    "general": "General",
+    "frontend": "Frontend",
+    "backend": "Backend"
+  },
+  "sidebarRight": {
+    "members": "Members"
+  },
+  "chat": {
+    "messagePlaceholder": "Type a message...",
+    "sendButton": "Send"
+  }
+}
