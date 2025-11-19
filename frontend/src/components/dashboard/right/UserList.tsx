@@ -4,6 +4,10 @@ import { UserListCard } from "./UserListCard";
 import { fetchAllUsers } from "@/services/fetchAllUsers";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { ProfileDialog } from "../ProfileDialog";
+import {
+  normalizePresenceStatus,
+  type PresenceStatus,
+} from "@/utils/normalizeStatus";
 // import { Card } from "@/components/ui/card";
 
 type User = {
@@ -22,7 +26,7 @@ type ProfileUser = {
   avatarUrl?: string | null;
   lastActivityAt?: string | null;
   customStatusMessage?: string | null;
-  presenceStatus?: "Online" | "Offline" | "Away" | "Busy" | undefined;
+  presenceStatus?: PresenceStatus | undefined;
 };
 
 export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
@@ -52,12 +56,7 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
       displayName: user.username,
       externalId: user.id || "",
       avatarUrl: user.avatar,
-      presenceStatus: user.status as
-        | "Online"
-        | "Offline"
-        | "Away"
-        | "Busy"
-        | undefined,
+      presenceStatus: normalizePresenceStatus(user.status),
     };
     setSelectedUser(profileUser);
     setProfileDialogOpen(true);

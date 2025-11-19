@@ -9,13 +9,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { type PresenceStatus } from "@/utils/normalizeStatus";
 
 type User = {
   id: string;
   displayName?: string | null;
   externalId?: string | null;
   avatarUrl?: string | null;
-  presenceStatus?: string | undefined;
+  presenceStatus?: PresenceStatus | undefined;
 };
 
 type Props = {
@@ -39,7 +40,6 @@ export const ProfileDialog = ({ open, onOpenChange, user }: Props) => {
           <DialogTitle className="pb-1.5 font-semibold">
             {user?.displayName}'s {t("userInfo.profile")}
           </DialogTitle>
-          <DialogDescription></DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4 py-4">
