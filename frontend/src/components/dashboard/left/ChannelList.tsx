@@ -46,7 +46,7 @@ export const ChannelItem = ({
         onSelect?.(channel);
       }}
       aria-pressed={active}
-      className={`w-full justify-between py-2 text-sm ${active ? "font-semibold" : "font-light"} ${collapsed ? "justify-center px-2.5" : "px-2.5"}`}
+      className={`w-full cursor-pointer justify-between py-2 text-sm ${active ? "font-semibold" : "font-light"} ${collapsed ? "justify-center px-2.5" : "px-2.5"}`}
       title={channel.topic || undefined}
     >
       <span className="flex min-w-0 items-center gap-2">

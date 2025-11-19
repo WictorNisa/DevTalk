@@ -10,6 +10,7 @@ const MessageList = () => {
   const messages = useChatStore((state) => state.messages);
   const unreadCount = useChatStore((state) => state.unreadCount);
   const resetUnreadCount = useChatStore((state) => state.resetUnreadCount);
+  const isAtBottom = useChatStore((state) => state.isAtBottom);
   const setIsAtBottom = useChatStore((state) => state.setIsAtBottom);
   const switchChannel = useChatStore((state) => state.switchChannel);
   const connected = useChatStore((state) => state.connected);
@@ -17,7 +18,21 @@ const MessageList = () => {
     (state) => state.incrementUnreadCount,
   );
 
-  // const { user, checkAuth, isLoading } = useAuthStore();
+  const activeChannel = useChatStore((state) => state.activeChannel);
+
+  useEffect(() => {
+    const isChannelSwitch = prevChannelRef.current !== activeChannel;
+
+    if (messages.length > 0) {
+      if (isChannelSwitch || isAtBottom) {
+        // Scroll to bottom
+      } else {
+        incrementUnreadCount();
+      }
+    }
+
+    prevChannelRef.current = activeChannel; // Update ref
+  }, [messages, isAtBottom, activeChannel, incrementUnreadCount]);
 
   const [showScrollButton, setShowScrollButton] = useState(false);
   const virtuosoRef = useRef<VirtuosoHandle>(null);
@@ -54,6 +69,8 @@ const MessageList = () => {
       timeDiff < 2 * 60 * 1000
     );
   };
+
+  const prevChannelRef = useRef(activeChannel);
 
   if (!connected) {
     return (

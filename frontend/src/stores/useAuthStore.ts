@@ -1,12 +1,17 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { fetchCurrentUser } from "@/services/fetchCurrentUser";
+import {
+  type PresenceStatus,
+  normalizePresenceStatus,
+} from "@/utils/normalizeStatus";
 
 type User = {
   id: string;
   externalId: string;
   displayName: string;
   avatarUrl: string;
+  presenceStatus?: PresenceStatus;
 };
 
 type AuthState = {
@@ -51,7 +56,8 @@ export const useAuthStore = create<AuthState>()(
                 id: me.id,
                 externalId: me.externalId,
                 displayName: me.displayName,
-                avatarUrl: me.avatarUrl, // includes fallback if backend null
+                avatarUrl: me.avatarUrl,
+                presenceStatus: normalizePresenceStatus(me.presenceStatus),
               },
               isAuthenticated: true,
               isLoading: false,

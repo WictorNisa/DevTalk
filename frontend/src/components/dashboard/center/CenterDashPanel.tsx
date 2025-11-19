@@ -1,4 +1,5 @@
 // import { mockMessages } from "@/data/mockMessages";
+// import { useTranslation } from "react-i18next";
 import CenterBottomWidget from "./CenterBottomWidget";
 import CenterTopWidget from "./CenterTopWidget";
 import { useChatStore } from "@/stores/chat/useChatStore";

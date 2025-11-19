@@ -17,6 +17,7 @@ import { useState } from "react";
 import { useChatStore } from "@/stores/chat/useChatStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useSendMessage } from "@/hooks/useSendMessage";
+import { useTranslation } from "react-i18next";
 
 const CenterBottomWidget = () => {
   const [inputValue, setInputValue] = useState<string>("");
@@ -43,13 +44,14 @@ const CenterBottomWidget = () => {
       handleSubmit(e);
     }
   };
+  const { t } = useTranslation("dashboard");
 
   return (
     <form className="grid w-full" onSubmit={handleSubmit}>
       <InputGroup className="rounded-lg">
         <InputGroupTextarea
           className="min-h-auto"
-          placeholder="Type your message here..."
+          placeholder={t("chat.messagePlaceholder")}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -73,15 +75,15 @@ const CenterBottomWidget = () => {
             >
               <DropdownMenuItem className="cursor-pointer">
                 <FileUp />
-                Upload File
+                {t("chat.uploadFile")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="cursor-pointer">
-                Test
+                Test Text
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="cursor-pointer">
-                Test
+                Test Text
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
