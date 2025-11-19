@@ -3,9 +3,9 @@
     "menu": "Menu",
     "features": "Features",
     "howItWorks": "How it works",
-    "team": "Team",
+    "meetTheTeam": "Team",
     "signIn": "Sign in",
-    "githubLabel": "GitHub Repository",
+    "githubLabel": "GitHub Repo",
     "githubLabelMobile": "GitHub"
   },
 
@@ -26,12 +26,18 @@
     "notifications": "Notifications"
   },
 
+  "userInfo": {
+    "profile": "Profile",
+    "lastSeen": "Last seen: {{date}}"
+  },
+
   "common": {
     "loading": "Loading...",
     "error": "Something went wrong",
     "cancel": "Cancel",
     "save": "Save",
-    "delete": "Delete"
+    "delete": "Delete",
+    "close": "Close"
   },
 
   "language": {

@@ -29,7 +29,7 @@ export const fetchAllUsers = async (): Promise<User[]> => {
     }
 
     const backendUsers: BackendUser[] = await response.json();
-   
+
     return backendUsers.map((users) => ({
       id: users.id.toString(),
       username: users.displayName,
