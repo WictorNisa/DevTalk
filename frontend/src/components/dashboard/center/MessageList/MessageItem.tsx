@@ -63,7 +63,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
             </div>
           )}
 
-          <div className="text-sm wrap-break-word whitespace-pre-wrap">
+          <div className="text-sm break-words whitespace-pre-wrap">
             {parsedContent.map((part, index) => {
               if (part.type === "mention") {
                 const isMentioned = isCurrentUserMentioned(part.content, user);
