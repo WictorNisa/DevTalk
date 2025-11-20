@@ -19,9 +19,6 @@ const MessageSearchBar = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [highlightedMessageId, setHighlightedMessageId] = useState<
-    string | null
-  >(null);
 
   const { stompClient, connected, switchChannel, activeChannel } =
     useChatStore();
