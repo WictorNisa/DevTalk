@@ -21,6 +21,7 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
   isAtBottom: true,
   unreadCount: 0,
   currentSubscription: null,
+  editingMessageId: null, // <-- Add editing state
 
   switchChannel: (channelId: string) => {
     const { stompClient, activeChannel, connected, currentSubscription } =
@@ -45,7 +46,12 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
     console.log(`Switching to channel ${channelId}`);
 
     // Subscribe to new channel
-    const newSubscription = subscribeToChannel(stompClient!, channelId, get, set);
+    const newSubscription = subscribeToChannel(
+      stompClient!,
+      channelId,
+      get,
+      set,
+    );
     set({ currentSubscription: newSubscription });
 
     // Request message history
@@ -105,7 +111,12 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
       });
 
       // Subscribe to channel messages
-      const initialSubscription = subscribeToChannel(client, channelId, get, set);
+      const initialSubscription = subscribeToChannel(
+        client,
+        channelId,
+        get,
+        set,
+      );
       set({
         activeChannel: channelId,
         currentSubscription: initialSubscription,
@@ -186,4 +197,76 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
     console.log("📜 Requesting message history for channel:", channelId);
     requestHistory(stompClient!, channelId);
   },
+
+  deleteMessage: (messageId: string) => {
+    const { stompClient, connected, activeChannel } = get();
+
+    if (!ensureConnected(stompClient, connected)) return;
+
+    const user = useAuthStore.getState().user;
+
+    if (!user) {
+      console.error("Cannot delete message: User not authenticated");
+      return;
+    }
+
+    const userId = parseInt(user.id);
+    if (isNaN(userId)) {
+      console.error("Cannot delete message: Invalid user ID");
+      return;
+    }
+
+    if (!activeChannel) {
+      console.error("Cannot delete message: No active channel");
+      return;
+    }
+
+    stompClient!.publish({
+      destination: "/app/chat.delete",
+      body: JSON.stringify({
+        messageId,
+        channelId: parseInt(activeChannel),
+        userId: userId,
+      }),
+      headers: { "content-type": "application/json" },
+    });
+  },
+
+  editMessage: (messageId: string, newContent: string) => {
+    const { stompClient, connected, activeChannel } = get();
+
+    if (!ensureConnected(stompClient, connected)) return;
+
+    const user = useAuthStore.getState().user;
+
+    if (!user) {
+      console.error("Cannot edit message: User not authenticated");
+      return;
+    }
+
+    const userId = parseInt(user.id);
+    if (isNaN(userId)) {
+      console.error("Cannot edit message: Invalid user ID");
+      return;
+    }
+
+    if (!activeChannel) {
+      console.error("Cannot edit message: No active channel");
+      return;
+    }
+
+    stompClient!.publish({
+      destination: "/app/chat.edit",
+      body: JSON.stringify({
+        messageId,
+        content: newContent,
+        channelId: parseInt(activeChannel),
+        userId: userId,
+      }),
+      headers: { "content-type": "application/json" },
+    });
+  },
+
+  setEditingMessage: (messageId: string | null) =>
+    set({ editingMessageId: messageId }),
 }));
