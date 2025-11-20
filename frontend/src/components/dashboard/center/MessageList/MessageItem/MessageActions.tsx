@@ -20,6 +20,7 @@ export const MessageActions = ({ messageId }: MessageActionsProps) => {
 
   const handleDelete = () => {
     deleteMessage(messageId);
+    // Refresh messages after delete
     setTimeout(() => {
       const { activeChannel, loadMessages } = useChatStore.getState();
       if (activeChannel) loadMessages(activeChannel);
@@ -36,6 +37,7 @@ export const MessageActions = ({ messageId }: MessageActionsProps) => {
           <button
             className="bg-background hover:bg-accent text-muted-foreground hover:text-foreground rounded border p-1 shadow-sm transition-colors"
             aria-label="Message options"
+            aria-haspopup="menu"
           >
             <MoreVertical className="h-3 w-3" />
           </button>

@@ -4,7 +4,7 @@ import {
   isCurrentUserMentioned,
 } from "./MessageItem/messageHelpers";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { CodeBlock } from "./MessageItem/CodeBlock";
 import { Mention } from "./MessageItem/Mention";
 import { MessageActions } from "./MessageItem/MessageActions";
@@ -34,6 +34,19 @@ const MessageItem: React.FC<MessageItemProps> = ({
   const { editingMessageId, setEditingMessage, editMessage } = useChatStore();
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState(messageText);
+  const timeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    setEditedContent(messageText);
+  }, [messageText]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const formattedTime = new Date(messageTimeStamp).toLocaleTimeString("en-US", {
     hour12: false,
@@ -56,10 +69,16 @@ const MessageItem: React.FC<MessageItemProps> = ({
   const isEditing = editingMessageId === messageId;
 
   const handleSaveEdit = () => {
-    editMessage(messageId, editedContent);
+    const trimmedContent = editedContent.trim();
+
+    if (!trimmedContent) {
+      return;
+    }
+
+    editMessage(messageId, trimmedContent);
     setEditingMessage(null);
     // Refresh messages after edit
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       const { activeChannel, loadMessages } = useChatStore.getState();
       if (activeChannel) loadMessages(activeChannel);
     }, 100);
@@ -71,6 +90,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Shift+Enter allows normal newline behavior
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSaveEdit();
@@ -85,6 +105,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
       aria-label={`Message from ${messageUser}`}
     >
       <div className="flex gap-3">
+        {/* Avatar Section */}
         <div className="w-10 shrink-0" data-section="avatar">
           {!isGrouped && (
             <Avatar className="h-10 w-10">
@@ -93,7 +114,9 @@ const MessageItem: React.FC<MessageItemProps> = ({
           )}
         </div>
 
+        {/* Message Content */}
         <div className="min-w-0 flex-1" data-section="content">
+          {/* Message Header */}
           {!isGrouped && (
             <div
               className="mb-1 flex items-baseline gap-2"
@@ -109,6 +132,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
             </div>
           )}
 
+          {/* Message Body */}
           <div
             className="relative text-sm wrap-break-word whitespace-pre-wrap"
             data-section="body"
@@ -174,6 +198,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
             )}
           </div>
 
+          {/* Message Actions (hover menu) - Only show for own messages */}
           {isOwnMessage && !isEditing && (
             <MessageActions messageId={messageId} />
           )}

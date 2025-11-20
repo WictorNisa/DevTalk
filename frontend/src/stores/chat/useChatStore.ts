@@ -11,6 +11,7 @@ import {
   // handleIncomingMessage,
   requestHistory,
   subscribeToChannel,
+  getAuthenticatedUserId,
 } from "./chatStoreHelpers";
 
 export const useChatStore = create<ChatStateProps>((set, get) => ({
@@ -199,20 +200,18 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
   },
 
   deleteMessage: (messageId: string) => {
+    if (!messageId || messageId.trim() === "") {
+      console.error("Cannot delete message: Invalid message ID");
+      return;
+    }
+
     const { stompClient, connected, activeChannel } = get();
 
     if (!ensureConnected(stompClient, connected)) return;
 
-    const user = useAuthStore.getState().user;
-
-    if (!user) {
+    const userId = getAuthenticatedUserId();
+    if (userId === null) {
       console.error("Cannot delete message: User not authenticated");
-      return;
-    }
-
-    const userId = parseInt(user.id);
-    if (isNaN(userId)) {
-      console.error("Cannot delete message: Invalid user ID");
       return;
     }
 
@@ -233,20 +232,24 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
   },
 
   editMessage: (messageId: string, newContent: string) => {
+    if (!messageId || messageId.trim() === "") {
+      console.error("Cannot edit message: Invalid message ID");
+      return;
+    }
+
+    const trimmedContent = newContent.trim();
+    if (!trimmedContent) {
+      console.error("Cannot edit message: Content cannot be empty");
+      return;
+    }
+
     const { stompClient, connected, activeChannel } = get();
 
     if (!ensureConnected(stompClient, connected)) return;
 
-    const user = useAuthStore.getState().user;
-
-    if (!user) {
+    const userId = getAuthenticatedUserId();
+    if (userId === null) {
       console.error("Cannot edit message: User not authenticated");
-      return;
-    }
-
-    const userId = parseInt(user.id);
-    if (isNaN(userId)) {
-      console.error("Cannot edit message: Invalid user ID");
       return;
     }
 
@@ -259,7 +262,7 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
       destination: "/app/chat.edit",
       body: JSON.stringify({
         messageId,
-        content: newContent,
+        content: trimmedContent,
         channelId: parseInt(activeChannel),
         userId: userId,
       }),
