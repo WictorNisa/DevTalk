@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final UserActivityInterceptor userActivityInterceptor;

@@ -78,4 +78,33 @@ public class SecurityConfig {
         log.info("API security filter chain configured");
         return http.build();
     }
+
+    @Bean
+    @Order(3)
+    public SecurityFilterChain webSocketSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/ws", "/ws/**")
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin()));
+
+        log.info("WebSocket security filter chain configured");
+        return http.build();
+    }
+
+    @Bean
+    @Order(4)
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin()));
+
+        log.info("Default security filter chain configured (catch-all)");
+        return http.build();
+    }
 }

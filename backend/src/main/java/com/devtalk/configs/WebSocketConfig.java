@@ -12,6 +12,7 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 
 @Configuration
 @EnableWebSocketMessageBroker
+@SuppressWarnings("null")
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final ObjectProvider<TaskScheduler> taskSchedulerProvider;

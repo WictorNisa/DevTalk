@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("null")
 public class MessageDeliveryService {
 
     private final SimpMessagingTemplate messagingTemplate;
