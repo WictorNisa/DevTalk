@@ -18,7 +18,7 @@ body,
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background)
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -152,4 +152,20 @@ body,
   h6 {
     font-family: "Fira Mono", monospace;
   }
+}
+
+@keyframes highlightPulse {
+  0%,
+  100% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: var(--accent);
+  }
+}
+
+.highlight-message {
+  animation: highlightPulse 1.5s ease-in-out 2;
+  border-left: 3px solid var(--primary);
+  padding-left: 1rem;
 }

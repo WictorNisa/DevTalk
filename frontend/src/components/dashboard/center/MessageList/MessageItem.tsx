@@ -44,7 +44,10 @@ const MessageItem: React.FC<MessageItemProps> = ({
   };
 
   return (
-    <div className="group hover:bg-accent/50 -mx-4 px-4 py-1 transition-colors">
+    <div
+      id={`message-${messageId}`}
+      className="group hover:bg-accent/50 -mx-4 px-4 py-1 transition-colors"
+    >
       <div className="flex gap-3">
         <div className="w-10 shrink-0">
           {!isGrouped && (
