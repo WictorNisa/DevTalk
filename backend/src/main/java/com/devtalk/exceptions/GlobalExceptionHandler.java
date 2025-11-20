@@ -12,6 +12,7 @@ import com.devtalk.dtos.messages.ErrorResponseDTO;
 
 @RestControllerAdvice
 @Slf4j
+@SuppressWarnings("null")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)

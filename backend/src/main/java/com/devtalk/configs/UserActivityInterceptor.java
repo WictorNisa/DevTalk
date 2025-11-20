@@ -21,6 +21,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("null")
 public class UserActivityInterceptor implements HandlerInterceptor {
 
     private final UserService userService;
