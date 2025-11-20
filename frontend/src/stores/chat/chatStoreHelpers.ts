@@ -2,6 +2,25 @@ import type { ChatStateProps } from "@/types/chat/ChatStateProps";
 import type { Message } from "@/types/chat/Message";
 import type { MessageDtoProps } from "@/types/chat/MessageDtoProps";
 import { Client } from "@stomp/stompjs";
+import { useAuthStore } from "../useAuthStore";
+
+// Helper function to validate and get authenticated user ID
+export const getAuthenticatedUserId = (): number | null => {
+  const user = useAuthStore.getState().user;
+
+  if (!user) {
+    console.error("User not authenticated");
+    return null;
+  }
+
+  const userId = parseInt(user.id);
+  if (isNaN(userId)) {
+    console.error("Invalid user ID");
+    return null;
+  }
+
+  return userId;
+};
 
 // Helper function to transform backend messages to frontend format
 export const transformBackendMessage = (payload: MessageDtoProps): Message => {

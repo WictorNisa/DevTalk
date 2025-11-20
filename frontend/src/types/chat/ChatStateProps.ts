@@ -9,6 +9,7 @@ export interface ChatStateProps {
   isAtBottom: boolean;
   unreadCount: number;
   currentSubscription: StompSubscription | null;
+  editingMessageId: string | null;
   setIsAtBottom: (atBottom: boolean) => void;
   incrementUnreadCount: () => void;
   resetUnreadCount: () => void;
@@ -21,4 +22,7 @@ export interface ChatStateProps {
   setActiveChannel: (channel: string) => void;
   loadMessages: (channelId: string) => Promise<void>;
   switchChannel: (channelId: string) => void;
+  deleteMessage: (messageId: string) => void;
+  editMessage: (messageId: string, newContent: string) => void;
+  setEditingMessage: (messageId: string | null) => void;
 }
