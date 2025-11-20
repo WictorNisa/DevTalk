@@ -254,7 +254,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
       });
 
       console.log(`📡 Subscribed to /topic/room/${channelId}`);
-      set({ activeChannel: channelId.toString() });
 
       // Request message history
       client.publish({
