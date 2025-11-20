@@ -302,7 +302,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     const messagePayload = {
       content: content,
-      userId: 1, // TODO: Get from useAuthStore
+      userId: useAuthStore.getState().user?.id || "", // Get from useAuthStore
       channelId: parseInt(channelId),
       threadId: null,
       parentMessageId: null,
