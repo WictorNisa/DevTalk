@@ -44,7 +44,7 @@ export const UserListCard = ({
       onClick={onClick}
     >
       <CardContent className="flex min-w-0 items-center gap-3 p-0">
-        <div className="relative flex-shrink-0">
+        <div className="relative shrink-0">
           <Avatar className="h-9 w-9 rounded-full">
             <AvatarImage
               src={avatar || "https://placehold.co/120"}

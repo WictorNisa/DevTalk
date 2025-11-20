@@ -26,7 +26,7 @@ type ProfileUser = {
   avatarUrl?: string | null;
   lastActivityAt?: string | null;
   customStatusMessage?: string | null;
-  presenceStatus?: PresenceStatus | undefined;
+  presenceStatus?: PresenceStatus;
 };
 
 export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
@@ -54,7 +54,7 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
     const profileUser: ProfileUser = {
       id: user.id || "",
       displayName: user.username,
-      externalId: user.id || "",
+      externalId: null,
       avatarUrl: user.avatar,
       presenceStatus: normalizePresenceStatus(user.status),
     };

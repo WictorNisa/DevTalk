@@ -38,16 +38,21 @@ export const ProfileDialog = ({ open, onOpenChange, user }: Props) => {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="pb-1.5 font-semibold">
-            {user?.displayName}'s {t("userInfo.profile")}
+            {t("userInfo.profileOf", {
+              name: user?.displayName || user?.externalId || "User",
+            })}
           </DialogTitle>
+          <DialogDescription>
+            {t("userInfo.profileDialogDescription")}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4 py-4">
           <div className="flex items-center gap-4">
             {!user ? (
-              <div className="bg-muted h-[4.5rem] w-[4.5rem] animate-pulse rounded-full" />
+              <div className="bg-muted h-18 w-18 animate-pulse rounded-full" />
             ) : (
-              <Avatar className="h-[4.5rem] w-[4.5rem]">
+              <Avatar className="h-18 w-18">
                 <AvatarImage
                   src={user?.avatarUrl || undefined}
                   alt={user?.displayName || "User avatar"}

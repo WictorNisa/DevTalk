@@ -34,9 +34,9 @@ export async function fetchCurrentUser(): Promise<CurrentUser | null> {
 
   return {
     id: String(data.id ?? ""),
-    externalId: data.externalId ?? "",
+    externalId: data.externalId ?? null,
     displayName: data.displayName || data.externalId || "User",
     avatarUrl: avatar,
-    presenceStatus: normalizePresenceStatus(data.presenceStatus) || "Online",
+    presenceStatus: normalizePresenceStatus(data.presenceStatus) || undefined,
   };
 }
