@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { useAuthStore } from "./useAuthStore";
+import API_CONFIG from "@/config/api";
 
 
 export type Message = {
@@ -182,7 +183,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   connect: () => {
     console.log(" Attempting to connect to websocket...");
 
-    const socket = new SockJS("http://localhost:8080/ws");
+    const socket = new SockJS(API_CONFIG.ENDPOINTS.WS);
 
     const client = new Client({
       webSocketFactory: () => socket,

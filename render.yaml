@@ -1,0 +1,81 @@
+# Render Blueprint for DevTalk Application
+# This file defines all services needed to deploy the DevTalk application on Render
+
+services:
+  # PostgreSQL Database
+  - type: pserv
+    name: devtalk-db
+    plan: free  # Change to starter or higher for production
+    region: oregon  # Choose your preferred region
+    databaseName: devtalk
+    databaseUser: devtalk_user
+    ipAllowList: []  # Empty means allow all IPs
+
+  # Backend Web Service (Spring Boot)
+  - type: web
+    name: devtalk-backend
+    runtime: java
+    plan: free  # Change to starter or higher for production
+    region: oregon  # Choose your preferred region
+    rootDir: backend
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/backend-0.0.1-SNAPSHOT.jar
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: SERVER_PORT
+        value: 8080
+      - key: DB_HOST
+        fromDatabase:
+          name: devtalk-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: devtalk-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: devtalk-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: devtalk-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: devtalk-db
+          property: password
+      - key: GITHUB_CLIENT_ID
+        sync: false  # Must be set manually in Render dashboard
+      - key: GITHUB_CLIENT_SECRET
+        sync: false  # Must be set manually in Render dashboard
+      - key: FRONTEND_URL
+        sync: false  # Must be set manually to your frontend URL
+
+  # Frontend Static Site (React + Vite)
+  - type: web
+    name: devtalk-frontend
+    runtime: static
+    plan: free  # Change to starter or higher for production
+    region: oregon  # Choose your preferred region
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        sync: false  # Must be set manually to your backend URL
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin

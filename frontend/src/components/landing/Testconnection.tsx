@@ -1,6 +1,7 @@
 import SockJs from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { useState } from "react";
+import API_CONFIG from "@/config/api";
 
 interface Message {
   id: string;
@@ -15,7 +16,7 @@ const Testconnection = () => {
 
   const connect = () => {
     //This creates a SockJs connection
-    const socket = new SockJs("http://localhost:8080/ws");
+    const socket = new SockJs(API_CONFIG.ENDPOINTS.WS);
 
     //Create a STOMP client
     const client = new Client({
