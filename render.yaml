@@ -3,7 +3,7 @@
 
 services:
   # PostgreSQL Database
-  - type: pserv
+  - type: pgsql
     name: devtalk-db
     plan: free  # Change to starter or higher for production
     region: oregon  # Choose your preferred region
