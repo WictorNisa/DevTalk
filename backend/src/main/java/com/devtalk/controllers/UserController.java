@@ -6,7 +6,6 @@ import com.devtalk.enums.PresenceStatus;
 import com.devtalk.models.User;
 import com.devtalk.services.UserService;
 import com.devtalk.services.UserStatusService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

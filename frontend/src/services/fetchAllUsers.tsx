@@ -15,9 +15,11 @@ interface User {
   badge?: string | boolean;
 }
 
+import API_CONFIG from "@/config/api";
+
 export const fetchAllUsers = async (): Promise<User[]> => {
   try {
-    const response = await fetch("http://localhost:8080/api/users", {
+    const response = await fetch(API_CONFIG.ENDPOINTS.USERS, {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",

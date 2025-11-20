@@ -47,10 +47,12 @@ public class UserStatusService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponseDTO> getUsersByPresenceStatus(PresenceStatus status) {
-        return userRepository.findByPresenceStatus(status).stream()
-                .map(userMapper::toResponseDTO)
-                .collect(Collectors.toList());
-    }
+   public List<UserResponseDTO> getUsersByPresenceStatus(PresenceStatus status) {
+    log.debug("Fetching users with presence status: {}", status);
+    return userRepository.findByPresenceStatus(status)
+        .stream()
+        .map(userMapper::toResponseDTO)
+        .collect(Collectors.toList());
+}
 }
 

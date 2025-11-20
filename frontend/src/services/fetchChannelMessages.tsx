@@ -5,10 +5,12 @@ export interface ChannelMessage {
   timestamp: string; // or Date, depending on API
 }
 
+import API_CONFIG from "@/config/api";
+
 export const fetchChannelMessages = async (channelId: number): Promise<ChannelMessage[]> => {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/channels/${channelId}/messages`,
+      API_CONFIG.ENDPOINTS.CHANNEL_MESSAGES(channelId.toString()),
       {
         credentials: "include",
         headers: {

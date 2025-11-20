@@ -2,6 +2,7 @@ package com.devtalk.configs;
 
 import com.devtalk.services.OAuth2UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -11,15 +12,31 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
 public class SecurityConfig {
 
+    @Value("${frontend.url:http://localhost:5173}")
+    private String frontendUrl;
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080", "http://localhost:63342"));
+
+        // Create list of allowed origins, always including localhost for development
+        List<String> allowedOrigins = new ArrayList<>();
+        allowedOrigins.add("http://localhost:5173");
+        allowedOrigins.add("http://localhost:8080");
+        allowedOrigins.add("http://localhost:63342");
+
+        // Add production frontend URL if configured
+        if (frontendUrl != null && !frontendUrl.equals("http://localhost:5173")) {
+            allowedOrigins.add(frontendUrl);
+        }
+
+        corsConfiguration.setAllowedOrigins(allowedOrigins);
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setAllowedMethods(List.of("*"));
         corsConfiguration.setAllowCredentials(true);
@@ -38,8 +55,8 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                        .defaultSuccessUrl("http://localhost:5173/dashboard", true)
-                        .failureUrl("http://localhost:5173/error"))
+                        .defaultSuccessUrl(frontendUrl + "/dashboard", true)
+                        .failureUrl(frontendUrl + "/error"))
                 .formLogin(formLogin -> formLogin.disable())
                 .logout(logout -> logout.logoutUrl("/api/logout")
                         .deleteCookies("JSESSIONID")
