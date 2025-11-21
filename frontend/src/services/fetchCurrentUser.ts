@@ -1,15 +1,5 @@
-import {
-  type PresenceStatus,
-  normalizePresenceStatus,
-} from "@/utils/normalizeStatus";
-
-export type CurrentUser = {
-  id: string;
-  externalId: string;
-  displayName: string;
-  avatarUrl: string;
-  presenceStatus?: PresenceStatus;
-};
+import { normalizePresenceStatus } from "@/utils/normalizeStatus";
+import type { CurrentUser } from "@/types/User";
 
 const deriveGitHubAvatar = (externalId?: string) => {
   if (!externalId) return "";
@@ -26,17 +16,13 @@ export async function fetchCurrentUser(): Promise<CurrentUser | null> {
 
   const data = await res.json();
 
-  const avatar =
-    data.avatarUrl ||
-    data.avatar_url ||
-    deriveGitHubAvatar(data.externalId) ||
-    "";
+  const avatar = data.avatarUrl || deriveGitHubAvatar(data.externalId) || "";
 
   return {
     id: String(data.id ?? ""),
-    externalId: data.externalId ?? "",
+    externalId: data.externalId ?? null,
     displayName: data.displayName || data.externalId || "User",
     avatarUrl: avatar,
-    presenceStatus: normalizePresenceStatus(data.presenceStatus) || "Online",
+    presenceStatus: normalizePresenceStatus(data.presenceStatus) || undefined,
   };
 }

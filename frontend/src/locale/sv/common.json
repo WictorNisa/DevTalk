@@ -5,7 +5,7 @@
     "howItWorks": "Hur det fungerar",
     "meetTheTeam": "Teamet",
     "signIn": "Logga in",
-    "githubLabel": "GitHub",
+    "githubLabel": "GitHub Repo",
     "githubLabelMobile": "GitHub"
   },
 
@@ -27,7 +27,8 @@
   },
 
   "userInfo": {
-    "profile": "Profil",
+    "profileOf": "{{name}}s Profil",
+    "profileDialogDescription": "Denna dialog visar användarens profilinformation.",
     "lastSeen": "Senast sedd: {{date}}"
   },
 

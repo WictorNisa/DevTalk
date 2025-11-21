@@ -9,7 +9,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
+  // DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SmilePlus, PlusIcon, SendHorizontal, FileUp } from "lucide-react";
@@ -56,7 +56,10 @@ const CenterBottomWidget = () => {
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <InputGroupAddon align="block-end" className="ml-auto border-t">
+        <InputGroupAddon
+          align="block-end"
+          className="border-muted ml-auto flex border-t"
+        >
           {/* Drop Down */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -71,19 +74,12 @@ const CenterBottomWidget = () => {
             <DropdownMenuContent
               side="top"
               align="start"
-              className="hidden w-48 md:block"
+              className="hidden w-auto md:block"
             >
+              {/*TODO: add real file upload functionality */}
               <DropdownMenuItem className="cursor-pointer">
                 <FileUp />
                 {t("chat.uploadFile")}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
-                Test Text
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
-                Test Text
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

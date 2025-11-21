@@ -1,19 +1,5 @@
-interface BackendUser {
-  id: number;
-  externalId: string;
-  displayName: string;
-  avatarUrl?: string;
-  presenceStatus: string;
-  role?: string;
-}
-
-interface User {
-  id: string;
-  username: string;
-  avatar?: string;
-  status?: string;
-  badge?: string | boolean;
-}
+import type { User } from "@/types/User";
+import type { PresenceStatus } from "@/utils/normalizeStatus";
 
 export const fetchAllUsers = async (): Promise<User[]> => {
   try {
@@ -28,16 +14,16 @@ export const fetchAllUsers = async (): Promise<User[]> => {
       throw new Error(`Failed to fetch users ${response.status}`);
     }
 
-    const backendUsers: BackendUser[] = await response.json();
+    const backendUsers: User[] = await response.json();
 
     return backendUsers.map((users) => ({
       id: users.id.toString(),
-      username: users.displayName,
+      displayName: users.displayName,
       avatar:
         users.avatarUrl ||
         `https://api.dicebear.com/7.x/avataaars/svg?seed=${users.displayName}`,
-      status: users.presenceStatus?.toLowerCase(),
-      badge: users.role,
+      status: users.presenceStatus?.toLowerCase() as PresenceStatus | undefined,
+      badge: users.role ?? undefined,
     }));
   } catch (error) {
     console.error("Error fetching users:", error);

@@ -9,11 +9,13 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Settings, LogOut, Ellipsis } from "lucide-react";
+import type { User } from "@/types/User";
 
 type UserMenuProps = {
+  user?: User;
   onSignOut?: () => void;
   onOpenSettings?: () => void;
-  children: React.ReactNode; // avatar component
+  children: React.ReactNode;
 };
 
 export const UserMenu = ({

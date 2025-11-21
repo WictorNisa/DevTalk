@@ -27,7 +27,8 @@
   },
 
   "userInfo": {
-    "profile": "Profile",
+    "profileOf": "Profile of {{name}}",
+    "profileDialogDescription": "This dialog shows the user's profile information.",
     "lastSeen": "Last seen: {{date}}"
   },
 
