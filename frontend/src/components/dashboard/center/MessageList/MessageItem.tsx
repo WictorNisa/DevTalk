@@ -8,10 +8,12 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { CodeBlock } from "./MessageItem/CodeBlock";
 import { Mention } from "./MessageItem/Mention";
 import { MessageActions } from "./MessageItem/MessageActions";
-import { useChatStore } from "@/stores/chat/useChatStore";
+import { useMessageUIStore } from "@/stores/chat/useMessageUIStore";
+import { messageService } from "@/services/messageService";
+import { useChannelStore } from "@/stores/chat/useChannelStore";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Check, X } from "lucide-react";
+import { Check, ThumbsDown, ThumbsUp, X } from "lucide-react";
 
 interface MessageItemProps {
   messageId: string;
@@ -20,6 +22,8 @@ interface MessageItemProps {
   messageText: string;
   messageTimeStamp: number;
   isGrouped: boolean;
+  reactions?: Record<string, number>;
+  reactionUsers?: Record<string, number[]>;
 }
 
 const MessageItem: React.FC<MessageItemProps> = ({
@@ -29,12 +33,32 @@ const MessageItem: React.FC<MessageItemProps> = ({
   messageText,
   messageTimeStamp,
   isGrouped,
+  reactions = {},
+  reactionUsers = {},
 }) => {
   const { user } = useAuthStore();
-  const { editingMessageId, setEditingMessage, editMessage } = useChatStore();
+  const editingMessageId = useMessageUIStore((state) => state.editingMessageId);
+  const setEditingMessage = useMessageUIStore(
+    (state) => state.setEditingMessage,
+  );
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState(messageText);
   const timeoutRef = useRef<number | null>(null);
+
+  // Extract upvotes and downvotes from reactions
+  const upvotes = reactions["UPVOTE"] || 0;
+  const downvotes = reactions["DOWNVOTE"] || 0;
+
+  // Check if current user has already voted
+  const currentUserId = user ? parseInt(user.id) : null;
+  const upvoteUsers = reactionUsers["UPVOTE"] || [];
+  const downvoteUsers = reactionUsers["DOWNVOTE"] || [];
+  const hasUpvoted = currentUserId
+    ? upvoteUsers.includes(currentUserId)
+    : false;
+  const hasDownvoted = currentUserId
+    ? downvoteUsers.includes(currentUserId)
+    : false;
 
   useEffect(() => {
     setEditedContent(messageText);
@@ -68,6 +92,14 @@ const MessageItem: React.FC<MessageItemProps> = ({
   const isOwnMessage = user?.displayName === messageUser;
   const isEditing = editingMessageId === messageId;
 
+  const handleUpvote = () => {
+    messageService.voteMessage(messageId, "up");
+  };
+
+  const handleDownvote = () => {
+    messageService.voteMessage(messageId, "down");
+  };
+
   const handleSaveEdit = () => {
     const trimmedContent = editedContent.trim();
 
@@ -75,12 +107,12 @@ const MessageItem: React.FC<MessageItemProps> = ({
       return;
     }
 
-    editMessage(messageId, trimmedContent);
+    messageService.editMessage(messageId, trimmedContent);
     setEditingMessage(null);
     // Refresh messages after edit
     timeoutRef.current = setTimeout(() => {
-      const { activeChannel, loadMessages } = useChatStore.getState();
-      if (activeChannel) loadMessages(activeChannel);
+      const { activeChannel } = useChannelStore.getState();
+      if (activeChannel) messageService.loadMessages(activeChannel);
     }, 100);
   };
 
@@ -201,6 +233,48 @@ const MessageItem: React.FC<MessageItemProps> = ({
           {/* Message Actions (hover menu) - Only show for own messages */}
           {isOwnMessage && !isEditing && (
             <MessageActions messageId={messageId} />
+          )}
+
+          {/* Vote buttons - show on hover */}
+          {!isEditing && (
+            <div className="invisible mt-1 flex items-center gap-1 group-hover:visible">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleUpvote}
+                disabled={hasUpvoted}
+                className={`h-6 gap-1 px-2 hover:bg-green-500/10 hover:text-green-500 ${hasUpvoted ? "bg-green-500/20 text-green-500" : ""}`}
+              >
+                <ThumbsUp className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleDownvote}
+                disabled={hasDownvoted}
+                className={`h-6 gap-1 px-2 hover:bg-red-500/10 hover:text-red-500 ${hasDownvoted ? "bg-red-500/20 text-red-500" : ""}`}
+              >
+                <ThumbsDown className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          )}
+
+          {/* Vote counts - show if votes exist */}
+          {(upvotes > 0 || downvotes > 0) && (
+            <div className="mt-1 flex items-center gap-2">
+              {upvotes > 0 && (
+                <span className="flex items-center gap-0.5">
+                  <ThumbsUp className="h-3.5 w-3.5 text-green-500/70" />
+                  <span className="text-xs text-green-500/70">+{upvotes}</span>
+                </span>
+              )}
+              {downvotes > 0 && (
+                <span className="flex items-center gap-0.5">
+                  <ThumbsDown className="h-3.5 w-3.5 text-red-500/70" />
+                  <span className="text-xs text-red-500/70">-{downvotes}</span>
+                </span>
+              )}
+            </div>
           )}
         </div>
       </div>

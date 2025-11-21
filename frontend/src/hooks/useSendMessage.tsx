@@ -1,8 +1,8 @@
-import { useChatStore } from "@/stores/chat/useChatStore";
+import { useChannelStore } from "@/stores/chat/useChannelStore";
+import { messageService } from "@/services/messageService";
 
 export const useSendMessage = () => {
-  const sendMessage = useChatStore((state) => state.sendMessage);
-  const activeChannel = useChatStore((state) => state.activeChannel);
+  const activeChannel = useChannelStore((state) => state.activeChannel);
 
   const handleSendMessage = (content: string) => {
     if (!activeChannel) {
@@ -15,8 +15,8 @@ export const useSendMessage = () => {
       return;
     }
 
-    // Use the WebSocket sendMessage from store
-    sendMessage(activeChannel, content.trim());
+    // Use the WebSocket sendMessage from service
+    messageService.sendMessage(activeChannel, content.trim());
   };
 
   return { sendMessage: handleSendMessage };
