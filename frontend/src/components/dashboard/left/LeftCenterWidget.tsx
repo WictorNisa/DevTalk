@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChannelList, type Channel } from "./ChannelList";
-import { useChatStore } from "@/stores/chat/useChatStore";
+import { useChannelStore } from "@/stores/chat/useChannelStore";
+import { useWebSocketStore } from "@/stores/chat/useWebsocketStore";
 
 // mapping channel names to their translation keys in dashboard.json
 const CHANNEL_TRANSLATION_MAP: Record<string, string> = {
@@ -32,10 +33,10 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // get the chat state from zustand store
-  const activeChannelId = useChatStore((state) => state.activeChannel);
-  const switchChannel = useChatStore((state) => state.switchChannel);
-  const connected = useChatStore((state) => state.connected);
+  // get the chat state from zustand stores
+  const activeChannelId = useChannelStore((state) => state.activeChannel);
+  const switchChannel = useChannelStore((state) => state.switchChannel);
+  const connected = useWebSocketStore((state) => state.connected);
 
   useEffect(() => {
     const fetchChannels = async () => {
