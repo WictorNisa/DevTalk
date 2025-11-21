@@ -1,33 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { UserListCard } from "./UserListCard";
 import { fetchAllUsers } from "@/services/fetchAllUsers";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { ProfileDialog } from "../ProfileDialog";
-import {
-  normalizePresenceStatus,
-  type PresenceStatus,
-} from "@/utils/normalizeStatus";
-// import { Card } from "@/components/ui/card";
-
-type User = {
-  id: string | null | undefined;
-  username: string;
-  avatar?: string;
-  status?: string;
-  badge?: string | boolean;
-};
-
-// added a User type from ProfileDialog to show user details on click
-type ProfileUser = {
-  id: string;
-  displayName?: string | null;
-  externalId?: string | null;
-  avatarUrl?: string | null;
-  lastActivityAt?: string | null;
-  customStatusMessage?: string | null;
-  presenceStatus?: PresenceStatus;
-};
+import { normalizePresenceStatus } from "@/utils/normalizeStatus";
+import type { User, ProfileUser } from "@/types/User";
 
 export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
   const { isAuthenticated, isLoading: authLoading } = useAuthStore();
@@ -53,7 +31,7 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
   const handleUserClick = (user: User) => {
     const profileUser: ProfileUser = {
       id: user.id || "",
-      displayName: user.username,
+      displayName: user.displayName || "User",
       externalId: null,
       avatarUrl: user.avatar,
       presenceStatus: normalizePresenceStatus(user.status),
@@ -62,35 +40,34 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
     setProfileDialogOpen(true);
   };
 
+  const didInitialFetch = useRef(false);
+
+  const loadUsers = async (showSpinner = false) => {
+    if (showSpinner) setIsLoading(true);
+    try {
+      const fetchedUsers = await fetchAllUsers();
+      const normalizedUsers = fetchedUsers.map((user) => ({
+        ...user,
+        status: normalizePresenceStatus(user.status) ?? "Offline",
+      }));
+      setUsers(normalizedUsers);
+      setError(null);
+    } catch (err) {
+      console.error("Error loading users:", err);
+      setError(err instanceof Error ? err.message : "Failed to load users");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const loadUsers = async () => {
-      if (authLoading) return;
+    if (authLoading || !isAuthenticated) return;
 
-      if (!isAuthenticated) {
-        setIsLoading(false);
-        return;
-      }
+    loadUsers(!didInitialFetch.current);
+    didInitialFetch.current = true;
 
-      try {
-        setIsLoading(true);
-        const fetchedUsers = await fetchAllUsers();
-        const normalizedUsers = fetchedUsers.map((user) => ({
-          ...user,
-          status: normalizePresenceStatus(user.status) ?? "Offline",
-        }));
-        setUsers(normalizedUsers);
-        setError(null);
-      } catch (error) {
-        console.error("Error loading users:", error);
-        setError(
-          error instanceof Error ? error.message : "Failed to load users",
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadUsers();
+    const pollId = setInterval(() => loadUsers(false), 10_000);
+    return () => clearInterval(pollId);
   }, [isAuthenticated, authLoading]);
 
   if (authLoading || isLoading) {
@@ -127,6 +104,7 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
             <UserListCard
               key={user.id}
               {...user}
+              username={user.displayName || "User"}
               collapsed={collapsed}
               onClick={() => handleUserClick(user)}
             />
@@ -141,6 +119,7 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
             <UserListCard
               key={user.id}
               {...user}
+              username={user.displayName || "User"}
               collapsed={collapsed}
               onClick={() => handleUserClick(user)}
             />

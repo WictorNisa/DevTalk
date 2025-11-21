@@ -9,15 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { type PresenceStatus } from "@/utils/normalizeStatus";
-
-type User = {
-  id: string;
-  displayName?: string | null;
-  externalId?: string | null;
-  avatarUrl?: string | null;
-  presenceStatus?: PresenceStatus;
-};
+import type { User } from "@/types/User";
 
 type Props = {
   open: boolean;

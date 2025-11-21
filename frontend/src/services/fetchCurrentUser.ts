@@ -1,15 +1,5 @@
-import {
-  type PresenceStatus,
-  normalizePresenceStatus,
-} from "@/utils/normalizeStatus";
-
-export type CurrentUser = {
-  id: string;
-  externalId: string;
-  displayName: string;
-  avatarUrl: string;
-  presenceStatus?: PresenceStatus;
-};
+import { normalizePresenceStatus } from "@/utils/normalizeStatus";
+import type { CurrentUser } from "@/types/User";
 
 const deriveGitHubAvatar = (externalId?: string) => {
   if (!externalId) return "";
