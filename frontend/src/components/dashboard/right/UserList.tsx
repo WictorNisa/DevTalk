@@ -41,11 +41,11 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
 
   const offlineUsers = users.filter(
-    (userStatus) => userStatus.status === "offline",
+    (userStatus) => userStatus.status === "Offline",
   );
 
   const activeUsers = users.filter(
-    (userStatus) => userStatus.status !== "offline",
+    (userStatus) => userStatus.status !== "Offline",
   );
   const { t } = useTranslation("dashboard");
 
@@ -74,7 +74,11 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
       try {
         setIsLoading(true);
         const fetchedUsers = await fetchAllUsers();
-        setUsers(fetchedUsers);
+        const normalizedUsers = fetchedUsers.map((user) => ({
+          ...user,
+          status: normalizePresenceStatus(user.status) ?? "Offline",
+        }));
+        setUsers(normalizedUsers);
         setError(null);
       } catch (error) {
         console.error("Error loading users:", error);

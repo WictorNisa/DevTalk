@@ -10,7 +10,7 @@ export const UserListCard = ({
   collapsed = false,
   onClick,
 }: UserCardProps & { collapsed?: boolean; onClick?: () => void }) => {
-  const statusBg = userStatus(status);
+  const statusBg = userStatus(status?.toLowerCase());
 
   if (collapsed) {
     return (

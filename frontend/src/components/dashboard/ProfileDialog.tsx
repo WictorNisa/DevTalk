@@ -16,7 +16,7 @@ type User = {
   displayName?: string | null;
   externalId?: string | null;
   avatarUrl?: string | null;
-  presenceStatus?: PresenceStatus | undefined;
+  presenceStatus?: PresenceStatus;
 };
 
 type Props = {
