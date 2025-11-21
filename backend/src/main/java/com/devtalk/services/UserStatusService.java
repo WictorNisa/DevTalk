@@ -41,6 +41,11 @@ public class UserStatusService {
         return userMapper.toStatusDTO(updated);
     }
 
+    public UserStatusDTO getUserStatusByExternalId(String externalId) {
+        User user = userService.getUserById(Long.valueOf(externalId));
+        return userMapper.toStatusDTO(user);
+    }
+
     private void updateUserStatusFields(User user, UpdateUserStatusRequest request) {
         user.setPresenceStatus(request.getStatus());
         user.setCustomStatusMessage(request.getCustomStatusMessage());

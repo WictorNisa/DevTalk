@@ -1,6 +1,7 @@
 package com.devtalk.controllers;
 
 import com.devtalk.dtos.user.UserResponseDTO;
+import com.devtalk.dtos.user.UserStatusDTO;
 import com.devtalk.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,8 +28,8 @@ public class AuthController {
         @ApiResponse(responseCode = "401", description = "Unauthorized"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<UserResponseDTO> getCurrentUser(@AuthenticationPrincipal OAuth2User oauth2User) {
-        UserResponseDTO user = authService.getAuthenticatedUser(oauth2User);
+    public ResponseEntity<UserStatusDTO> getCurrentUser(@AuthenticationPrincipal OAuth2User oauth2User) {
+        UserStatusDTO user = authService.getAuthenticatedUserStatus(oauth2User);
         return ResponseEntity.ok(user);
     }
 }
