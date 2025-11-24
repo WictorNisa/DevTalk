@@ -1,19 +1,9 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { fetchCurrentUser } from "@/services/fetchCurrentUser";
-import {
-  type PresenceStatus,
-  normalizePresenceStatus,
-} from "@/utils/normalizeStatus";
+import { normalizePresenceStatus } from "@/utils/normalizeStatus";
 import { API_BASE_URL } from "@/config/api";
-
-type User = {
-  id: string;
-  externalId: string;
-  displayName: string;
-  avatarUrl: string;
-  presenceStatus?: PresenceStatus;
-};
+import type { User } from "@/types/User";
 
 type AuthState = {
   user: User | null;

@@ -8,7 +8,9 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { CodeBlock } from "./MessageItem/CodeBlock";
 import { Mention } from "./MessageItem/Mention";
 import { MessageActions } from "./MessageItem/MessageActions";
-import { useChatStore } from "@/stores/chat/useChatStore";
+import { useMessageUIStore } from "@/stores/chat/useMessageUIStore";
+import { messageService } from "@/services/messageService";
+import { useChannelStore } from "@/stores/chat/useChannelStore";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
@@ -31,7 +33,10 @@ const MessageItem: React.FC<MessageItemProps> = ({
   isGrouped,
 }) => {
   const { user } = useAuthStore();
-  const { editingMessageId, setEditingMessage, editMessage } = useChatStore();
+  const editingMessageId = useMessageUIStore((state) => state.editingMessageId);
+  const setEditingMessage = useMessageUIStore(
+    (state) => state.setEditingMessage,
+  );
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState(messageText);
   const timeoutRef = useRef<number | null>(null);
@@ -75,12 +80,12 @@ const MessageItem: React.FC<MessageItemProps> = ({
       return;
     }
 
-    editMessage(messageId, trimmedContent);
+    messageService.editMessage(messageId, trimmedContent);
     setEditingMessage(null);
     // Refresh messages after edit
     timeoutRef.current = setTimeout(() => {
-      const { activeChannel, loadMessages } = useChatStore.getState();
-      if (activeChannel) loadMessages(activeChannel);
+      const { activeChannel } = useChannelStore.getState();
+      if (activeChannel) messageService.loadMessages(activeChannel);
     }, 100);
   };
 

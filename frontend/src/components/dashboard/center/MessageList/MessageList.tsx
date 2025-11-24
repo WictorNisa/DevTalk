@@ -1,24 +1,25 @@
 import { useState, useRef, useEffect } from "react";
 import { Virtuoso } from "react-virtuoso";
 import type { VirtuosoHandle } from "react-virtuoso";
-import { useChatStore } from "@stores/chat/useChatStore";
+import { useMessageStore } from "@/stores/chat/useMessageStore";
+import { useMessageUIStore } from "@/stores/chat/useMessageUIStore";
+import { useChannelStore } from "@/stores/chat/useChannelStore";
+import { useWebSocketStore } from "@/stores/chat/useWebSocketStore";
 import { Button } from "@components/ui/button";
 import { ArrowDown } from "lucide-react";
 import MessageItem from "./MessageItem";
 
 const MessageList = () => {
-  const messages = useChatStore((state) => state.messages);
-  const unreadCount = useChatStore((state) => state.unreadCount);
-  const resetUnreadCount = useChatStore((state) => state.resetUnreadCount);
-  const isAtBottom = useChatStore((state) => state.isAtBottom);
-  const setIsAtBottom = useChatStore((state) => state.setIsAtBottom);
-  const switchChannel = useChatStore((state) => state.switchChannel);
-  const connected = useChatStore((state) => state.connected);
-  const incrementUnreadCount = useChatStore(
+  const messages = useMessageStore((state) => state.messages);
+  const unreadCount = useMessageUIStore((state) => state.unreadCount);
+  const resetUnreadCount = useMessageUIStore((state) => state.resetUnreadCount);
+  const isAtBottom = useMessageUIStore((state) => state.isAtBottom);
+  const setIsAtBottom = useMessageUIStore((state) => state.setIsAtBottom);
+  const incrementUnreadCount = useMessageUIStore(
     (state) => state.incrementUnreadCount,
   );
-
-  const activeChannel = useChatStore((state) => state.activeChannel);
+  const connected = useWebSocketStore((state) => state.connected);
+  const activeChannel = useChannelStore((state) => state.activeChannel);
 
   useEffect(() => {
     const isChannelSwitch = prevChannelRef.current !== activeChannel;
