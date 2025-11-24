@@ -23,9 +23,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(@NonNull StompEndpointRegistry registry) {
+        String[] allowedOrigins = SecurityConstants.ALLOWED_ORIGINS;
         registry.addEndpoint("/ws")
                 .addInterceptors(new HttpSessionHandshakeInterceptor())
-                .setAllowedOriginPatterns("*")
+                .setAllowedOrigins(allowedOrigins)
                 .withSockJS();
     }
 

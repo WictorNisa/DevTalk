@@ -2,6 +2,7 @@ import {
   type PresenceStatus,
   normalizePresenceStatus,
 } from "@/utils/normalizeStatus";
+import { API_BASE_URL } from "@/config/api";
 
 export type CurrentUser = {
   id: string;
@@ -19,7 +20,7 @@ const deriveGitHubAvatar = (externalId?: string) => {
 };
 
 export async function fetchCurrentUser(): Promise<CurrentUser | null> {
-  const res = await fetch("http://localhost:8080/api/me", {
+  const res = await fetch(`${API_BASE_URL}/api/me`, {
     credentials: "include",
   });
   if (!res.ok) return null;

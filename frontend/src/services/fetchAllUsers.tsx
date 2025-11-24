@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "@/config/api";
+
 interface BackendUser {
   id: number;
   externalId: string;
@@ -17,7 +19,7 @@ interface User {
 
 export const fetchAllUsers = async (): Promise<User[]> => {
   try {
-    const response = await fetch("http://localhost:8080/api/users", {
+    const response = await fetch(`${API_BASE_URL}/api/users`, {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",

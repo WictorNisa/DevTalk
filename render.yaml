@@ -1,0 +1,46 @@
+services:
+  # Backend Service (Spring Boot)
+  - type: web
+    name: devtalk-backend
+    runtime: java
+    buildCommand: cd backend && ./mvnw clean package -DskipTests
+    startCommand: cd backend && java -Dserver.port=$PORT -jar target/backend-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: 5432
+      - key: DB_NAME
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: BACKEND_URL
+        sync: false
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+    healthCheckPath: /actuator/health
+
+  # Frontend Service (React + Vite)
+  - type: web
+    name: devtalk-frontend
+    runtime: node
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm run preview -- --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: VITE_API_URL
+        sync: false
+
+# Optional: PostgreSQL Database (if you don't already have one)
+# Uncomment if you need Render to provision a database
+# databases:
+#   - name: devtalk-db
+#     databaseName: devtalkdb
+#     user: dtadmin

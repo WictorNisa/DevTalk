@@ -25,6 +25,11 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
+        String backendUrl = System.getenv("BACKEND_URL");
+        if (backendUrl == null || backendUrl.isEmpty()) {
+            backendUrl = "http://localhost:8080";
+        }
+
         OpenAPI openAPI = new OpenAPI()
                 .info(new Info()
                         .title(applicationName)
@@ -40,8 +45,8 @@ public class OpenApiConfig {
                                 .url("https://opensource.org/licenses/MIT")))
                 .servers(List.of(
                         new Server()
-                                .url("http://localhost:8080")
-                                .description("Local development server")
+                                .url(backendUrl)
+                                .description(backendUrl.contains("localhost") ? "Local development server" : "Production server")
                 ));
 
         // Add WebSocket connection endpoint

@@ -13,5 +13,28 @@ export default defineConfig({
   ],
   define: {
     global: 'globalThis'
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+    minify: 'terser',
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router'],
+          'ui-vendor': ['@radix-ui/react-avatar', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+        }
+      }
+    }
+  },
+  preview: {
+    port: 4173,
+    host: '0.0.0.0',
+    strictPort: true,
+  },
+  server: {
+    port: 5173,
+    host: true,
   }
 });

@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "@/config/api";
+
 export interface ChannelMessage {
   id: number;
   content: string;
@@ -8,7 +10,7 @@ export interface ChannelMessage {
 export const fetchChannelMessages = async (channelId: number): Promise<ChannelMessage[]> => {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/channels/${channelId}/messages`,
+      `${API_BASE_URL}/api/channels/${channelId}/messages`,
       {
         credentials: "include",
         headers: {

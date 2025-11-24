@@ -5,6 +5,7 @@ import {
   type PresenceStatus,
   normalizePresenceStatus,
 } from "@/utils/normalizeStatus";
+import { API_BASE_URL } from "@/config/api";
 
 type User = {
   id: string;
@@ -32,11 +33,11 @@ export const useAuthStore = create<AuthState>()(
 
       login: () => {
         window.location.href =
-          "http://localhost:8080/oauth2/authorization/github";
+          `${API_BASE_URL}/oauth2/authorization/github`;
       },
       logout: async () => {
         try {
-          await fetch("http://localhost:8080/api/logout", {
+          await fetch(`${API_BASE_URL}/api/logout`, {
             method: "POST",
             credentials: "include",
           });

@@ -4,6 +4,7 @@ import SockJS from "sockjs-client";
 import type { MessageDtoProps } from "@/types/chat/MessageDtoProps";
 import type { ChatStateProps } from "@/types/chat/ChatStateProps";
 import { useAuthStore } from "../useAuthStore";
+import { API_BASE_URL } from "@/config/api";
 
 import {
   transformBackendMessage,
@@ -76,7 +77,7 @@ export const useChatStore = create<ChatStateProps>((set, get) => ({
   connect: () => {
     console.log("Attempting to connect to websocket...");
 
-    const socket = new SockJS("http://localhost:8080/ws");
+    const socket = new SockJS(`${API_BASE_URL}/ws`);
     const client = new Client({
       webSocketFactory: () => socket,
       debug: (str) => console.log("[STOMP Debug]", str),
