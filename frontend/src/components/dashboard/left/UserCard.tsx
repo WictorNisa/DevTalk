@@ -4,6 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { UserMenu } from "@/components/dashboard/left/UserMenu";
 import { SettingsDialog } from "@/components/dashboard/left/SettingsDialog";
+import { userStatus } from "@/utils/userStatus";
 
 type Props = { collapsed?: boolean };
 
@@ -16,6 +17,9 @@ export const UserCard = ({ collapsed = false }: Props) => {
     user?.externalId?.slice(0, 2) ||
     "?"
   ).toUpperCase();
+
+  const presence = user?.presenceStatus ?? "Offline";
+  const statusBg = userStatus(presence.toLowerCase());
 
   if (collapsed) {
     return (
@@ -33,7 +37,7 @@ export const UserCard = ({ collapsed = false }: Props) => {
             </Avatar>
           )}
           <span
-            className="ring-primary-foreground bg-muted-foreground/60 absolute right-0 bottom-0 h-2 w-2 rounded-full ring-1"
+            className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2 w-2 rounded-full ring-1`}
             aria-hidden="true"
           />
         </div>
@@ -51,7 +55,7 @@ export const UserCard = ({ collapsed = false }: Props) => {
             }}
             onOpenSettings={() => setSettingsOpen(true)}
           >
-            <div className="relative flex-shrink-0">
+            <div className="relative shrink-0">
               {isLoading ? (
                 <div className="bg-muted h-12 w-12 animate-pulse rounded-full" />
               ) : (
@@ -59,16 +63,12 @@ export const UserCard = ({ collapsed = false }: Props) => {
                   <AvatarImage
                     src={user?.avatarUrl || undefined}
                     alt={user?.displayName || "User avatar"}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "/images/default-avatar.jpg";
-                    }}
                   />
                   <AvatarFallback>{initials}</AvatarFallback>
                 </Avatar>
               )}
               <span
-                className="ring-primary-foreground bg-muted-foreground/60 absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full ring-1"
+                className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full ring-1`}
                 aria-hidden="true"
               />
             </div>
@@ -89,8 +89,8 @@ export const UserCard = ({ collapsed = false }: Props) => {
                 </div>
                 {user?.presenceStatus && (
                   <div className="text-muted-foreground truncate text-xs">
-                    {user?.presenceStatus.charAt(0).toUpperCase() +
-                      user?.presenceStatus.slice(1).toLowerCase()}
+                    {presence.charAt(0).toUpperCase() +
+                      presence.slice(1).toLowerCase()}
                   </div>
                 )}
               </div>
