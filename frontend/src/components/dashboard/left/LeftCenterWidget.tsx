@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChannelList, type Channel } from "./ChannelList";
 import { useChannelStore } from "@/stores/chat/useChannelStore";
-import { useWebSocketStore } from "@/stores/chat/useWebsocketStore";
+import { useWebSocketStore } from "@/stores/chat/useWebSocketStore";
 
 // mapping channel names to their translation keys in dashboard.json
 const CHANNEL_TRANSLATION_MAP: Record<string, string> = {
