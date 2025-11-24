@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("null")
 public class DatabaseSeeder implements CommandLineRunner {
 
     private final ChannelRepository channelRepository;

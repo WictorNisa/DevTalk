@@ -2,6 +2,25 @@ import type { ChatStateProps } from "@/types/chat/ChatStateProps";
 import type { Message } from "@/types/chat/Message";
 import type { MessageDtoProps } from "@/types/chat/MessageDtoProps";
 import { Client } from "@stomp/stompjs";
+import { useAuthStore } from "../useAuthStore";
+
+// Helper function to validate and get authenticated user ID
+export const getAuthenticatedUserId = (): number | null => {
+  const user = useAuthStore.getState().user;
+
+  if (!user) {
+    console.error("User not authenticated");
+    return null;
+  }
+
+  const userId = parseInt(user.id);
+  if (isNaN(userId)) {
+    console.error("Invalid user ID");
+    return null;
+  }
+
+  return userId;
+};
 
 // Helper function to transform backend messages to frontend format
 export const transformBackendMessage = (payload: MessageDtoProps): Message => {
@@ -42,17 +61,18 @@ export const ensureConnected = (
 export const handleIncomingMessage = (
   messageBody: string,
   get: () => ChatStateProps,
+  set: (partial: Partial<ChatStateProps>) => void,
 ) => {
   try {
     const payload = JSON.parse(messageBody);
     const transformedMessage = transformBackendMessage(payload);
-    const { isAtBottom } = get();
+    const state = get();
 
-    if (!isAtBottom) {
-      get().incrementUnreadCount();
+    if (!state.isAtBottom) {
+      set({ unreadCount: state.unreadCount + 1 });
     }
 
-    get().addMessage(transformedMessage);
+    set({ messages: [...state.messages, transformedMessage] });
     return transformedMessage;
   } catch (error) {
     console.error("Error parsing message", error);
@@ -80,9 +100,10 @@ export const subscribeToChannel = (
   stompClient: Client,
   channelId: string,
   get: () => ChatStateProps,
+  set: (partial: Partial<ChatStateProps>) => void,
 ) => {
   return stompClient.subscribe(`/topic/room/${channelId}`, (message) => {
     console.log(`Received message in channel ${channelId}:`, message.body);
-    handleIncomingMessage(message.body, get);
+    handleIncomingMessage(message.body, get, set);
   });
 };

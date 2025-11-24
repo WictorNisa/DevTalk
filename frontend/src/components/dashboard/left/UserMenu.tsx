@@ -8,18 +8,16 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Settings, LogOut, Ellipsis, UserPen } from "lucide-react";
+import { Settings, LogOut, Ellipsis } from "lucide-react";
 
 type UserMenuProps = {
   onSignOut?: () => void;
-  onOpenProfile?: () => void;
   onOpenSettings?: () => void;
-  children: React.ReactNode; // Avatar component
+  children: React.ReactNode; // avatar component
 };
 
 export const UserMenu = ({
   onSignOut,
-  onOpenProfile,
   onOpenSettings,
   children,
 }: UserMenuProps) => {
@@ -54,19 +52,6 @@ export const UserMenu = ({
           className="w-auto"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* TODO: Fetch and display user profile data from backend */}
-          {/* GET /api/users/me/profile */}
-          <DropdownMenuItem
-            className="cursor-pointer"
-            onSelect={() => {
-              onOpenProfile?.();
-            }}
-          >
-            <UserPen className="mr-3 h-4 w-4" /> {t("userMenu.profile")}
-          </DropdownMenuItem>
-
-          {/* TODO: Load user settings from backend */}
-          {/* GET /api/users/me/settings */}
           <DropdownMenuItem
             className="cursor-pointer"
             onSelect={() => {

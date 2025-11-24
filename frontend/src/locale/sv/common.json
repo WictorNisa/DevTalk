@@ -3,9 +3,9 @@
     "menu": "Meny",
     "features": "Funktioner",
     "howItWorks": "Hur det fungerar",
-    "team": "Teamet",
+    "meetTheTeam": "Teamet",
     "signIn": "Logga in",
-    "githubLabel": "GitHub Repository",
+    "githubLabel": "GitHub",
     "githubLabelMobile": "GitHub"
   },
 
@@ -23,7 +23,12 @@
   "settings": {
     "theme": "Tema",
     "language": "Språk",
-    "notifications": "Notifieringar"
+    "notifications": "Notiser"
+  },
+
+  "userInfo": {
+    "profile": "Profil",
+    "lastSeen": "Senast sedd: {{date}}"
   },
 
   "common": {
@@ -31,7 +36,8 @@
     "error": "Något gick fel",
     "cancel": "Avbryt",
     "save": "Spara",
-    "delete": "Ta bort"
+    "delete": "Ta bort",
+    "close": "Stäng"
   },
 
   "language": {

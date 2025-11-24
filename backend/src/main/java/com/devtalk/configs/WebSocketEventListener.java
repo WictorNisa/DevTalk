@@ -16,6 +16,7 @@ import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Component
@@ -43,12 +44,12 @@ public class WebSocketEventListener {
         // Update user status to ONLINE in database
         updateUserStatus(username, PresenceStatus.ONLINE);
 
-        UserStatusMessageDTO message = UserStatusMessageDTO.of(
+        UserStatusMessageDTO message = Objects.requireNonNull(UserStatusMessageDTO.of(
                 ConnectionType.JOIN,
                 sessionId,
                 null,
                 username,
-                PresenceStatus.ONLINE);
+                PresenceStatus.ONLINE), "User status message must not be null");
 
         simpMessagingTemplate.convertAndSend("/topic/users", message);
     }
@@ -67,11 +68,11 @@ public class WebSocketEventListener {
             presenceService.addSubscription(sessionId, destination);
             log.info("Session {} subscribed to {}", sessionId, destination);
 
-            UserStatusMessageDTO message = UserStatusMessageDTO.of(ConnectionType.SUBSCRIBE,
+            UserStatusMessageDTO message = Objects.requireNonNull(UserStatusMessageDTO.of(ConnectionType.SUBSCRIBE,
                     sessionId,
                     destination,
                     username,
-                    PresenceStatus.ONLINE);
+                    PresenceStatus.ONLINE), "User status message must not be null");
 
             simpMessagingTemplate.convertAndSend("/topic/users", message);
         }
@@ -92,24 +93,27 @@ public class WebSocketEventListener {
             updateUserStatus(username, PresenceStatus.OFFLINE);
         }
 
-        UserStatusMessageDTO leaveMsg = UserStatusMessageDTO.of(
+        UserStatusMessageDTO leaveMsg = Objects.requireNonNull(UserStatusMessageDTO.of(
                 ConnectionType.LEAVE,
                 sessionId,
                 null,
                 username,
                 PresenceStatus.OFFLINE
-        );
+        ), "User status message must not be null");
 
         simpMessagingTemplate.convertAndSend("/topic/users", leaveMsg);
 
         for (String dest : subscribedDestinations) {
-            UserStatusMessageDTO roomLeave = UserStatusMessageDTO.of(
+            if (dest == null) {
+                continue;
+            }
+            UserStatusMessageDTO roomLeave = Objects.requireNonNull(UserStatusMessageDTO.of(
                     ConnectionType.LEAVE,
                     sessionId,
                     dest,
                     username,
                     PresenceStatus.OFFLINE
-            );
+            ), "User status message must not be null");
             try {
                 simpMessagingTemplate.convertAndSend(dest, roomLeave);
             } catch (Exception ex) {

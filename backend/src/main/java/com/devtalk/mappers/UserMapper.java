@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
+    @Mapping(target = "isOnline", source = "online")
     UserResponseDTO toResponseDTO(User user);
 
     @Mapping(target = "userId", source = "id")
@@ -20,6 +21,7 @@ public interface UserMapper {
     @Mapping(target = "messages", ignore = true)
     @Mapping(target = "relationships", ignore = true)
     @Mapping(target = "relatedBy", ignore = true)
+    @Mapping(target = "isOnline", source = "online")
     User toEntity(UserBaseDTO dto);
 
     default User toEntity(UserResponseDTO dto) {

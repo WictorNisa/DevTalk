@@ -1,58 +1,110 @@
 package com.devtalk.configs;
 
 import com.devtalk.services.OAuth2UserService;
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
+import static com.devtalk.configs.SecurityConstants.*;
 
 @Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080", "http://localhost:63342"));
-        corsConfiguration.setAllowedHeaders(List.of("*"));
-        corsConfiguration.setAllowedMethods(List.of("*"));
-        corsConfiguration.setAllowCredentials(true);
+    private final OAuth2UserService oAuth2UserService;
+    private final CorsConfigurationSource corsConfigurationSource;
+    private final org.springframework.security.web.authentication.logout.LogoutSuccessHandler logoutSuccessHandler;
 
-        UrlBasedCorsConfigurationSource url = new UrlBasedCorsConfigurationSource();
-        url.registerCorsConfiguration("/**", corsConfiguration);
-        return url;
+    @Bean
+    @Order(1)
+    public SecurityFilterChain publicSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/swagger-ui/**", "/swagger-ui.html", "/api-docs/**", 
+                                "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**", 
+                                "/actuator/health")
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .sessionManagement(AbstractHttpConfigurer::disable)
+                .securityContext(AbstractHttpConfigurer::disable)
+                .requestCache(AbstractHttpConfigurer::disable);
+
+        log.info("Public security filter chain configured for Swagger/API docs");
+        return http.build();
     }
 
-    // Temporarily disabling security config for development purposes
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, OAuth2UserService oAuth2UserService) throws Exception {
-        http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
-                .cors(Customizer.withDefaults())
+    @Order(2)
+    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/api/**", "/oauth2/**", "/login/**")
                 .csrf(csrf -> csrf.disable())
-                .httpBasic(basic -> basic.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(OAUTH2_ENDPOINTS).permitAll()
+                        .requestMatchers(API_PUBLIC_ENDPOINTS).permitAll()
+                        .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/oauth2/authorization/github")
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                        .defaultSuccessUrl("http://localhost:5173/dashboard", true)
-                        .failureUrl("http://localhost:5173/error"))
-                .formLogin(formLogin -> formLogin.disable())
-                .logout(logout -> logout.logoutUrl("/api/logout")
-                        .deleteCookies("JSESSIONID")
+                        .defaultSuccessUrl(OAUTH2_SUCCESS_URL, true)
+                        .failureUrl(OAUTH2_FAILURE_URL))
+                .logout(logout -> logout
+                        .logoutUrl(LOGOUT_URL)
+                        .logoutSuccessHandler(logoutSuccessHandler)
+                        .deleteCookies(JSESSIONID_COOKIE)
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
-                        .permitAll()
-                        .logoutSuccessHandler((req, res, auth) -> {
-                            res.setStatus(HttpServletResponse.SC_OK);
-                            res.setContentType("application/json");
-                            res.getWriter().write("{\"message\":\"Logout successful\"}");
+                        .permitAll())
+                .httpBasic(basic -> basic.disable())
+                .formLogin(formLogin -> formLogin.disable())
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin()))
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            log.warn("Authentication failed for URI: {}", request.getRequestURI());
+                            response.sendRedirect("/oauth2/authorization/github");
                         }));
-        http.headers(headers -> headers
-                .frameOptions(frameOptions -> frameOptions.sameOrigin()));
+
+        log.info("API security filter chain configured");
+        return http.build();
+    }
+
+    @Bean
+    @Order(3)
+    public SecurityFilterChain webSocketSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/ws", "/ws/**")
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin()));
+
+        log.info("WebSocket security filter chain configured");
+        return http.build();
+    }
+
+    @Bean
+    @Order(4)
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin()));
+
+        log.info("Default security filter chain configured (catch-all)");
         return http.build();
     }
 }

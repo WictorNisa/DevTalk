@@ -16,6 +16,7 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("null")
 public class WebSocketExceptionHandler {
 
     private final SimpMessagingTemplate simpMessagingTemplate;

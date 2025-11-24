@@ -3,15 +3,13 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { UserMenu } from "@/components/dashboard/left/UserMenu";
-import { ProfileDialog } from "@/components/dashboard/left/ProfileDialog";
 import { SettingsDialog } from "@/components/dashboard/left/SettingsDialog";
 
 type Props = { collapsed?: boolean };
 
 export const UserCard = ({ collapsed = false }: Props) => {
-  const [profileOpen, setProfileOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const { user, isLoading } = useAuthStore();
+  const { user, isLoading, logout } = useAuthStore();
 
   const initials = (
     user?.displayName?.slice(0, 2) ||
@@ -29,11 +27,7 @@ export const UserCard = ({ collapsed = false }: Props) => {
             <Avatar className="h-8 w-8 rounded-full">
               <AvatarImage
                 src={user?.avatarUrl || undefined}
-                alt={user?.displayName || "User avatar"}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    "/images/default-avatar.jpg";
-                }}
+                alt={user?.displayName || "User Avatar"}
               />
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
@@ -53,9 +47,8 @@ export const UserCard = ({ collapsed = false }: Props) => {
         <CardContent className="flex min-w-0 items-center gap-2.5 p-1">
           <UserMenu
             onSignOut={() => {
-              // TODO: handle sign out
+              logout();
             }}
-            onOpenProfile={() => setProfileOpen(true)}
             onOpenSettings={() => setSettingsOpen(true)}
           >
             <div className="relative flex-shrink-0">
@@ -94,16 +87,18 @@ export const UserCard = ({ collapsed = false }: Props) => {
                     {user?.displayName || user?.externalId || "User"}
                   </span>
                 </div>
-                <div className="text-muted-foreground truncate text-xs">
-                  {/* status text ska jag hämta från backend, kolla endpoint och hur jag ska göra */}
-                </div>
+                {user?.presenceStatus && (
+                  <div className="text-muted-foreground truncate text-xs">
+                    {user?.presenceStatus.charAt(0).toUpperCase() +
+                      user?.presenceStatus.slice(1).toLowerCase()}
+                  </div>
+                )}
               </div>
             )}
           </div>
         </CardContent>
       </Card>
 
-      <ProfileDialog open={profileOpen} onOpenChange={setProfileOpen} />
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </>
   );

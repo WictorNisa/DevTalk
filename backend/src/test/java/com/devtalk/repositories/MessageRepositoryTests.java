@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestPropertySource(properties = {
         "spring.autoconfigure.exclude="
 })
+@SuppressWarnings("null")
 class MessageRepositoryTests {
 
     @Autowired
