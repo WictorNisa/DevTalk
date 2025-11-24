@@ -73,6 +73,16 @@ const MessageList = () => {
 
   const prevChannelRef = useRef(activeChannel);
 
+  // Scroll to bottom on initial load
+  useEffect(() => {
+    if (messages.length > 0 && virtuosoRef.current) {
+      virtuosoRef.current.scrollToIndex({
+        index: messages.length - 1,
+        behavior: "auto",
+      });
+    }
+  }, [messages[0]?.id]); // Trigger when first message loads
+
   if (!connected) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -117,6 +127,8 @@ const MessageList = () => {
               messageText={msg.content}
               messageTimeStamp={msg.timestamp}
               isGrouped={shouldGroupMessage(index)}
+              reactions={msg.reactions}
+              reactionUsers={msg.reactionUsers}
             />
           </div>
         )}

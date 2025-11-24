@@ -15,7 +15,7 @@ export const fetchAllUsers = async (): Promise<User[]> => {
       throw new Error(`Failed to fetch users ${response.status}`);
     }
 
-    const backendUsers: BackendUser[] = await response.json();
+    const backendUsers: User[] = await response.json();
 
     return backendUsers.map((users) => ({
       id: users.id.toString(),

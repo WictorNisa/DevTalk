@@ -30,7 +30,7 @@ const CenterDashPanel = () => {
       <div className="flex-1 overflow-hidden">
         <CenterTopWidget />
       </div>
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         <CenterBottomWidget />
       </div>
     </div>
