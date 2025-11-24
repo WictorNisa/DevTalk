@@ -5,25 +5,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Edit, MoreVertical, Trash2 } from "lucide-react";
-import { useChatStore } from "@/stores/chat/useChatStore";
+import { useMessageUIStore } from "@/stores/chat/useMessageUIStore";
+import { messageService } from "@/services/messageService";
+import { useChannelStore } from "@/stores/chat/useChannelStore";
 
 interface MessageActionsProps {
   messageId: string;
 }
 
 export const MessageActions = ({ messageId }: MessageActionsProps) => {
-  const { deleteMessage, setEditingMessage } = useChatStore();
+  const setEditingMessage = useMessageUIStore(
+    (state) => state.setEditingMessage,
+  );
 
   const handleEdit = () => {
     setEditingMessage(messageId);
   };
 
   const handleDelete = () => {
-    deleteMessage(messageId);
+    messageService.deleteMessage(messageId);
     // Refresh messages after delete
     setTimeout(() => {
-      const { activeChannel, loadMessages } = useChatStore.getState();
-      if (activeChannel) loadMessages(activeChannel);
+      const { activeChannel } = useChannelStore.getState();
+      if (activeChannel) messageService.loadMessages(activeChannel);
     }, 100);
   };
 
