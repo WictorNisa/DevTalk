@@ -4,7 +4,7 @@ import type { VirtuosoHandle } from "react-virtuoso";
 import { useMessageStore } from "@/stores/chat/useMessageStore";
 import { useMessageUIStore } from "@/stores/chat/useMessageUIStore";
 import { useChannelStore } from "@/stores/chat/useChannelStore";
-import { useWebSocketStore } from "@/stores/chat/useWebsocketStore";
+import { useWebSocketStore } from "@/stores/chat/useWebSocketStore";
 import { Button } from "@components/ui/button";
 import { ArrowDown } from "lucide-react";
 import MessageItem from "./MessageItem";
@@ -18,7 +18,6 @@ const MessageList = () => {
   const incrementUnreadCount = useMessageUIStore(
     (state) => state.incrementUnreadCount,
   );
-  const switchChannel = useChannelStore((state) => state.switchChannel);
   const connected = useWebSocketStore((state) => state.connected);
   const activeChannel = useChannelStore((state) => state.activeChannel);
 

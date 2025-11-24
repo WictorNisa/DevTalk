@@ -2,7 +2,7 @@
 // import { useTranslation } from "react-i18next";
 import CenterBottomWidget from "./CenterBottomWidget";
 import CenterTopWidget from "./CenterTopWidget";
-import { useWebSocketStore } from "@/stores/chat/useWebsocketStore";
+import { useWebSocketStore } from "@/stores/chat/useWebSocketStore";
 import { messageService } from "@/services/messageService";
 import { useEffect } from "react";
 

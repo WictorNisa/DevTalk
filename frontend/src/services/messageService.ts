@@ -1,4 +1,3 @@
-import { useWebSocketStore } from "@/stores/chat/useWebsocketStore";
 import { useMessageStore } from "@/stores/chat/useMessageStore";
 import { useChannelStore } from "@/stores/chat/useChannelStore";
 import { useMessageUIStore } from "@/stores/chat/useMessageUIStore";
@@ -6,6 +5,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import type { MessageDtoProps } from "@/types/chat/MessageDtoProps";
 import type { Message } from "@/types/chat/Message";
 import { Client } from "@stomp/stompjs";
+import { useWebSocketStore } from "@/stores/chat/useWebSocketStore";
 
 // Utility functions
 const getAuthenticatedUserId = (): number | null => {
@@ -261,7 +261,8 @@ export const messageService = {
       return;
     }
 
-    const channelId = "1";
+    //TODO: Fix the channel ID so that it's not a magic number.
+    const channelId = "1"; // This is 1/3 channels.
 
     // Subscribe to message history
     stompClient.subscribe("/user/queue/history", (message) => {

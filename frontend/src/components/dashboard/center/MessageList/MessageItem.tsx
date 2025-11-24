@@ -45,20 +45,30 @@ const MessageItem: React.FC<MessageItemProps> = ({
   const [editedContent, setEditedContent] = useState(messageText);
   const timeoutRef = useRef<number | null>(null);
 
-  // Extract upvotes and downvotes from reactions
-  const upvotes = reactions["UPVOTE"] || 0;
-  const downvotes = reactions["DOWNVOTE"] || 0;
+  const [optimisticReactions, setOptimisticReactions] = useState(reactions);
+  const [optimisticReactionUsers, setOptimisticReactionUsers] =
+    useState(reactionUsers);
 
-  // Check if current user has already voted
+  useEffect(() => {
+    setOptimisticReactions(reactions);
+    setOptimisticReactionUsers(reactionUsers);
+  }, [reactions, reactionUsers]);
+
+  const upvotes = optimisticReactions["UPVOTE"] || 0;
+  const downvotes = optimisticReactions["DOWNVOTE"] || 0;
+
+  // Check if current user has already voted (using optimistic state)
   const currentUserId = user ? parseInt(user.id) : null;
-  const upvoteUsers = reactionUsers["UPVOTE"] || [];
-  const downvoteUsers = reactionUsers["DOWNVOTE"] || [];
-  const hasUpvoted = currentUserId
-    ? upvoteUsers.includes(currentUserId)
-    : false;
-  const hasDownvoted = currentUserId
-    ? downvoteUsers.includes(currentUserId)
-    : false;
+  const upvoteUsers = optimisticReactionUsers["UPVOTE"] || [];
+  const downvoteUsers = optimisticReactionUsers["DOWNVOTE"] || [];
+  const hasUpvoted = useMemo(
+    () => (currentUserId ? upvoteUsers.includes(currentUserId) : false),
+    [currentUserId, upvoteUsers],
+  );
+  const hasDownvoted = useMemo(
+    () => (currentUserId ? downvoteUsers.includes(currentUserId) : false),
+    [currentUserId, downvoteUsers],
+  );
 
   useEffect(() => {
     setEditedContent(messageText);
@@ -93,10 +103,45 @@ const MessageItem: React.FC<MessageItemProps> = ({
   const isEditing = editingMessageId === messageId;
 
   const handleUpvote = () => {
+    if (!currentUserId) return;
+
+    const newUpvoteUsers = hasUpvoted
+      ? upvoteUsers.filter((id) => id !== currentUserId)
+      : [...upvoteUsers, currentUserId];
+    const newUpvoteCount = hasUpvoted ? upvotes - 1 : upvotes + 1;
+
+    setOptimisticReactions({
+      ...optimisticReactions,
+      UPVOTE: newUpvoteCount,
+    });
+    setOptimisticReactionUsers({
+      ...optimisticReactionUsers,
+      UPVOTE: newUpvoteUsers,
+    });
+
+    // Send to server
     messageService.voteMessage(messageId, "up");
   };
 
   const handleDownvote = () => {
+    if (!currentUserId) return;
+
+    // Optimistic update
+    const newDownvoteUsers = hasDownvoted
+      ? downvoteUsers.filter((id) => id !== currentUserId)
+      : [...downvoteUsers, currentUserId];
+    const newDownvoteCount = hasDownvoted ? downvotes - 1 : downvotes + 1;
+
+    setOptimisticReactions({
+      ...optimisticReactions,
+      DOWNVOTE: newDownvoteCount,
+    });
+    setOptimisticReactionUsers({
+      ...optimisticReactionUsers,
+      DOWNVOTE: newDownvoteUsers,
+    });
+
+    // Send to server
     messageService.voteMessage(messageId, "down");
   };
 
@@ -230,19 +275,19 @@ const MessageItem: React.FC<MessageItemProps> = ({
             )}
           </div>
 
-          {/* Message Actions (hover menu) - Only show for own messages */}
           {isOwnMessage && !isEditing && (
             <MessageActions messageId={messageId} />
           )}
 
           {/* Vote buttons - show on hover */}
           {!isEditing && (
-            <div className="invisible mt-1 flex items-center gap-1 group-hover:visible">
+            <div className="mt-1 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={handleUpvote}
                 disabled={hasUpvoted}
+                aria-label={hasUpvoted ? "Remove upvote" : "Upvote message"}
                 className={`h-6 gap-1 px-2 hover:bg-green-500/10 hover:text-green-500 ${hasUpvoted ? "bg-green-500/20 text-green-500" : ""}`}
               >
                 <ThumbsUp className="h-3.5 w-3.5" />
@@ -252,6 +297,9 @@ const MessageItem: React.FC<MessageItemProps> = ({
                 variant="ghost"
                 onClick={handleDownvote}
                 disabled={hasDownvoted}
+                aria-label={
+                  hasDownvoted ? "Remove downvote" : "Downvote message"
+                }
                 className={`h-6 gap-1 px-2 hover:bg-red-500/10 hover:text-red-500 ${hasDownvoted ? "bg-red-500/20 text-red-500" : ""}`}
               >
                 <ThumbsDown className="h-3.5 w-3.5" />
