@@ -201,13 +201,27 @@ export const messageService = {
       try {
         const payload = JSON.parse(message.body);
         const transformedMessage = transformBackendMessage(payload);
+        const { messages } = useMessageStore.getState();
         const { isAtBottom } = useMessageUIStore.getState();
 
-        if (!isAtBottom) {
-          useMessageUIStore.getState().incrementUnreadCount();
-        }
+        const existingMessage = messages.find(
+          (msg) => msg.id === transformedMessage.id,
+        );
 
-        useMessageStore.getState().addMessage(transformedMessage);
+        if (existingMessage) {
+          useMessageStore.getState().updateMessage(transformedMessage.id, {
+            reactions: transformedMessage.reactions,
+            reactionUsers: transformedMessage.reactionUsers,
+            content: transformedMessage.content,
+            isEdited: transformedMessage.isEdited,
+            editedAt: transformedMessage.editedAt,
+          });
+        } else {
+          if (!isAtBottom) {
+            useMessageUIStore.getState().incrementUnreadCount();
+          }
+          useMessageStore.getState().addMessage(transformedMessage);
+        }
       } catch (error) {
         console.error("Error parsing message", error);
       }

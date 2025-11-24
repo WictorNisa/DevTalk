@@ -18,8 +18,7 @@ const CenterDashPanel = () => {
     };
   }, [connect, disconnect]);
 
-  //Once the user connects to the app, setup message service
-
+  // Once the user connects to the app, setup message service
   useEffect(() => {
     if (connected) {
       messageService.setupConnection();

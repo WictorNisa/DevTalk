@@ -105,43 +105,72 @@ const MessageItem: React.FC<MessageItemProps> = ({
   const handleUpvote = () => {
     if (!currentUserId) return;
 
-    const newUpvoteUsers = hasUpvoted
-      ? upvoteUsers.filter((id) => id !== currentUserId)
-      : [...upvoteUsers, currentUserId];
-    const newUpvoteCount = hasUpvoted ? upvotes - 1 : upvotes + 1;
+    let newUpvoteUsers: number[];
+    let newUpvoteCount: number;
+    let newDownvoteUsers = downvoteUsers;
+    let newDownvoteCount = downvotes;
+
+    if (hasUpvoted) {
+      newUpvoteUsers = upvoteUsers.filter((id) => id !== currentUserId);
+      newUpvoteCount = upvotes - 1;
+    } else {
+      // Add upvote and remove downvote if exists
+      newUpvoteUsers = [...upvoteUsers, currentUserId];
+      newUpvoteCount = upvotes + 1;
+
+      if (hasDownvoted) {
+        newDownvoteUsers = downvoteUsers.filter((id) => id !== currentUserId);
+        newDownvoteCount = downvotes - 1;
+      }
+    }
 
     setOptimisticReactions({
       ...optimisticReactions,
       UPVOTE: newUpvoteCount,
+      DOWNVOTE: newDownvoteCount,
     });
     setOptimisticReactionUsers({
       ...optimisticReactionUsers,
       UPVOTE: newUpvoteUsers,
+      DOWNVOTE: newDownvoteUsers,
     });
 
-    // Send to server
     messageService.voteMessage(messageId, "up");
   };
 
   const handleDownvote = () => {
     if (!currentUserId) return;
 
-    // Optimistic update
-    const newDownvoteUsers = hasDownvoted
-      ? downvoteUsers.filter((id) => id !== currentUserId)
-      : [...downvoteUsers, currentUserId];
-    const newDownvoteCount = hasDownvoted ? downvotes - 1 : downvotes + 1;
+    let newDownvoteUsers: number[];
+    let newDownvoteCount: number;
+    let newUpvoteUsers = upvoteUsers;
+    let newUpvoteCount = upvotes;
+
+    if (hasDownvoted) {
+      newDownvoteUsers = downvoteUsers.filter((id) => id !== currentUserId);
+      newDownvoteCount = downvotes - 1;
+    } else {
+      // Add downvote and remove upvote if exists
+      newDownvoteUsers = [...downvoteUsers, currentUserId];
+      newDownvoteCount = downvotes + 1;
+
+      if (hasUpvoted) {
+        newUpvoteUsers = upvoteUsers.filter((id) => id !== currentUserId);
+        newUpvoteCount = upvotes - 1;
+      }
+    }
 
     setOptimisticReactions({
       ...optimisticReactions,
+      UPVOTE: newUpvoteCount,
       DOWNVOTE: newDownvoteCount,
     });
     setOptimisticReactionUsers({
       ...optimisticReactionUsers,
+      UPVOTE: newUpvoteUsers,
       DOWNVOTE: newDownvoteUsers,
     });
 
-    // Send to server
     messageService.voteMessage(messageId, "down");
   };
 
@@ -279,49 +308,49 @@ const MessageItem: React.FC<MessageItemProps> = ({
             <MessageActions messageId={messageId} />
           )}
 
-          {/* Vote buttons - show on hover */}
+          {/* Vote buttons */}
           {!isEditing && (
-            <div className="mt-1 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+            <div
+              className={`mt-1 flex items-center gap-1 transition-opacity ${upvotes > 0 || downvotes > 0 ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+            >
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={handleUpvote}
-                disabled={hasUpvoted}
                 aria-label={hasUpvoted ? "Remove upvote" : "Upvote message"}
-                className={`h-6 gap-1 px-2 hover:bg-green-500/10 hover:text-green-500 ${hasUpvoted ? "bg-green-500/20 text-green-500" : ""}`}
+                className="h-6 gap-1 px-2"
               >
-                <ThumbsUp className="h-3.5 w-3.5" />
+                <ThumbsUp
+                  className={`h-3.5 w-3.5 ${hasUpvoted ? "text-green-500" : ""}`}
+                />
+                {upvotes > 0 && (
+                  <span
+                    className={`text-xs ${hasUpvoted ? "text-green-500" : ""}`}
+                  >
+                    {upvotes}
+                  </span>
+                )}
               </Button>
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={handleDownvote}
-                disabled={hasDownvoted}
                 aria-label={
                   hasDownvoted ? "Remove downvote" : "Downvote message"
                 }
-                className={`h-6 gap-1 px-2 hover:bg-red-500/10 hover:text-red-500 ${hasDownvoted ? "bg-red-500/20 text-red-500" : ""}`}
+                className="h-6 gap-1 px-2"
               >
-                <ThumbsDown className="h-3.5 w-3.5" />
+                <ThumbsDown
+                  className={`h-3.5 w-3.5 ${hasDownvoted ? "text-red-500" : ""}`}
+                />
+                {downvotes > 0 && (
+                  <span
+                    className={`text-xs ${hasDownvoted ? "text-red-500" : ""}`}
+                  >
+                    {downvotes}
+                  </span>
+                )}
               </Button>
-            </div>
-          )}
-
-          {/* Vote counts - show if votes exist */}
-          {(upvotes > 0 || downvotes > 0) && (
-            <div className="mt-1 flex items-center gap-2">
-              {upvotes > 0 && (
-                <span className="flex items-center gap-0.5">
-                  <ThumbsUp className="h-3.5 w-3.5 text-green-500/70" />
-                  <span className="text-xs text-green-500/70">+{upvotes}</span>
-                </span>
-              )}
-              {downvotes > 0 && (
-                <span className="flex items-center gap-0.5">
-                  <ThumbsDown className="h-3.5 w-3.5 text-red-500/70" />
-                  <span className="text-xs text-red-500/70">-{downvotes}</span>
-                </span>
-              )}
             </div>
           )}
         </div>

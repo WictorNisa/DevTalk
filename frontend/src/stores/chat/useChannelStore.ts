@@ -54,7 +54,11 @@ export const useChannelStore = create<ChannelState>((set, get) => ({
 
     // Subscribe to new channel and load messages
     const newSubscription = messageService.subscribeToChannel(channelId);
-    set({ currentSubscription: newSubscription });
-    messageService.loadMessages(channelId);
+    if (newSubscription) {
+      set({ currentSubscription: newSubscription });
+      messageService.loadMessages(channelId);
+    } else {
+      console.error("Failed to subscribe to channel");
+    }
   },
 }));

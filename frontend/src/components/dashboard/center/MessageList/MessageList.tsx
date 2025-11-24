@@ -81,7 +81,7 @@ const MessageList = () => {
         behavior: "auto",
       });
     }
-  }, [messages.length > 0 ? messages[0]?.id : null]); // Trigger when first message loads
+  }, [messages[0]?.id]); // Trigger when first message loads
 
   if (!connected) {
     return (
