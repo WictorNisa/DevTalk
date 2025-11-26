@@ -3,20 +3,21 @@ import type { PresenceStatus } from "@/utils/normalizeStatus";
 
 export const fetchAllUsers = async (): Promise<User[]> => {
   try {
-    const response = await fetch("http://localhost:8080/api/users", {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const statuses = ["ONLINE", "AWAY", "BUSY", "OFFLINE"] as const;
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch users ${response.status}`);
-    }
+    const requests = statuses.map((status) =>
+      fetch(`http://localhost:8080/api/users/status?status=${status}`, {
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      }).then((res) => {
+        if (!res.ok) throw new Error(`Failed status ${status}: ${res.status}`);
+        return res.json();
+      }),
+    );
 
-    const backendUsers: User[] = await response.json();
+    const allUsers = (await Promise.all(requests)).flat();
 
-    return backendUsers.map((users) => ({
+    return allUsers.map((users) => ({
       id: users.id.toString(),
       displayName: users.displayName,
       avatar:
