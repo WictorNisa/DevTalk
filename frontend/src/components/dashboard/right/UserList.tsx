@@ -5,7 +5,7 @@ import { fetchAllUsers } from "@/services/fetchAllUsers";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { ProfileDialog } from "../ProfileDialog";
 import { normalizePresenceStatus } from "@/utils/normalizeStatus";
-import type { User, ProfileUser } from "@/types/User";
+import type { User } from "@/types/User";
 
 export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
   const { isAuthenticated, isLoading: authLoading } = useAuthStore();
@@ -14,8 +14,7 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // using ProfileUser type for selectedUser (to show with ProfileDialog)
-  const [selectedUser, setSelectedUser] = useState<ProfileUser | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
 
   const offlineUsers = users.filter(
@@ -27,9 +26,8 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
   );
   const { t } = useTranslation("dashboard");
 
-  // map UserList User to ProfileDialog's User type
   const handleUserClick = (user: User) => {
-    const profileUser: ProfileUser = {
+    const profileUser: User = {
       id: user.id || "",
       displayName: user.displayName || "User",
       externalId: null,

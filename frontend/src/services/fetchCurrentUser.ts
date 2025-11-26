@@ -1,5 +1,5 @@
 import { normalizePresenceStatus } from "@/utils/normalizeStatus";
-import type { CurrentUser } from "@/types/User";
+import type { User } from "@/types/User";
 
 const deriveGitHubAvatar = (externalId?: string) => {
   if (!externalId) return "";
@@ -8,21 +8,42 @@ const deriveGitHubAvatar = (externalId?: string) => {
     : `https://github.com/${externalId}.png`;
 };
 
-export async function fetchCurrentUser(): Promise<CurrentUser | null> {
-  const res = await fetch("http://localhost:8080/api/me", {
+const mapUserData = (data: any): User => ({
+  id: String(data.id ?? ""),
+  externalId: data.externalId ?? null,
+  displayName: data.displayName || data.externalId || "User",
+  avatarUrl: data.avatarUrl || deriveGitHubAvatar(data.externalId) || "",
+  presenceStatus: normalizePresenceStatus(data.presenceStatus) || undefined,
+});
+
+const fetchFromEndpoint = async (url: string): Promise<User | null> => {
+  const response = await fetch(url, {
     credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
-  if (!res.ok) return null;
 
-  const data = await res.json();
+  if (!response.ok) {
+    throw new Error(`Failed to fetch: ${response.status}`);
+  }
 
-  const avatar = data.avatarUrl || deriveGitHubAvatar(data.externalId) || "";
+  return mapUserData(await response.json());
+};
 
-  return {
-    id: String(data.id ?? ""),
-    externalId: data.externalId ?? null,
-    displayName: data.displayName || data.externalId || "User",
-    avatarUrl: avatar,
-    presenceStatus: normalizePresenceStatus(data.presenceStatus) || undefined,
-  };
-}
+export const fetchCurrentUser = async (): Promise<User | null> => {
+  const endpoints = [
+    "http://localhost:8080/api/me",
+    "http://localhost:8080/api/users/current",
+  ];
+
+  for (const endpoint of endpoints) {
+    try {
+      return await fetchFromEndpoint(endpoint);
+    } catch (error) {
+      console.error(`Error fetching from ${endpoint}:`, error);
+    }
+  }
+
+  return null;
+};

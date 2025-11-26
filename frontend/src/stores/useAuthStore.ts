@@ -47,7 +47,8 @@ export const useAuthStore = create<AuthState>()(
                 externalId: me.externalId,
                 displayName: me.displayName,
                 avatarUrl: me.avatarUrl,
-                presenceStatus: normalizePresenceStatus(me.presenceStatus),
+                // Force online status on successful auth check
+                presenceStatus: "Online",
               },
               isAuthenticated: true,
               isLoading: false,
