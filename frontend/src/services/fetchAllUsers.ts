@@ -14,16 +14,16 @@ export const fetchAllUsers = async (): Promise<User[]> => {
       throw new Error(`Failed to fetch users ${response.status}`);
     }
 
-    const backendUsers: User[] = await response.json();
+    const users: User[] = await response.json();
 
-    return backendUsers.map((users) => ({
-      id: users.id.toString(),
-      displayName: users.displayName,
+    return users.map((user) => ({
+      id: user.id.toString(),
+      displayName: user.displayName,
       avatar:
-        users.avatarUrl ||
-        `https://api.dicebear.com/7.x/avataaars/svg?seed=${users.displayName}`,
-      status: users.presenceStatus?.toLowerCase() as PresenceStatus | undefined,
-      badge: users.role ?? undefined,
+        user.avatarUrl ||
+        `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.displayName}`,
+      status: user.presenceStatus?.toLowerCase() as PresenceStatus | undefined,
+      badge: user.role ?? undefined,
     }));
   } catch (error) {
     console.error("Error fetching users:", error);

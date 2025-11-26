@@ -1,6 +1,6 @@
 import type { PresenceStatus } from "@/utils/normalizeStatus";
 
-export type User = {
+export interface User {
   id: string | number;
   externalId?: string | null;
   displayName: string;
@@ -12,16 +12,4 @@ export type User = {
   badge?: string | boolean;
   lastActivityAt?: string | null;
   customStatusMessage?: string | null;
-};
-
-export interface BackendUser {
-  id: number;
-  externalId: string;
-  displayName: string;
-  avatarUrl?: string;
-  presenceStatus: string;
-  role?: string;
 }
-
-export type CurrentUser = User;
-export type ProfileUser = User;
