@@ -1,6 +1,9 @@
+import type { PresenceStatus } from "@/utils/normalizeStatus";
+
 export type UserCardProps = {
   avatar?: string;
   username: string;
-  status?: "online" | "idle" | "busy" | string;
+  presenceStatus?: PresenceStatus;
+  status?: PresenceStatus;
   badge?: boolean | string;
 };

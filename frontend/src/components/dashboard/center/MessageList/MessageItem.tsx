@@ -8,10 +8,12 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { CodeBlock } from "./MessageItem/CodeBlock";
 import { Mention } from "./MessageItem/Mention";
 import { MessageActions } from "./MessageItem/MessageActions";
-import { useChatStore } from "@/stores/chat/useChatStore";
+import { useMessageUIStore } from "@/stores/chat/useMessageUIStore";
+import { messageService } from "@/services/messageService";
+import { useChannelStore } from "@/stores/chat/useChannelStore";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Check, X } from "lucide-react";
+import { Check, ThumbsDown, ThumbsUp, X } from "lucide-react";
 
 interface MessageItemProps {
   messageId: string;
@@ -20,6 +22,8 @@ interface MessageItemProps {
   messageText: string;
   messageTimeStamp: number;
   isGrouped: boolean;
+  reactions?: Record<string, number>;
+  reactionUsers?: Record<string, number[]>;
 }
 
 const MessageItem: React.FC<MessageItemProps> = ({
@@ -29,12 +33,42 @@ const MessageItem: React.FC<MessageItemProps> = ({
   messageText,
   messageTimeStamp,
   isGrouped,
+  reactions = {},
+  reactionUsers = {},
 }) => {
   const { user } = useAuthStore();
-  const { editingMessageId, setEditingMessage, editMessage } = useChatStore();
+  const editingMessageId = useMessageUIStore((state) => state.editingMessageId);
+  const setEditingMessage = useMessageUIStore(
+    (state) => state.setEditingMessage,
+  );
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState(messageText);
   const timeoutRef = useRef<number | null>(null);
+
+  const [optimisticReactions, setOptimisticReactions] = useState(reactions);
+  const [optimisticReactionUsers, setOptimisticReactionUsers] =
+    useState(reactionUsers);
+
+  useEffect(() => {
+    setOptimisticReactions(reactions);
+    setOptimisticReactionUsers(reactionUsers);
+  }, [reactions, reactionUsers]);
+
+  const upvotes = optimisticReactions["UPVOTE"] || 0;
+  const downvotes = optimisticReactions["DOWNVOTE"] || 0;
+
+  // Check if current user has already voted (using optimistic state)
+  const currentUserId = user ? parseInt(user.id) : null;
+  const upvoteUsers = optimisticReactionUsers["UPVOTE"] || [];
+  const downvoteUsers = optimisticReactionUsers["DOWNVOTE"] || [];
+  const hasUpvoted = useMemo(
+    () => (currentUserId ? upvoteUsers.includes(currentUserId) : false),
+    [currentUserId, upvoteUsers],
+  );
+  const hasDownvoted = useMemo(
+    () => (currentUserId ? downvoteUsers.includes(currentUserId) : false),
+    [currentUserId, downvoteUsers],
+  );
 
   useEffect(() => {
     setEditedContent(messageText);
@@ -68,6 +102,78 @@ const MessageItem: React.FC<MessageItemProps> = ({
   const isOwnMessage = user?.displayName === messageUser;
   const isEditing = editingMessageId === messageId;
 
+  const handleUpvote = () => {
+    if (!currentUserId) return;
+
+    let newUpvoteUsers: number[];
+    let newUpvoteCount: number;
+    let newDownvoteUsers = downvoteUsers;
+    let newDownvoteCount = downvotes;
+
+    if (hasUpvoted) {
+      newUpvoteUsers = upvoteUsers.filter((id) => id !== currentUserId);
+      newUpvoteCount = upvotes - 1;
+    } else {
+      // Add upvote and remove downvote if exists
+      newUpvoteUsers = [...upvoteUsers, currentUserId];
+      newUpvoteCount = upvotes + 1;
+
+      if (hasDownvoted) {
+        newDownvoteUsers = downvoteUsers.filter((id) => id !== currentUserId);
+        newDownvoteCount = downvotes - 1;
+      }
+    }
+
+    setOptimisticReactions({
+      ...optimisticReactions,
+      UPVOTE: newUpvoteCount,
+      DOWNVOTE: newDownvoteCount,
+    });
+    setOptimisticReactionUsers({
+      ...optimisticReactionUsers,
+      UPVOTE: newUpvoteUsers,
+      DOWNVOTE: newDownvoteUsers,
+    });
+
+    messageService.voteMessage(messageId, "up");
+  };
+
+  const handleDownvote = () => {
+    if (!currentUserId) return;
+
+    let newDownvoteUsers: number[];
+    let newDownvoteCount: number;
+    let newUpvoteUsers = upvoteUsers;
+    let newUpvoteCount = upvotes;
+
+    if (hasDownvoted) {
+      newDownvoteUsers = downvoteUsers.filter((id) => id !== currentUserId);
+      newDownvoteCount = downvotes - 1;
+    } else {
+      // Add downvote and remove upvote if exists
+      newDownvoteUsers = [...downvoteUsers, currentUserId];
+      newDownvoteCount = downvotes + 1;
+
+      if (hasUpvoted) {
+        newUpvoteUsers = upvoteUsers.filter((id) => id !== currentUserId);
+        newUpvoteCount = upvotes - 1;
+      }
+    }
+
+    setOptimisticReactions({
+      ...optimisticReactions,
+      UPVOTE: newUpvoteCount,
+      DOWNVOTE: newDownvoteCount,
+    });
+    setOptimisticReactionUsers({
+      ...optimisticReactionUsers,
+      UPVOTE: newUpvoteUsers,
+      DOWNVOTE: newDownvoteUsers,
+    });
+
+    messageService.voteMessage(messageId, "down");
+  };
+
   const handleSaveEdit = () => {
     const trimmedContent = editedContent.trim();
 
@@ -75,12 +181,12 @@ const MessageItem: React.FC<MessageItemProps> = ({
       return;
     }
 
-    editMessage(messageId, trimmedContent);
+    messageService.editMessage(messageId, trimmedContent);
     setEditingMessage(null);
     // Refresh messages after edit
     timeoutRef.current = setTimeout(() => {
-      const { activeChannel, loadMessages } = useChatStore.getState();
-      if (activeChannel) loadMessages(activeChannel);
+      const { activeChannel } = useChannelStore.getState();
+      if (activeChannel) messageService.loadMessages(activeChannel);
     }, 100);
   };
 
@@ -198,9 +304,54 @@ const MessageItem: React.FC<MessageItemProps> = ({
             )}
           </div>
 
-          {/* Message Actions (hover menu) - Only show for own messages */}
           {isOwnMessage && !isEditing && (
             <MessageActions messageId={messageId} />
+          )}
+
+          {/* Vote buttons */}
+          {!isEditing && (
+            <div
+              className={`mt-1 flex items-center gap-1 transition-opacity ${upvotes > 0 || downvotes > 0 ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+            >
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleUpvote}
+                aria-label={hasUpvoted ? "Remove upvote" : "Upvote message"}
+                className="h-6 gap-1 px-2"
+              >
+                <ThumbsUp
+                  className={`h-3.5 w-3.5 ${hasUpvoted ? "text-green-500" : ""}`}
+                />
+                {upvotes > 0 && (
+                  <span
+                    className={`text-xs ${hasUpvoted ? "text-green-500" : ""}`}
+                  >
+                    {upvotes}
+                  </span>
+                )}
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleDownvote}
+                aria-label={
+                  hasDownvoted ? "Remove downvote" : "Downvote message"
+                }
+                className="h-6 gap-1 px-2"
+              >
+                <ThumbsDown
+                  className={`h-3.5 w-3.5 ${hasDownvoted ? "text-red-500" : ""}`}
+                />
+                {downvotes > 0 && (
+                  <span
+                    className={`text-xs ${hasDownvoted ? "text-red-500" : ""}`}
+                  >
+                    {downvotes}
+                  </span>
+                )}
+              </Button>
+            </div>
           )}
         </div>
       </div>
