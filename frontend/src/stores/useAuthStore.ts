@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { fetchCurrentUser } from "@/services/fetchCurrentUser";
 import { normalizePresenceStatus } from "@/utils/normalizeStatus";
+import type { PresenceStatus } from "@/utils/normalizeStatus";
 import type { User } from "@/types/User";
 
 type AuthState = {
@@ -11,6 +12,7 @@ type AuthState = {
   login: () => void;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
+  setPresenceStatus: (status: PresenceStatus) => Promise<void>;
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -58,6 +60,22 @@ export const useAuthStore = create<AuthState>()(
         } catch (e) {
           console.error("Auth check failed:", e);
           set({ user: null, isAuthenticated: false, isLoading: false });
+        }
+      },
+
+      setPresenceStatus: async (status: PresenceStatus) => {
+        // Update backend
+        const { updatePresenceStatus } = await import(
+          "@/services/updatePresenceStatus"
+        );
+        const ok = await updatePresenceStatus(status);
+        if (ok) {
+          // Update local store
+          set((state) => ({
+            user: state.user
+              ? { ...state.user, presenceStatus: status }
+              : state.user,
+          }));
         }
       },
     }),
