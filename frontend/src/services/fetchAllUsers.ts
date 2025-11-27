@@ -15,16 +15,24 @@ export const fetchAllUsers = async (): Promise<User[]> => {
       }),
     );
 
+<<<<<<< HEAD:frontend/src/services/fetchAllUsers.ts
+    const users: User[] = await response.json();
+
+    return users.map((user) => ({
+      id: user.id.toString(),
+      displayName: user.displayName,
+=======
     const allUsers = (await Promise.all(requests)).flat();
 
     return allUsers.map((users) => ({
       id: users.id.toString(),
       displayName: users.displayName,
+>>>>>>> main:frontend/src/services/fetchAllUsers.tsx
       avatar:
-        users.avatarUrl ||
-        `https://api.dicebear.com/7.x/avataaars/svg?seed=${users.displayName}`,
-      status: users.presenceStatus?.toLowerCase() as PresenceStatus | undefined,
-      badge: users.role ?? undefined,
+        user.avatarUrl ||
+        `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.displayName}`,
+      status: user.presenceStatus?.toLowerCase() as PresenceStatus | undefined,
+      badge: user.role ?? undefined,
     }));
   } catch (error) {
     console.error("Error fetching users:", error);

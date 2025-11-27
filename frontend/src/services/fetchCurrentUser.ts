@@ -1,5 +1,5 @@
 import { normalizePresenceStatus } from "@/utils/normalizeStatus";
-import type { CurrentUser } from "@/types/User";
+import type { User } from "@/types/User";
 
 const deriveGitHubAvatar = (externalId?: string) => {
   if (!externalId) return "";
@@ -8,7 +8,7 @@ const deriveGitHubAvatar = (externalId?: string) => {
     : `https://github.com/${externalId}.png`;
 };
 
-export async function fetchCurrentUser(): Promise<CurrentUser | null> {
+export async function fetchCurrentUser(): Promise<User | null> {
   const res = await fetch("http://localhost:8080/api/me", {
     credentials: "include",
   });
