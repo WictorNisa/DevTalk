@@ -1,7 +1,7 @@
 import type { PresenceStatus } from "@/utils/normalizeStatus";
 
 export interface User {
-  id: string | number;
+  id: string;
   externalId?: string | null;
   displayName: string;
   avatarUrl?: string;
