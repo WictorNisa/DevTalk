@@ -43,7 +43,7 @@ public class User extends BaseEntity {
     @Builder.Default
     private PresenceStatus presenceStatus = PresenceStatus.OFFLINE;
 
-    @Column(nullable = false)
+    @Column(name = "is_online", nullable = false)
     @Builder.Default
     private boolean isOnline = false;
     

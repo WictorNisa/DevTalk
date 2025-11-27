@@ -13,5 +13,12 @@ export default defineConfig({
   ],
   define: {
     global: 'globalThis'
+  },
+  build: {
+    rollupOptions: {
+      onwarn(warning, warn){
+        return;
+      }
+    }
   }
 });
