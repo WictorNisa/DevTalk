@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type Theme = "light" | "dark";
+type Theme = "dark" | "light";
 
 interface ThemeStore {
   theme: Theme;
