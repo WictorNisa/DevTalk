@@ -66,7 +66,7 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
     loadUsers(!didInitialFetch.current);
     didInitialFetch.current = true;
 
-    const pollId = setInterval(() => loadUsers(false), 1_000);
+    const pollId = setInterval(() => loadUsers(false), 500);
     return () => clearInterval(pollId);
   }, [isAuthenticated, authLoading]);
 
