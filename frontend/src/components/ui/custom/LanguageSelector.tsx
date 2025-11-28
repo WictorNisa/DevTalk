@@ -61,7 +61,11 @@ export default function LanguageSelector() {
           onValueChange={(value) => handleLanguageChange(value as LanguageCode)}
         >
           {LANGUAGE_CODES.map((code) => (
-            <DropdownMenuRadioItem key={code} value={code}>
+            <DropdownMenuRadioItem
+              key={code}
+              value={code}
+              className="cursor-pointer"
+            >
               {languageNames[code]}
             </DropdownMenuRadioItem>
           ))}

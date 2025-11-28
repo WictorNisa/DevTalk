@@ -9,7 +9,7 @@ export default function CTA() {
   const { login } = useAuthStore();
 
   return (
-    <section className="bg-background relative py-32 text-center">
+    <section id="CTA" className="bg-background relative py-32 text-center">
       <div className="container mx-auto px-6">
         <h2 className="text-3xl font-semibold sm:text-4xl">{t("cta.title")}</h2>
 
@@ -19,7 +19,6 @@ export default function CTA() {
 
         <motion.div
           initial={{ opacity: 0 }}
-          transition={{ ease: "easeIn", duration: 0.4 }}
           whileInView={{ opacity: 1 }}
           whileHover={{ scale: 1.02 }}
           className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6"
@@ -27,7 +26,7 @@ export default function CTA() {
           <Button
             variant="outline"
             size="lg"
-            className="border-input/20 text-secondary hover:text-secondary hover:bg-secondary/10 dark:text-primary bg-accent/5 w-auto cursor-pointer rounded-lg sm:w-auto"
+            className="dark:bg-input/30 dark:text-primary border-input/20 bg-accent-foreground hover:bg-accent-foreground w-auto cursor-pointer rounded-lg text-white hover:text-white sm:w-auto"
             onClick={login}
           >
             <GitHubLogoIcon className="mr-2 h-5 w-5" />

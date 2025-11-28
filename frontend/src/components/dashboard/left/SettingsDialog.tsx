@@ -13,24 +13,6 @@ import ThemeSwitcher from "@/components/ui/custom/ThemeSwitcher";
 import LanguageSelector from "@/components/ui/custom/LanguageSelector";
 import { useState } from "react";
 
-/*
- TODO (SettingsDialog)
- - Fetch user settings from backend: GET /api/users/me/settings
- - Save settings to backend: PUT /api/users/me/settings
- - Add loading state while fetching settings
- - Add loading/disabled state while saving settings
- - Show toast/notification on save success/error
- - Add more settings when backend supports:
-   * Email notifications
-   * Push notifications
-   * Sound effects
-   * Message preview in notifications
-   * Privacy settings (who can message you, etc.)
-   * Language preference
- - Debounce settings changes before saving to backend
- - Add settings validation
-*/
-
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -39,13 +21,10 @@ type Props = {
 export const SettingsDialog = ({ open, onOpenChange }: Props) => {
   const { t } = useTranslation("common");
 
-  // TODO: Wire to backend - save to: PUT /api/users/me/settings
   const [notifications, setNotifications] = useState(true);
 
   const handleNotificationsChange = (checked: boolean) => {
     setNotifications(checked);
-    // TODO: Debounce and auto-save to backend
-    // OR show a "Save" button to manually trigger save
   };
 
   return (
@@ -61,7 +40,9 @@ export const SettingsDialog = ({ open, onOpenChange }: Props) => {
         <div className="flex flex-col gap-3 py-2">
           <div className="flex min-h-[35px] items-center justify-between">
             <Label htmlFor="language">{t("settings.language")}</Label>
-            <LanguageSelector />
+            <span className="dark:bg-input/30 dark:text-primary border-input/20 bg-accent-foreground hover:bg-accent-foreground w-auto cursor-pointer rounded-lg text-white hover:text-white sm:w-auto">
+              <LanguageSelector />
+            </span>
           </div>
 
           <div className="flex min-h-[35px] items-center justify-between">

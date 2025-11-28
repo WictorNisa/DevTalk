@@ -62,7 +62,7 @@ export default function Navbar() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="border-input/20 text-secondary hover:text-secondary hover:bg-secondary/10 dark:text-primary bg-accent/5 inline-flex cursor-pointer items-center gap-2"
+          className="border-input/20 text-secondary hover:text-secondary hover:bg-primary/70 dark:text-primary bg-primary/75 inline-flex cursor-pointer items-center gap-2"
           aria-label={t("language.label")}
         >
           <Languages className="h-4 w-4" aria-hidden="true" />
@@ -79,7 +79,11 @@ export default function Navbar() {
           onValueChange={(value) => handleLanguageChange(value as LanguageCode)}
         >
           {LANGUAGE_CODES.map((code) => (
-            <DropdownMenuRadioItem key={code} value={code}>
+            <DropdownMenuRadioItem
+              key={code}
+              value={code}
+              className="cursor-pointer"
+            >
               {languageNames[code]}
             </DropdownMenuRadioItem>
           ))}
@@ -92,7 +96,7 @@ export default function Navbar() {
     <header className="dark:text-foreground bg-foreground/50 text-foreground sticky top-0 z-50 w-full border-b border-(--muted-foreground)/30 backdrop-blur-md dark:border-(--border)/70 dark:bg-(--background)/40">
       <nav className="max-w-8xl mx-auto flex items-center justify-between px-5 py-5">
         <a href="#home" className="flex">
-          <span className="bg-foreground/15 flex h-12 w-12 items-center justify-center rounded-lg transition-colors dark:border-none dark:bg-transparent">
+          <span className="bg-primary/75 hover:bg-primary/70 border-input/20 dark:border-input flex h-12 w-12 items-center justify-center rounded-lg border dark:bg-transparent">
             <img src={Logo} className="h-8 w-8 invert" alt="DevTalk logo" />
           </span>
         </a>
@@ -102,7 +106,7 @@ export default function Navbar() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="border-input/20 text-secondary hover:text-secondary hover:bg-secondary/10 dark:text-primary bg-accent/5 hidden cursor-pointer items-center gap-2 md:inline-flex"
+                className="border-input/20 text-secondary hover:text-secondary hover:bg-primary/70 dark:text-primary bg-primary/75 hidden cursor-pointer items-center gap-2 md:inline-flex"
               >
                 {t("nav.menu")}
               </Button>
@@ -145,7 +149,7 @@ export default function Navbar() {
               <Button
                 variant="outline"
                 size="icon"
-                className="border-input/20 text-secondary hover:text-secondary hover:bg-secondary/10 dark:text-primary bg-accent/5 md:hidden"
+                className="border-input/20 text-secondary hover:text-secondary hover:bg-primary/70 dark:text-primary bg-primary/75 md:hidden"
                 aria-label="Open navigation menu"
               >
                 <HamburgerMenuIcon className="h-5 w-5" />
