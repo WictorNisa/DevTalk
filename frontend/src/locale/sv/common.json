@@ -12,7 +12,14 @@
   "userMenu": {
     "profile": "Profil",
     "settings": "Inställningar",
-    "signOut": "Logga ut"
+    "signOut": "Logga ut",
+    "statusMenu": {
+      "status": "Status",
+      "online": "Online",
+      "away": "Borta",
+      "doNotDisturb": "Upptagen",
+      "invisible": "Offline"
+    }
   },
 
   "profileSettings": {
