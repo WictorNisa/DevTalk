@@ -318,7 +318,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
                 variant="ghost"
                 onClick={handleUpvote}
                 aria-label={hasUpvoted ? "Remove upvote" : "Upvote message"}
-                className="h-6 gap-1 px-2"
+                className="h-6 cursor-pointer gap-1 px-2"
               >
                 <ThumbsUp
                   className={`h-3.5 w-3.5 ${hasUpvoted ? "text-green-500" : ""}`}
@@ -338,7 +338,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
                 aria-label={
                   hasDownvoted ? "Remove downvote" : "Downvote message"
                 }
-                className="h-6 gap-1 px-2"
+                className="h-6 cursor-pointer gap-1 px-2"
               >
                 <ThumbsDown
                   className={`h-3.5 w-3.5 ${hasDownvoted ? "text-red-500" : ""}`}
