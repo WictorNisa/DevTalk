@@ -53,7 +53,22 @@ export default function HowItWorks() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-muted-foreground flex-1 text-sm">
-                <p>{t(`howItWorks.steps.${key}.desc`)}</p>
+                <p>
+                  {t(`howItWorks.steps.${key}.desc`)}
+                  {index === 0 && (
+                    <>
+                      {" "}
+                      <a
+                        className="text-primary hover:text-foreground/80 italic hover:underline"
+                        href="https://www.github.com/signup"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {t(`howItWorks.steps.${key}.link`)}
+                      </a>
+                    </>
+                  )}
+                </p>
               </CardContent>
             </Card>
           ))}

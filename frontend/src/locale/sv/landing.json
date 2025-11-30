@@ -11,7 +11,7 @@
     "items": {
       "realtime": {
         "title": "Chatt i realtid",
-        "desc": "Snabba kanaler och direktmeddelanden drivs av WebSocket."
+        "desc": "Kanaler och direktmeddelanden drivs av WebSocket."
       },
       "threads": {
         "title": "Trådar & Kanaler",
@@ -43,15 +43,16 @@
     "steps": {
       "signin": {
         "title": "Logga in med GitHub",
-        "desc": "Logga in enkelt med ditt GitHub-konto."
+        "desc": "Logga in enkelt med ditt GitHub-konto. Har du inget konto än? Att skapa ett är snabbt och gratis.",
+        "link": "Klicka här för att komma igång."
       },
       "join": {
         "title": "Gå med i en kanal",
-        "desc": "Hitta eller skapa en kanal för dina favoritämnen inom utveckling."
+        "desc": "Hitta en kanal för dina favoritämnen inom utveckling, och börja koppla upp dig med likasinnade kodare."
       },
       "share": {
         "title": "Dela kod & få hjälp",
-        "desc": "Dela kodsnuttar, ställ frågor och lär dig från andra utvecklare i realtid."
+        "desc": "Dela kodsnuttar, idéer, ställ frågor och lär dig från andra utvecklare i realtid."
       }
     }
   },
