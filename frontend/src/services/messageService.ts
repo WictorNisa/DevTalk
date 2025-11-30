@@ -203,6 +203,7 @@ export const messageService = {
         const transformedMessage = transformBackendMessage(payload);
         const { messages } = useMessageStore.getState();
         const { isAtBottom } = useMessageUIStore.getState();
+        const { activeChannel, incrementUnread } = useChannelStore.getState();
 
         const existingMessage = messages.find(
           (msg) => msg.id === transformedMessage.id,
@@ -219,6 +220,10 @@ export const messageService = {
         } else {
           if (!isAtBottom) {
             useMessageUIStore.getState().incrementUnreadCount();
+          }
+          const incomingChannelId = transformedMessage.channelId?.toString();
+          if (incomingChannelId && incomingChannelId !== activeChannel) {
+            incrementUnread(incomingChannelId);
           }
           useMessageStore.getState().addMessage(transformedMessage);
         }
