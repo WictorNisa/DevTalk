@@ -1,37 +1,37 @@
 {
   "hero": {
     "title": "DevTalk",
-    "subtitle": "Talk code. Share knowledge. Grow together.",
+    "subtitle": "The home for developers",
     "ctaGithub": "Sign In With GitHub"
   },
 
   "features": {
     "title": "Everything you need is here",
-    "description": "DevTalk bundles the essential tools devs rely on to stay in sync.",
+    "description": "DevTalk gives you all the tools you need to stay connected, focused, and in sync.",
     "items": {
       "realtime": {
         "title": "Real-time Chat",
-        "desc": "Fast channels and direct messages powered by WebSocket."
+        "desc": "Chat without delay – messages appear instantly so conversations stay in sync."
       },
       "threads": {
-        "title": "Threads & Channels",
-        "desc": "Keep discussions organized by topic and team."
+        "title": "Channels",
+        "desc": "Keep every discussion organized with dedicated channels for your conversations."
       },
       "snippets": {
         "title": "Code Snippets",
-        "desc": "Share formatted, syntax-highlighted code directly in chat."
+        "desc": "Share clean, readable code directly in chat – perfectly formatted and easy to discuss."
       },
       "security": {
         "title": "Security",
-        "desc": "Protected with Spring Security and JWT under the hood."
+        "desc": "Your data stays safe with built-in protection and secure access at every step."
       },
       "notifications": {
         "title": "Notifications",
-        "desc": "Get notified instantly when someone mentions you."
+        "desc": "Never miss a beat – get instant alerts when someone tags you or sends a message."
       },
       "github": {
         "title": "GitHub SSO",
-        "desc": "Seamless sign-in using your GitHub account via OAuth."
+        "desc": "Log in instantly with your GitHub account – no extra steps, no friction."
       }
     }
   },
@@ -43,15 +43,16 @@
     "steps": {
       "signin": {
         "title": "Sign in with GitHub",
-        "desc": "Log in with ease using your GitHub account."
+        "desc": "Log in with ease using your GitHub account. Don't have an account? No problem!",
+        "signUp": "Sign up for a free GitHub account to get started."
       },
       "join": {
         "title": "Join a channel",
-        "desc": "Find or create a channel for your favorite dev topics."
+        "desc": "Find a channel for your favorite dev topics and join the conversation."
       },
       "share": {
         "title": "Share code & get help",
-        "desc": "Post snippets, ask questions, and learn from other developers in real time."
+        "desc": "Post code-snippets, ask questions, and learn from other developers in real time."
       }
     }
   },
@@ -66,9 +67,9 @@
     "title": "The Team Behind DevTalk",
     "description": "A small team of passionate dev-students building a place for coders to connect, learn, and grow.",
     "roles": {
-      "frontend": "Frontend, UI/UX",
+      "frontend": "Frontend, UI/UX Design",
       "backend": "Backend, Database Design",
-      "scrum": "Scrum Master, UI/UX"
+      "scrum": "Scrum Master, Frontend"
     }
   }
 }

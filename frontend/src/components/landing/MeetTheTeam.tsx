@@ -40,10 +40,10 @@ export default function MeetTheTeam() {
             <motion.div
               key={githubUser || name}
               variants={cardVariants}
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.02 }}
             >
-              <Card className="flex h-full flex-col">
-                <CardContent className="flex flex-1 flex-col px-6 py-5 sm:py-6">
+              <Card className="bg-muted/50 hover:border-foreground/5 flex h-full flex-col border-2 border-transparent text-left shadow-md transition-all duration-200 hover:shadow-lg">
+                <CardContent className="flex flex-1 flex-col rounded-lg px-8 py-7 sm:py-8">
                   <div className="grid grid-cols-[auto_1fr] items-start gap-4 text-left">
                     <div className="dark:bg-foreground/10 dark:border-primary/10 border-border flex h-20 w-20 items-center justify-center rounded-full border bg-(--background)/80">
                       <Avatar className="h-16 w-16 rounded-full">
@@ -75,7 +75,7 @@ export default function MeetTheTeam() {
                           href={`https://github.com/${githubUser}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="hover:text-foreground transition-colors"
+                          className="hover:text-foreground transition-colors duration-150 hover:scale-106 hover:animate-pulse"
                         >
                           <GitHubLogoIcon className="h-5 w-5" />
                         </a>
@@ -83,7 +83,7 @@ export default function MeetTheTeam() {
                           href={linkedin}
                           target="_blank"
                           rel="noreferrer"
-                          className="hover:text-foreground transition-colors"
+                          className="hover:text-foreground transition-colors duration-150 hover:scale-106 hover:animate-pulse"
                         >
                           <LinkedInLogoIcon className="h-5 w-5" />
                         </a>
@@ -97,7 +97,7 @@ export default function MeetTheTeam() {
         </motion.div>
       </div>
       <ChevronDown
-        className="absolute bottom-10 left-1/2 h-10 w-10 -translate-x-1/2 animate-bounce cursor-pointer text-white/30"
+        className="text-foreground/30 absolute bottom-10 left-1/2 h-10 w-10 -translate-x-1/2 animate-bounce cursor-pointer"
         aria-hidden
         onClick={() => {
           const element = document.getElementById("CTA");
