@@ -69,7 +69,7 @@
     "roles": {
       "frontend": "Frontend, UI/UX",
       "backend": "Backend, Database Design",
-      "scrum": "Scrum Master, UI/UX"
+      "scrum": "Scrum Master, Frontend"
     }
   }
 }

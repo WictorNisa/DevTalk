@@ -68,8 +68,8 @@
     "description": "Ett litet team av passionerade utvecklarstudenter som bygger en plats för kodare att koppla upp sig, lära sig och växa.",
     "roles": {
       "frontend": "Frontend, UI/UX",
-      "backend": "Backend",
-      "scrum": "Scrum Master, UI/UX"
+      "backend": "Backend, Databas",
+      "scrum": "Scrum Master, Frontend"
     }
   }
 }
