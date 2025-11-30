@@ -42,10 +42,11 @@ export default function Features() {
             <motion.div
               key={key}
               variants={cardVariants}
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.02 }}
             >
               <motion.div>
-                <Card className="flex h-full flex-col text-left">
+                <Card className="hover:border-foreground/5 bg-muted/50 flex h-full flex-col border-2 border-transparent text-left shadow-md transition-all duration-200 hover:shadow-lg">
+                  {" "}
                   <CardHeader className="space-y-3">
                     <div className="text-muted-foreground flex items-center gap-3 text-sm">
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
@@ -56,7 +57,7 @@ export default function Features() {
                       </CardTitle>
                     </div>
                   </CardHeader>
-                  <CardContent className="text-muted-foreground flex-1 text-sm">
+                  <CardContent className="text-muted-foreground flex-1 py-2 text-sm">
                     <p>{t(`features.items.${key}.desc`)}</p>
                   </CardContent>
                 </Card>
@@ -66,7 +67,7 @@ export default function Features() {
         </motion.div>
       </div>
       <ChevronDown
-        className="absolute bottom-10 left-1/2 h-10 w-10 -translate-x-1/2 animate-bounce cursor-pointer text-white/30"
+        className="text-foreground/30 absolute bottom-10 left-1/2 h-10 w-10 -translate-x-1/2 animate-bounce cursor-pointer"
         aria-hidden
         onClick={() => {
           const element = document.getElementById("how-it-works");

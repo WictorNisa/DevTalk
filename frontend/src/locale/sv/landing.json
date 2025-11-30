@@ -1,7 +1,7 @@
 {
   "hero": {
     "title": "DevTalk",
-    "subtitle": "Prata kod. Dela kunskap. Väx tillsammans.",
+    "subtitle": "Ett hem för utvecklare",
     "ctaGithub": "Logga in med GitHub"
   },
 
@@ -11,27 +11,27 @@
     "items": {
       "realtime": {
         "title": "Chatt i realtid",
-        "desc": "Snabba kanaler och direktmeddelanden drivs av WebSocket."
+        "desc": "Upplev sömlös kommunikation med vår snabba och responsiva chattfunktion."
       },
       "threads": {
-        "title": "Trådar & Kanaler",
-        "desc": "Håll diskussioner organiserade efter ämne och team."
+        "title": "Kanaler",
+        "desc": "Håll varje diskussion organiserad med dedikerade kanaler för dina konversationer."
       },
       "snippets": {
-        "title": "Kodsnuttar",
-        "desc": "Dela formaterad, syntaxmarkerad kod direkt i chatten."
+        "title": "Kodbitar",
+        "desc": "Dela ren, läsbar kod direkt i chatten – perfekt formaterad och lätt att diskutera."
       },
       "security": {
         "title": "Säkerhet",
-        "desc": "Skyddad med Spring Security och JWT under huven."
+        "desc": "Dina data är skyddade med inbyggt skydd och säker åtkomst i varje steg."
       },
       "notifications": {
         "title": "Notifikationer",
-        "desc": "Få omedelbara notiser när någon nämner dig."
+        "desc": "Missa ingenting – få notiser direkt när någon nämner dig eller något viktigt händer."
       },
       "github": {
         "title": "GitHub SSO",
-        "desc": "Sömlös inloggning med ditt GitHub-konto via OAuth."
+        "desc": "Logga in direkt med ditt GitHub-konto – inga extra steg, inga konstigheter."
       }
     }
   },
@@ -43,11 +43,12 @@
     "steps": {
       "signin": {
         "title": "Logga in med GitHub",
-        "desc": "Logga in enkelt med ditt GitHub-konto."
+        "desc": "Logga in enkelt med ditt GitHub-konto. Har du inget konto? Inga problem!",
+        "signUp": "Skapa ett gratis GitHub-konto för att komma igång."
       },
       "join": {
         "title": "Gå med i en kanal",
-        "desc": "Hitta eller skapa en kanal för dina favoritämnen inom utveckling."
+        "desc": "Hitta en kanal för dina favoritämnen inom utveckling och gå med i konversationen."
       },
       "share": {
         "title": "Dela kod & få hjälp",
@@ -66,9 +67,9 @@
     "title": "Teamet bakom DevTalk",
     "description": "Ett litet team av passionerade utvecklarstudenter som bygger en plats för kodare att koppla upp sig, lära sig och växa.",
     "roles": {
-      "frontend": "Frontend, UI/UX",
-      "backend": "Backend",
-      "scrum": "Scrum Master, UI/UX"
+      "frontend": "Frontend, UI/UX Design",
+      "backend": "Backend, Databasdesign",
+      "scrum": "Scrum Master, Frontend"
     }
   }
 }
