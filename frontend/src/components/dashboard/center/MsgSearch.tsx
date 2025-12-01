@@ -9,7 +9,7 @@ export const MsgSearch = () => {
         type="search"
         name=""
         id=""
-        className="border-foreground/10 focus:border-foreground/30 relative box-border w-80 rounded-md border px-2 py-1 pl-8 font-light focus:outline-none"
+        className="border-foreground/10 bg-background/65 focus:border-foreground/30 relative box-border w-80 rounded-md border px-2 py-1 pl-8 font-light focus:outline-none"
         placeholder="Search..."
       />
     </div>
