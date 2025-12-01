@@ -26,7 +26,7 @@ export default function Hero() {
         loop
         playsInline
         preload="none"
-        initial={{ scale: 1.5, opacity: 0 }}
+        initial={{ scale: 2, opacity: 1 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 2, ease: "easeOut" }}
       >
@@ -89,7 +89,7 @@ export default function Hero() {
         </motion.div>
       </div>
       <ChevronDown
-        className="absolute bottom-10 left-1/2 h-10 w-10 -translate-x-1/2 animate-bounce cursor-pointer text-white/30"
+        className="text-foreground/30 absolute bottom-10 left-1/2 h-10 w-10 -translate-x-1/2 animate-bounce cursor-pointer"
         aria-hidden
         onClick={() => {
           const element = document.getElementById("features");

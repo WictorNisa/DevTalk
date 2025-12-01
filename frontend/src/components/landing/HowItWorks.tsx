@@ -52,12 +52,8 @@ export default function HowItWorks() {
           className="mt-12 grid gap-8 sm:grid-cols-3"
         >
           {steps.map(({ icon: Icon, key }, index) => (
-            <motion.div
-              key={key}
-              variants={cardVariants}
-              whileHover={{ scale: 1.03 }}
-            >
-              <Card className="flex h-full flex-col text-left">
+            <motion.div key={key} variants={cardVariants}>
+              <Card className="bg-muted/50 border-foreground/5 flex h-full flex-col border-2 text-left shadow-md transition-all duration-200 hover:shadow-lg">
                 <CardHeader className="space-y-3">
                   <div className="text-muted-foreground flex items-center gap-3 text-sm">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
@@ -71,8 +67,24 @@ export default function HowItWorks() {
                     {t(`howItWorks.steps.${key}.title`)}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="text-muted-foreground flex-1 text-sm">
-                  <p>{t(`howItWorks.steps.${key}.desc`)}</p>
+                <CardContent className="text-muted-foreground flex-1 py-2 text-sm">
+                  <p>
+                    {t(`howItWorks.steps.${key}.desc`)}
+                    {index === 0 && (
+                      <>
+                        {" "}
+                        <a
+                          className="text-primary/80 hover:text-primary underline"
+                          href="https://www.github.com/signup"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <br />
+                          {t(`howItWorks.steps.${key}.signUp`)}
+                        </a>
+                      </>
+                    )}
+                  </p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -80,7 +92,7 @@ export default function HowItWorks() {
         </motion.div>
       </div>
       <ChevronDown
-        className="absolute bottom-10 left-1/2 h-10 w-10 -translate-x-1/2 animate-bounce cursor-pointer text-white/30"
+        className="text-foreground/30 absolute bottom-10 left-1/2 h-10 w-10 -translate-x-1/2 animate-bounce cursor-pointer"
         aria-hidden
         onClick={() => {
           const element = document.getElementById("team");
