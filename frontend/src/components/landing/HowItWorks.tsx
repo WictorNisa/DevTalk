@@ -53,7 +53,7 @@ export default function HowItWorks() {
         >
           {steps.map(({ icon: Icon, key }, index) => (
             <motion.div key={key} variants={cardVariants}>
-              <Card className="bg-muted/50 border-foreground/5 flex h-full flex-col border-2 text-left shadow-md transition-all duration-200 hover:shadow-lg">
+              <Card className="bg-muted/50 border-foreground/5 flex h-full flex-col border-2 text-left shadow-md transition-all duration-200">
                 <CardHeader className="space-y-3">
                   <div className="text-muted-foreground flex items-center gap-3 text-sm">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
