@@ -18,7 +18,7 @@ body,
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background)
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
