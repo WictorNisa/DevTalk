@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { UserMenu } from "@/components/dashboard/left/UserMenu";
 import { SettingsDialog } from "@/components/dashboard/left/SettingsDialog";
-import { userStatus } from "@/utils/userStatus";
+import { getPresenceIcon } from "@/utils/presenceIcons";
+import type { PresenceStatus } from "@/utils/normalizeStatus";
 
 type Props = { collapsed?: boolean };
 
 export const UserCard = ({ collapsed = false }: Props) => {
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const { user, isLoading, logout } = useAuthStore();
+  const { user, isLoading, logout, setPresenceStatus } = useAuthStore();
 
   const initials = (
     user?.displayName?.slice(0, 2) ||
@@ -18,8 +19,17 @@ export const UserCard = ({ collapsed = false }: Props) => {
     "?"
   ).toUpperCase();
 
-  const presence = user?.presenceStatus ?? "Offline";
-  const statusBg = userStatus(presence.toLowerCase());
+  const presence = user?.presenceStatus ?? "Online";
+
+  useEffect(() => {
+    if (user && user.presenceStatus === "Offline") {
+      setPresenceStatus("Online");
+    }
+  }, [user, setPresenceStatus]);
+
+  const handlePresenceChange = async (status: string) => {
+    await setPresenceStatus(status as PresenceStatus);
+  };
 
   if (collapsed) {
     return (
@@ -37,9 +47,11 @@ export const UserCard = ({ collapsed = false }: Props) => {
             </Avatar>
           )}
           <span
-            className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2 w-2 rounded-full ring-1`}
+            className="absolute right-0 bottom-0 flex items-center justify-center rounded-full"
             aria-hidden="true"
-          />
+          >
+            {getPresenceIcon(presence)}
+          </span>
         </div>
       </Card>
     );
@@ -48,12 +60,14 @@ export const UserCard = ({ collapsed = false }: Props) => {
   return (
     <>
       <Card className="w-full min-w-0 items-start rounded-lg p-2">
-        <CardContent className="flex min-w-0 items-center gap-2.5 p-1">
+        <CardContent className="flex min-w-0 items-center gap-3 p-1">
           <UserMenu
+            user={user ?? undefined}
             onSignOut={() => {
               logout();
             }}
             onOpenSettings={() => setSettingsOpen(true)}
+            onSelectPresence={handlePresenceChange}
           >
             <div className="relative shrink-0">
               {isLoading ? (
@@ -68,9 +82,11 @@ export const UserCard = ({ collapsed = false }: Props) => {
                 </Avatar>
               )}
               <span
-                className={`${statusBg} ring-primary-foreground absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full ring-1`}
+                className="ring-primary-foreground absolute right-0 bottom-0 flex items-center justify-center rounded-full"
                 aria-hidden="true"
-              />
+              >
+                {getPresenceIcon(presence)}
+              </span>
             </div>
           </UserMenu>
 

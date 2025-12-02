@@ -2,12 +2,12 @@ export const userStatus = (s?: string) => {
   const status = (s || "").toLowerCase();
   switch (status) {
     case "online":
-      return "bg-green-400";
+      return "bg-green-500";
     case "idle":
-      return "bg-yellow-400";
+      return "bg-yellow-500";
     case "busy":
-      return "bg-red-400";
+      return "bg-red-500";
     default:
-      return "bg-gray-400";
+      return "bg-zinc-500";
   }
 };

@@ -10,7 +10,10 @@
   },
 
   "userMenu": {
-    "profile": "Profile",
+    "online": "Online",
+    "idle": "Idle",
+    "busy": "Busy",
+    "offline": "Offline",
     "settings": "Settings",
     "signOut": "Sign out"
   },

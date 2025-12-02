@@ -96,7 +96,7 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
         {t("sidebarRight.members")}
       </div>
       <div className={`flex flex-col gap-2 ${collapsed ? "items-center" : ""}`}>
-        <div className="mb-2 flex flex-col justify-start gap-3 text-gray-500">
+        <div className="text-muted-foreground mb-2 flex flex-col justify-start gap-3">
           <span className={`text-sm font-medium ${collapsed ? "hidden" : ""}`}>
             {t("sidebarRight.active", { count: activeUsers.length })}
           </span>
@@ -111,7 +111,7 @@ export const UserList = ({ collapsed = false }: { collapsed?: boolean }) => {
           ))}
         </div>
 
-        <div className="mb-2 flex flex-col justify-start gap-3 text-gray-500">
+        <div className="text-muted-foreground mb-2 flex flex-col justify-start gap-3">
           <span className={`text-sm font-medium ${collapsed ? "hidden" : ""}`}>
             {t("sidebarRight.inactive", { count: offlineUsers.length })}
           </span>
