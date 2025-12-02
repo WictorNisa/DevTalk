@@ -7,13 +7,13 @@ import { NavLink } from "react-router";
 const LogoPanel = () => {
   const { isLeftCollapsed } = useSidebarStates();
   return (
-    <Card className="h-[3.25rem] min-w-0 rounded-lg p-0">
+    <Card className="h-13 min-w-0 rounded-lg p-0">
       <CardContent className="flex h-full items-center justify-center p-0">
         <NavLink
           to={ROUTES.HOME}
           className="flex items-center justify-center p-2"
         >
-          <DevTalkLogo className="h-9 w-9 flex-shrink-0" />
+          <DevTalkLogo className="h-9 w-9 shrink-0" />
           {!isLeftCollapsed && (
             <h1 className="px-2 text-lg font-medium whitespace-nowrap">
               DevTalk

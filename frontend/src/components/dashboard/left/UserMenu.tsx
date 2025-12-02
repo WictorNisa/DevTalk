@@ -8,7 +8,14 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Settings, LogOut, Ellipsis } from "lucide-react";
+import {
+  Settings,
+  LogOut,
+  Ellipsis,
+  Moon,
+  Circle,
+  CircleMinus,
+} from "lucide-react";
 import type { User } from "@/types/User";
 
 type UserMenuProps = {
@@ -48,7 +55,7 @@ const SignoutButton = ({ onSignOut }: { onSignOut?: () => void }) => {
         onSignOut?.();
       }}
     >
-      <LogOut className="mr-3 h-4 w-4" /> {t("userMenu.signOut")}
+      <LogOut className="mr-2 h-4 w-4" /> {t("userMenu.signOut")}
     </DropdownMenuItem>
   );
 };
@@ -62,32 +69,49 @@ const SettingsMenu = ({ onOpenSettings }: { onOpenSettings?: () => void }) => {
         onOpenSettings?.();
       }}
     >
-      <Settings className="mr-3 h-4 w-4" /> {t("userMenu.settings")}
+      <Settings className="mr-2 h-4 w-4" /> {t("userMenu.settings")}
     </DropdownMenuItem>
   );
 };
-
-const PRESENCE_OPTIONS = [
-  { label: "Online", value: "online", color: "bg-green-400" },
-  { label: "Idle", value: "idle", color: "bg-yellow-400" },
-  { label: "Busy", value: "busy", color: "bg-red-400" },
-  { label: "Offline", value: "offline", color: "bg-zinc-400" },
-];
 
 type PresenceStatusProps = {
   onSelectPresence?: (status: string) => void;
 };
 
 const PresenceStatus = ({ onSelectPresence }: PresenceStatusProps) => {
+  const { t } = useTranslation();
+
+  const PRESENCE_OPTIONS = [
+    {
+      label: t("userMenu.online"),
+      value: "online",
+      icon: <Circle className="h-4 w-4 fill-green-500 stroke-none" />,
+    },
+    {
+      label: t("userMenu.idle"),
+      value: "idle",
+      icon: <Moon className="h-4 w-4 fill-yellow-500 stroke-none" />,
+    },
+    {
+      label: t("userMenu.busy"),
+      value: "busy",
+      icon: <CircleMinus className="h-4 w-4 fill-red-500 stroke-none" />,
+    },
+    {
+      label: t("userMenu.offline"),
+      value: "offline",
+      icon: <Circle className="h-4 w-4 fill-zinc-400 stroke-none" />,
+    },
+  ];
   return (
     <>
       {PRESENCE_OPTIONS.map((opt) => (
         <DropdownMenuItem
           key={opt.value}
-          className="flex cursor-pointer items-center gap-2"
+          className="flex cursor-pointer items-center gap-4"
           onSelect={() => onSelectPresence?.(opt.value)}
         >
-          <span className={`h-2 w-2 rounded-2xl ${opt.color}`} /> {opt.label}
+          {opt.icon} {opt.label}
         </DropdownMenuItem>
       ))}
     </>

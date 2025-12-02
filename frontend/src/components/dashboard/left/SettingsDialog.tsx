@@ -29,7 +29,7 @@ export const SettingsDialog = ({ open, onOpenChange }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="bg-muted/50 border-foreground/5 shadow-md sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t("profileSettings.settings")}</DialogTitle>
           <DialogDescription>

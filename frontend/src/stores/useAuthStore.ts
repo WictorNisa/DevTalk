@@ -34,6 +34,7 @@ export const useAuthStore = create<AuthState>()(
           });
         } finally {
           set({ user: null, isAuthenticated: false });
+          localStorage.removeItem("auth-storage");
           window.location.href = "/";
         }
       },
@@ -43,13 +44,14 @@ export const useAuthStore = create<AuthState>()(
         try {
           const me = await fetchCurrentUser();
           if (me) {
+            const normalizedStatus = normalizePresenceStatus(me.presenceStatus);
             set({
               user: {
                 id: me.id,
                 externalId: me.externalId,
                 displayName: me.displayName,
                 avatarUrl: me.avatarUrl,
-                presenceStatus: normalizePresenceStatus(me.presenceStatus),
+                presenceStatus: normalizedStatus || "Online",
               },
               isAuthenticated: true,
               isLoading: false,
@@ -64,18 +66,19 @@ export const useAuthStore = create<AuthState>()(
       },
 
       setPresenceStatus: async (status: PresenceStatus) => {
-        // Update backend
-        const { updatePresenceStatus } = await import(
-          "@/services/updatePresenceStatus"
-        );
-        const ok = await updatePresenceStatus(status);
-        if (ok) {
-          // Update local store
-          set((state) => ({
-            user: state.user
-              ? { ...state.user, presenceStatus: status }
-              : state.user,
-          }));
+        set((state) => ({
+          user: state.user
+            ? { ...state.user, presenceStatus: status }
+            : state.user,
+        }));
+
+        try {
+          const { updatePresenceStatus } = await import(
+            "@/services/updatePresenceStatus"
+          );
+          await updatePresenceStatus(status);
+        } catch (error) {
+          console.error("Failed to update presence on backend:", error);
         }
       },
     }),
