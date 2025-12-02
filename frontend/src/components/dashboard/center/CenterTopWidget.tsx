@@ -1,12 +1,12 @@
-import { useTranslation } from "react-i18next";
 import { Card } from "@/components/ui/card";
 import MessageList from "./MessageList/MessageList";
+import { MsgSearch } from "./MsgSearch";
 
 const CenterTopWidget = () => {
-  const { t } = useTranslation("dashboard");
   return (
-    <Card className="bg-background flex h-full w-full flex-col overflow-hidden rounded-lg">
-      <div>{t("→ till höger ska jag lägga vår search bar. /Nico")}</div>
+    <Card className="bg-background relative flex h-full w-full flex-col overflow-hidden rounded-lg">
+      {/* Search is placeholder for now, Future implementation. */}
+      <MsgSearch />
       <MessageList />
     </Card>
   );
