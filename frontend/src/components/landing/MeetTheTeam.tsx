@@ -38,7 +38,7 @@ export default function MeetTheTeam() {
         >
           {team.map(({ name, role, githubUser, linkedin }) => (
             <motion.div key={githubUser || name} variants={cardVariants}>
-              <Card className="bg-muted/50 border-foreground/5 flex h-full flex-col border-2 text-left shadow-md transition-all duration-200 hover:shadow-lg">
+              <Card className="bg-muted/50 border-foreground/5 flex h-full flex-col border-2 text-left shadow-md transition-all duration-200">
                 <CardContent className="flex flex-1 flex-col rounded-lg px-8 py-7 sm:py-8">
                   <div className="grid grid-cols-[auto_1fr] items-start gap-4 text-left">
                     <div className="dark:bg-foreground/10 dark:border-primary/10 border-border flex h-20 w-20 items-center justify-center rounded-full border bg-(--background)/80">

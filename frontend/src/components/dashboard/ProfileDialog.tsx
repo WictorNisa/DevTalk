@@ -27,9 +27,9 @@ export const ProfileDialog = ({ open, onOpenChange, user }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="bg-muted/50 border-foreground/5 rounded-lg border-2 p-6 shadow-2xl sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="pb-1.5 font-semibold">
+          <DialogTitle className="text- pb-2 font-semibold">
             {t("userInfo.profileOf", {
               name: user?.displayName || user?.externalId || "User",
             })}
@@ -39,10 +39,10 @@ export const ProfileDialog = ({ open, onOpenChange, user }: Props) => {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-4 py-4">
+        <div className="flex flex-col gap-2 py-2 font-semibold">
           <div className="flex items-center gap-4">
             {!user ? (
-              <div className="bg-muted h-18 w-18 animate-pulse rounded-full" />
+              <div className="bg-muted h-16 w-16 animate-pulse rounded-full" />
             ) : (
               <Avatar className="h-18 w-18">
                 <AvatarImage

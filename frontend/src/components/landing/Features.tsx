@@ -41,7 +41,7 @@ export default function Features() {
           {features.map(({ icon: Icon, key }) => (
             <motion.div key={key} variants={cardVariants}>
               <motion.div>
-                <Card className="bg-muted/50 border-foreground/5 flex h-full flex-col border-2 text-left shadow-md transition-all duration-200 hover:shadow-lg">
+                <Card className="bg-muted/50 border-foreground/5 flex h-full flex-col border-2 text-left shadow-md transition-all duration-200">
                   {" "}
                   <CardHeader className="space-y-3">
                     <div className="text-muted-foreground flex items-center gap-3 text-sm">
