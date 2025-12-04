@@ -35,6 +35,7 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
 
   // get the chat state from zustand stores
   const activeChannelId = useChannelStore((state) => state.activeChannel);
+  const unreadByChannel = useChannelStore((state) => state.unreadByChannel);
   const switchChannel = useChannelStore((state) => state.switchChannel);
   const connected = useWebSocketStore((state) => state.connected);
 
@@ -136,7 +137,10 @@ const LeftCenterWidget = ({ collapsed = false }: { collapsed?: boolean }) => {
         </div>
 
         <ChannelList
-          channels={channels}
+          channels={channels.map((channel) => ({
+            ...channel,
+            unread: unreadByChannel[channel.id] || 0,
+          }))}
           collapsed={collapsed}
           activeId={activeChannelId || channels[0].id}
           onSelect={handleSelect}
